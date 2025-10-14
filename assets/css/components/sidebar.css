@@ -1,4 +1,11 @@
 @font-face {
+  font-family: "PoppinsRegular";
+  src: url("../fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: "Poppins";
   src: url("../fonts/Poppins-Medium.ttf") format("truetype");
   font-weight: normal;
@@ -12,14 +19,66 @@
 
 .sidenav {
   background-color: #073066;
-  height: 100%;
-  width: 15rem;
+  height: 93vh;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  width: 16rem;
+  top: 50%;                
+  transform: translateY(-50%); 
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
   position: fixed;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow: visible;
   padding: 1rem;
   align-items: center;
+  transition: width 0.3s ease;
+}
+
+.toggle-btn {
+  position: absolute;
+  right: -0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 9999;
+}
+
+.toggle-btn:hover {
+  background-color: #d5f3ff;
+}
+
+.arrow {
+  margin-top: 1px;
+  font-size: 1rem;
+  color: #073066;
+}
+
+.sidebar-logo {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+}
+
+.sidebar-logo .sidenav-logo {
+  height: 6.5rem;
+  margin-left: -10px;
+}
+
+.sidebar-logo p {
+  font-size: 20px;
+  font-family: "Poppins", sans-serif;
+  color: #ffffff;
 }
 
 .sidenav nav a {
@@ -35,6 +94,39 @@
   transition: background-color 0.2s ease;
 }
 
+/*------------ WHEN COLLAPSED ------------*/
+.sidenav.collapsed {
+  width: 5rem; 
+  align-items: center;
+  transition: width 0.3s ease;
+}
+
+.sidenav.collapsed .sidebar-logo p,
+.sidenav.collapsed nav a span:not(.sidenav-icon),
+.sidenav.collapsed .user-profile span {
+  display: none;
+}
+
+.sidenav.collapsed nav a {
+  justify-content: center;
+}
+
+.sidenav.collapsed .sidenav-logo {
+  height: 3rem;
+  margin: 0;
+}
+
+.sidenav.collapsed .user-profile {
+  justify-content: center;
+}
+
+.sidenav.collapsed .arrow {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+  margin-bottom: 4px;
+}
+
+/*------------ NAV LINKS ------------*/
 .sidenav img {
   height: auto;
   max-width: 8rem;
@@ -61,4 +153,26 @@
 .sidenav-icon img {
   height: 1.7rem;
   width: auto;
+}
+
+/*------------ USER PROFILE ------------*/
+.user-profile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  width: 90%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.user-profile img {
+  height: 3rem;
+  border-radius: 80px;
+}
+
+.user-profile span {
+  color: #ffffff;
+  text-align: left;
 }
