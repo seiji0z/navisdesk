@@ -23,8 +23,8 @@
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
   width: 16rem;
-  top: 50%;                
-  transform: translateY(-50%); 
+  top: 50%;
+  transform: translateY(-50%);
   box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
   position: fixed;
   display: flex;
@@ -49,7 +49,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 9999;
 }
 
@@ -96,7 +96,7 @@
 
 /*------------ WHEN COLLAPSED ------------*/
 .sidebar.collapsed {
-  width: 5rem; 
+  width: 5rem;
   align-items: center;
   transition: width 0.3s ease;
 }

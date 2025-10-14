@@ -7,10 +7,11 @@
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
+  transition: margin-left 0.3s ease;
 }
 
 .main.collapsed-sidebar {
-  margin-left: 5rem; 
+  margin-left: 5rem;
   transition: margin-left 0.3s ease;
 }
 
@@ -18,28 +19,29 @@
   position: relative;
   background-color: #ffb901;
   border-radius: 8px;
-  width: calc(100% - 2rem); 
-  max-width: 1500px;
+  width: calc(100% - 2rem);
+  max-width: 100vw;
   height: 700px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   overflow: visible;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, max-width 0.3s ease;
 }
 
 .main.collapsed-sidebar .dashboard-folder {
-  width: calc(100% + 11rem); 
-  max-width: 1700px; 
+  width: calc(100% + 11rem);
+  max-width: 1700px;
 }
 
 .header {
-  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: left;
-  text-align: left;
-  width: 100%;
+  top: -85px;
+  position: absolute;
+  right: 0;
+  width: 100vw;
   max-width: 1500px;
   padding-bottom: 2rem;
+  left: 0;
 }
 
 .welcome h1 {
@@ -89,7 +91,7 @@
   grid-template-rows: repeat(6, auto);
   gap: 1rem;
   width: 100%;
-  max-width: 1500px;
+  max-width: inherit;
   margin: 0 auto;
   padding: 2rem;
 }
