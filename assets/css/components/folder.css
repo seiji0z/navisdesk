@@ -1,0 +1,65 @@
+.dashboard-folder {
+  margin-top: 5rem;
+  position: relative;
+  background-color: #ffb901;
+  border-radius: 8px;
+  width: calc(100% - 2rem);
+  max-width: 100vw;
+  height: 100vh;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: visible;
+  transition: width 0.3s ease, max-width 0.3s ease;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  top: -85px;
+  position: absolute;
+  right: 0;
+  width: 100vw;
+  max-width: 1500px;
+  padding-bottom: 2rem;
+  left: 0;
+}
+
+.welcome h1 {
+  font-family: "PoppinsBold", sans-serif;
+  font-size: 2rem;
+}
+
+.welcome span {
+  font-family: "PoppinsSemiBold", sans-serif;
+  color: #073066;
+}
+
+/* Folder body */
+.folder-body {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.folder-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -70px;
+  right: 0;
+  width: 400px;
+  height: 80px;
+  border-radius: 16px 16px 0px 0;
+  background-color: #ffb901;
+  border-left: none;
+  box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: -1;
+}
+
+.folder-tab h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #334155;
+  margin: 0;
+}
