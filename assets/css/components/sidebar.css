@@ -17,7 +17,7 @@
   src: url("../fonts/Poppins-SemiBold.ttf") format("truetype");
 }
 
-.sidenav {
+.sidebar {
   background-color: #073066;
   height: 93vh;
   border-top-right-radius: 20px;
@@ -70,7 +70,7 @@
   margin-bottom: 20px;
 }
 
-.sidebar-logo .sidenav-logo {
+.sidebar-logo .sidebar-logo {
   height: 6.5rem;
   margin-left: -10px;
 }
@@ -81,7 +81,7 @@
   color: #ffffff;
 }
 
-.sidenav nav a {
+.sidebar nav a {
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -95,54 +95,54 @@
 }
 
 /*------------ WHEN COLLAPSED ------------*/
-.sidenav.collapsed {
+.sidebar.collapsed {
   width: 5rem; 
   align-items: center;
   transition: width 0.3s ease;
 }
 
-.sidenav.collapsed .sidebar-logo p,
-.sidenav.collapsed nav a span:not(.sidenav-icon),
-.sidenav.collapsed .user-profile span {
+.sidebar.collapsed .sidebar-logo p,
+.sidebar.collapsed nav a span:not(.sidebar-icon),
+.sidebar.collapsed .user-profile span {
   display: none;
 }
 
-.sidenav.collapsed nav a {
+.sidebar.collapsed nav a {
   justify-content: center;
 }
 
-.sidenav.collapsed .sidenav-logo {
+.sidebar.collapsed .sidebar-logo {
   height: 3rem;
   margin: 0;
 }
 
-.sidenav.collapsed .user-profile {
+.sidebar.collapsed .user-profile {
   justify-content: center;
 }
 
-.sidenav.collapsed .arrow {
+.sidebar.collapsed .arrow {
   transform: rotate(180deg);
   transition: transform 0.3s ease;
   margin-bottom: 4px;
 }
 
 /*------------ NAV LINKS ------------*/
-.sidenav img {
+.sidebar img {
   height: auto;
   max-width: 8rem;
 }
 
-.sidenav a.active {
+.sidebar a.active {
   color: #ffc000;
   font-family: "PoppinsSemiBold", sans-serif;
 }
 
-.sidenav a:hover {
+.sidebar a:hover {
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 0.5rem;
 }
 
-.sidenav-icon {
+.sidebar-icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -150,7 +150,7 @@
   flex-shrink: 0;
 }
 
-.sidenav-icon img {
+.sidebar-icon img {
   height: 1.7rem;
   width: auto;
 }

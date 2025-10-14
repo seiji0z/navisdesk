@@ -1,5 +1,5 @@
 .main {
-  margin-left: 240px; /* match sidebar width */
+  margin-left: 16rem;
   padding: 2rem;
   height: 100vh;
   display: flex;
@@ -9,16 +9,26 @@
   box-sizing: border-box;
 }
 
-/* Folder */
+.main.collapsed-sidebar {
+  margin-left: 5rem; 
+  transition: margin-left 0.3s ease;
+}
+
 .dashboard-folder {
   position: relative;
   background-color: #ffb901;
   border-radius: 8px;
-  width: 100%;
+  width: calc(100% - 2rem); 
   max-width: 1500px;
   height: 700px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   overflow: visible;
+  transition: width 0.3s ease;
+}
+
+.main.collapsed-sidebar .dashboard-folder {
+  width: calc(100% + 11rem); 
+  max-width: 1700px; 
 }
 
 .header {
