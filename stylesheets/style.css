@@ -71,7 +71,7 @@
   max-width: 8rem;
 }
 
-.sidenav a:active {
+.sidenav a.active {
   color: #ffc000;
   font-family: "PoppinsSemiBold", sans-serif;
 }
