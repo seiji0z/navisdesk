@@ -1,65 +1,19 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
-    <link rel="icon" type="image/x-icon" href="images/navi-logo.png" />
-    <link rel="stylesheet" href="../stylesheets/style.css" />
-    <link rel="stylesheet" href="../stylesheets/admin/dashboard.css" />
+    <link rel="icon" type="image/x-icon" href="../assets/images/navi-logo.png" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/admin/dashboard.css" />
+    <link rel="stylesheet" href="../assets/css/components/sidebar.css" />
   </head>
 
   <body>
-    <!-- sidebar -->
-    <div class="sidenav">
-      <img src="../images/navi-logo.png" alt="" />
-      <div>
-        <a href="dashboard.html" class="active"
-          ><span class="sidenav-icon"
-            ><img
-              src="../images/admin/dashboard-icon.png"
-              alt="Dashboard icon" /></span
-          >Dashboard</a
-        >
-        <a href="#"
-          ><span class="sidenav-icon"
-            ><img
-              src="../images/admin/user-mgmt-icon.png"
-              alt="User management icon" /></span
-          >User Management</a
-        >
-        <a href="#"
-          ><span class="sidenav-icon"
-            ><img
-              src="../images/admin/submissions-icon.png"
-              alt="Submissions icon" /></span
-          >Submissions</a
-        >
-        <a href="#"
-          ><span class="sidenav-icon">
-            <img
-              src="../images/admin/organizations-icon.png"
-              alt="Organizations icon"
-            /> </span
-          >Organizations</a
-        >
-        <a href="#"
-          ><span class="sidenav-icon"
-            ><img
-              src="../images/admin/deadlines-icon.png"
-              alt="Deadlines icon" /></span
-          >Deadlines</a
-        >
-        <a href="#"
-          ><span class="sidenav-icon"
-            ><img
-              src="../images/admin/system-settings-icon.png"
-              alt="System settings icon" /></span
-          >System Settings</a
-        >
-      </div>
-    </div>
+
+    <div id="sidebar"></div>
 
     <!-- main content -->
     <div class="main">
@@ -91,4 +45,13 @@
       </div>
     </div>
   </body>
+
+  <script>
+    fetch("../components/sidebar.html")
+      .then((response) => response.text())
+      .then((data) => {
+        document.getElementById("sidebar").innerHTML = data;
+      })
+  </script>
+    
 </html>
