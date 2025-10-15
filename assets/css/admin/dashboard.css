@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "PoppinsSemiBold";
+  src: url("../fonts/Poppins-SemiBold.ttf") format("truetype");
+}
+
 .main {
   margin-left: 16rem;
   padding: 2rem;
@@ -35,16 +40,62 @@
   border-radius: 8px;
   display: flex;
   justify-content: center;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
   align-items: center;
   font-family: "PoppinsSemiBold", sans-serif;
   color: #073066;
-  height: 120px;
+}
+
+.small {
+  grid-column: span 1;
+  height: 200px;
+  margin-bottom: 10px;
 }
 
 .medium {
   grid-column: span 2;
+  height: 460px;
 }
 
-.large {
-  grid-column: span 4;
+.grid-item.small .card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; 
+  align-items: center;            
+  width: 100%;                    
+  padding: 1rem 2rem;           
+  box-sizing: border-box;
+}
+
+.left-details .number {
+  font-size: 40px;
+  font-family: "PoppinsSemiBold", sans-serif;
+  margin-bottom: -10px;
+}
+
+.number#first {
+    color: #208bff;
+}
+.number#second {
+    color: #34C759;
+}
+.number#third {
+    color: #FFA325;
+}
+.number#fourth {
+    color: #FF5039;
+}
+
+.grid-item.medium .card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+  align-items: center;            
+  width: 100%;                    
+  padding: 1rem 2rem;           
+  box-sizing: border-box;
+}
+
+.grid-item.medium img {
+  height: 400px;
 }

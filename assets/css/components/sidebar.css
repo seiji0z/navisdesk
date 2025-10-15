@@ -123,7 +123,6 @@
 .sidebar.collapsed .arrow {
   transform: rotate(180deg);
   transition: transform 0.3s ease;
-  margin-bottom: 4px;
 }
 
 /*------------ NAV LINKS ------------*/
