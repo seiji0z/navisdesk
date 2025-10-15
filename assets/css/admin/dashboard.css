@@ -16,8 +16,7 @@
 }
 
 .main.collapsed-sidebar .dashboard-folder {
-  width: calc(100% + 11rem);
-  max-width: 1700px;
+  max-width: 90vw;
 }
 
 .grid-container {

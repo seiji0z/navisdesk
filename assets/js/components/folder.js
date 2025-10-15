@@ -4,7 +4,7 @@ export async function loadFolder(targetSelector, title) {
     if (!response.ok) throw new Error("Folder HTML not found");
 
     const html = await response.text();
-    console.log("Folder HTML fetched:", html); // <--- check this
+    console.log("Folder HTML fetched:", html);
 
     const target = document.querySelector(targetSelector);
     target.innerHTML = html;
