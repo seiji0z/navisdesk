@@ -1,4 +1,4 @@
-// Folder functions
+// folder functions
 function setFolderTitle(title) {
   document.querySelector(".folder-title").textContent = title;
 }
@@ -14,12 +14,10 @@ function setCurrentDate() {
   });
 }
 
-// Initialize dashboard
-function initDashboard() {
-  setFolderTitle("Dashboard");
-  setCurrentDate();
 
-  // inject dashboard-only grid inside folder-body
+// dashboard layouts by role
+// ---- OSAS Dashboard ----
+function loadOsasDashboard() {
   document.querySelector("#folder-body").innerHTML = `
     <div class="grid-container">
 
@@ -91,5 +89,43 @@ function initDashboard() {
     </div>
   `;
 }
+
+// ---- ADMIN ----
+function loadAdminDashboard() {
+  document.querySelector("#folder-body").innerHTML = `
+    <div class="grid-container">
+      <!-- content -->
+    </div>
+  `;
+}
+
+// ---- USER ----
+function loadUserDashboard() {
+  document.querySelector("#folder-body").innerHTML = `
+    <div class="grid-container">
+      <!-- content -->
+    </div>
+  `;
+}
+
+// ==========================
+// Main Dashboard Initializer
+// ==========================
+function initDashboard() {
+  setFolderTitle("Dashboard");
+  setCurrentDate();
+
+  const sidebar = document.querySelector("#sidebar");
+  const role = sidebar?.getAttribute("data-role") || "default";
+
+  if (role === "osas") {
+    loadOsasDashboard();
+  } else if (role === "admin") {
+    loadAdminDashboard();
+  } else {
+    loadUserDashboard();
+  } 
+}
+
 
 initDashboard();

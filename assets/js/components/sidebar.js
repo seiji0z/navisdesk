@@ -1,7 +1,28 @@
-fetch("../components/sidebar.html")
+const sidebarContainer = document.querySelector("#sidebar");
+const role = sidebarContainer.getAttribute("data-role");
+
+// determines which sidebar to load
+let sidebarPath;
+
+switch (role) {
+  case "admin":
+    sidebarPath = "../components/admin/sidebar.html";
+    break;
+  case "osas":
+    sidebarPath = "../components/osas/sidebar.html";
+    break;
+  case "org":
+    sidebarPath = "../components/org/sidebar.html";
+    break;
+  default:
+    sidebarPath = "../components/sidebar.html";
+    break;
+}
+
+fetch(sidebarPath)
   .then((response) => response.text())
   .then((data) => {
-    document.querySelector("#sidebar").innerHTML = data;
+    sidebarContainer.innerHTML = data;
 
     const toggleBtn = document.querySelector(".toggle-btn");
     const sidebar = document.querySelector(".sidebar");
@@ -14,4 +35,4 @@ fetch("../components/sidebar.html")
       });
     }
   })
-  .catch((error) => console.error("sidebar failed to load:", error));
+  .catch((error) => console.error("Sidebar failed to load:", error));
