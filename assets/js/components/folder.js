@@ -1,6 +1,6 @@
 export function setFolderTitle(title) {
-  const titleEl = document.querySelector(".folder-title");
-  if (titleEl) titleEl.textContent = title;
+  const folder = document.querySelector(".dashboard-folder");
+  if (!folder) return;
 }
 
 export function setCurrentDate() {
