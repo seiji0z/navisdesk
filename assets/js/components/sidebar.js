@@ -34,5 +34,22 @@ fetch(sidebarPath)
         main.classList.toggle("collapsed-sidebar");
       });
     }
+
+    const currentPath = window.location.pathname;
+    const currentPage = currentPath.split("/").pop();
+    const links = sidebar.querySelectorAll("nav a");
+
+    links.forEach((link) => {
+      const href = link.getAttribute("href");
+      if (!href) return;
+
+      const hrefFile = href.split("/").pop();
+
+      if (currentPage === hrefFile) {
+        link.classList.add("active");
+      } else {
+        link.classList.remove("active");
+      }
+    });
   })
   .catch((error) => console.error("Sidebar failed to load:", error));

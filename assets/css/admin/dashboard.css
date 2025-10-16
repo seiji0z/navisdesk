@@ -3,27 +3,6 @@
   src: url("../fonts/Poppins-SemiBold.ttf") format("truetype");
 }
 
-.main {
-  margin-left: 16rem;
-  padding: 2rem;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  transition: margin-left 0.3s ease;
-}
-
-.main.collapsed-sidebar {
-  margin-left: 5rem;
-  transition: margin-left 0.3s ease;
-}
-
-.main.collapsed-sidebar .dashboard-folder {
-  max-width: 90vw;
-}
-
 .grid-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

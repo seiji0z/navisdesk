@@ -1,19 +1,4 @@
-// folder functions
-function setFolderTitle(title) {
-  document.querySelector(".folder-title").textContent = title;
-}
-
-function setCurrentDate() {
-  const dateElement = document.querySelector(".current-date");
-  const today = new Date();
-  dateElement.textContent = today.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
+import { setFolderTitle, setCurrentDate } from "../components/folder.js";
 
 // dashboard layouts by role
 // ---- OSAS Dashboard ----
@@ -108,9 +93,7 @@ function loadUserDashboard() {
   `;
 }
 
-// ==========================
-// Main Dashboard Initializer
-// ==========================
+// main dashboard initializer
 function initDashboard() {
   setFolderTitle("Dashboard");
   setCurrentDate();

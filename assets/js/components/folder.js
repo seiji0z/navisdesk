@@ -1,24 +1,32 @@
+export function setFolderTitle(title) {
+  const titleEl = document.querySelector(".folder-title");
+  if (titleEl) titleEl.textContent = title;
+}
+
+export function setCurrentDate() {
+  const dateElement = document.querySelector(".current-date");
+  if (!dateElement) return;
+
+  const today = new Date();
+  dateElement.textContent = today.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 export async function loadFolder(targetSelector, title) {
   try {
     const response = await fetch("../components/folder.html");
     if (!response.ok) throw new Error("Folder HTML not found");
 
     const html = await response.text();
-    console.log("Folder HTML fetched:", html);
-
     const target = document.querySelector(targetSelector);
     target.innerHTML = html;
 
-    document.querySelector(".folder-title").textContent = title;
-
-    const dateElement = document.querySelector(".current-date");
-    const today = new Date();
-    dateElement.textContent = today.toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
+    setFolderTitle(title);
+    setCurrentDate();
   } catch (err) {
     console.error(err);
   }
