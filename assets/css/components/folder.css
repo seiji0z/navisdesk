@@ -1,10 +1,11 @@
 .main {
   margin-left: 16rem;
   padding: 2rem;
-  height: 100vh;
+  padding-bottom: 5rem; /* extra space at the bottom */
+  min-height: 100vh; /* ensure the main area fills viewport */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* allows content to grow downward */
   align-items: center;
   box-sizing: border-box;
   transition: margin-left 0.3s ease;
@@ -20,14 +21,13 @@
 }
 
 .dashboard-folder {
-  margin-top: 5rem;
   position: relative;
-  background-color: #ffb901;
   border-radius: 8px;
   width: calc(100% - 2rem);
   max-width: 80vw;
-  max-height: 85vh;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  min-height: 50vh; /* ensures some initial height */
+  display: flex;           
+  flex-direction: column;  
   overflow: visible;
   transition: width 0.3s ease, max-width 0.3s ease;
 }
@@ -35,13 +35,9 @@
 .header {
   display: flex;
   flex-direction: column;
-  top: -85px;
-  position: absolute;
-  right: 0;
-  width: 100vw;
+  width: 100%;
   max-width: 1500px;
-  padding-bottom: 2rem;
-  left: 0;
+  position: relative; 
 }
 
 .welcome h1 {
@@ -56,26 +52,27 @@
 
 /* Folder body */
 .folder-body {
+  background-color: #ffb901;
   width: 100%;
-  height: 100%;
   padding: 1rem;
   box-sizing: border-box;
+  border-radius: 8px 0 8px 8px;
 }
 
+/* Folder Tab aligned to the right using align-self */
 .folder-tab {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  top: -70px;
-  right: 0;
   width: 400px;
-  height: 80px;
-  border-radius: 16px 16px 0px 0;
+  min-height: 80px;
+  border-radius: 16px 16px 0 0;
   background-color: #ffb901;
-  border-left: none;
   box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.1);
   z-index: -1;
+
+  margin-top: -4rem;   /* keeps it above folder */
+  align-self: flex-end; /* moves it to the right */
 }
 
 .folder-tab h2 {

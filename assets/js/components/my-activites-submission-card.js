@@ -59,6 +59,63 @@ const activities = [
       "An exhibition showcasing student-led research and tech prototypes,...",
     date: "Oct 15, 2025",
   },
+  {
+    title: "Student Research Expo",
+    status: "Pending",
+    description:
+      "An exhibition showcasing student-led research and tech prototypes,...",
+    date: "Oct 15, 2025",
+  },
+    {
+    title: "Student Research Expo",
+    status: "Pending",
+    description:
+      "An exhibition showcasing student-led research and tech prototypes,...",
+    date: "Oct 15, 2025",
+  },
+    {
+    title: "Student Research Expo",
+    status: "Pending",
+    description:
+      "An exhibition showcasing student-led research and tech prototypes,...",
+    date: "Oct 15, 2025",
+  },  {
+    title: "Student Research Expo",
+    status: "Pending",
+    description:
+      "An exhibition showcasing student-led research and tech prototypes,...",
+    date: "Oct 15, 2025",
+  },  {
+    title: "Student Research Expo",
+    status: "Pending",
+    description:
+      "An exhibition showcasing student-led research and tech prototypes,...",
+    date: "Oct 15, 2025",
+  },  {
+    title: "Student Research Expo",
+    status: "Pending",
+    description:
+      "An exhibition showcasing student-led research and tech prototypes,...",
+    date: "Oct 15, 2025",
+  },  {
+    title: "Student Research Expo",
+    status: "Pending",
+    description:
+      "An exhibition showcasing student-led research and tech prototypes,...",
+    date: "Oct 15, 2025",
+  },  {
+    title: "Student Research Expo",
+    status: "Pending",
+    description:
+      "An exhibition showcasing student-led research and tech prototypes,...",
+    date: "Oct 15, 2025",
+  },  {
+    title: "Student Research Expo",
+    status: "Pending",
+    description:
+      "An exhibition showcasing student-led research and tech prototypes,...",
+    date: "Oct 15, 2025",
+  },
 ];
 
 // Create and append all cards

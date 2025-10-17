@@ -35,6 +35,7 @@ fetch(sidebarPath)
       });
     }
 
+    // highlight active sidebar link
     const currentPath = window.location.pathname;
     const currentPage = currentPath.split("/").pop();
     const links = sidebar.querySelectorAll("nav a");
@@ -51,5 +52,23 @@ fetch(sidebarPath)
         link.classList.remove("active");
       }
     });
+
+    // ✅ Update current date after sidebar loads
+    updateCurrentDate();
   })
   .catch((error) => console.error("Sidebar failed to load:", error));
+
+// ✅ Function to display current date
+function updateCurrentDate() {
+  const dateElement = document.querySelector(".current-date");
+  if (dateElement) {
+    const today = new Date();
+    const options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    dateElement.textContent = today.toLocaleDateString("en-US", options);
+  }
+}
