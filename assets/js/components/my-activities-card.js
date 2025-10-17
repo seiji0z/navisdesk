@@ -1,5 +1,7 @@
+
+
 // Select the container where the cards will appear
-const folderBody = document.getElementById("folder-body");
+const folderBody = document.getElementById("activities-cards");
 
 // Reusable function to create a card
 function createCard(title, count, description, iconClass, color) {
