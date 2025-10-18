@@ -1,6 +1,6 @@
-import { setFolderTitle, setCurrentDate } from "../components/folder.js";
+import { setCurrentDate } from "../components/folder.js";
 
-function loadActivitiesModule() {
+function loadActivities() {
   document.querySelector("#folder-body").innerHTML = `
     <div class="folder-content-card">
       <div class="activities-container">
@@ -114,9 +114,8 @@ function loadActivitiesModule() {
 }
 
 function initActivities() {
-  setFolderTitle("Activities");
   setCurrentDate();
-  loadActivitiesModule();
+  loadActivities();
 }
 
 initActivities();

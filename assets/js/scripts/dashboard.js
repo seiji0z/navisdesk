@@ -1,4 +1,4 @@
-import { setFolderTitle, setCurrentDate } from "../components/folder.js";
+import { setCurrentDate } from "../components/folder.js";
 
 // dashboard layouts by role
 // ---- OSAS Dashboard ----
@@ -236,7 +236,6 @@ function loadUserDashboard() {
 
 // main dashboard initializer
 function initDashboard() {
-  setFolderTitle("Dashboard");
   setCurrentDate();
 
   const sidebar = document.querySelector("#sidebar");

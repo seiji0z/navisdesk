@@ -1,10 +1,3 @@
-export function setFolderTitle(title) {
-  const folderTitle = document.querySelector(".folder-title");
-  if (!folderTitle) return;
-  folderTitle.textContent = title;
-}
-
-
 export function setCurrentDate() {
   const dateElement = document.querySelector(".current-date");
   if (!dateElement) return;
