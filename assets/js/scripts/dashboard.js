@@ -1,5 +1,3 @@
-import { setCurrentDate } from "../components/folder.js";
-
 // dashboard layouts by role
 // ---- OSAS Dashboard ----
 function loadOsasDashboard() {
@@ -28,7 +26,7 @@ function loadOsasDashboard() {
           <div class="right-icon"> 
             <img src="../../assets/images/check-icon.png" alt="Submissions icon" class="card-icon" /> 
           </div>
-        </div>
+        </div>z
       </div>
 
       <div class="grid-item small">
@@ -236,9 +234,8 @@ function loadUserDashboard() {
 
 // main dashboard initializer
 function initDashboard() {
-  setCurrentDate();
 
-  const sidebar = document.querySelector("#sidebar");
+  const sidebar = document.querySelector("#folder-body");
   const role = sidebar?.getAttribute("data-role") || "default";
 
   if (role === "osas") {

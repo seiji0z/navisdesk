@@ -1,5 +1,3 @@
-import { setCurrentDate } from "../components/folder.js";
-
 function loadActivities() {
   document.querySelector("#folder-body").innerHTML = `
     <div class="folder-content-card">
@@ -114,7 +112,6 @@ function loadActivities() {
 }
 
 function initActivities() {
-  setCurrentDate();
   loadActivities();
 }
 
