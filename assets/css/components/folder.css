@@ -78,6 +78,21 @@
   z-index: -1;
 }
 
+.dashboard-folder{
+margin-top: 5rem;
+position: relative;
+background-color:
+#ffb901;
+border-radius: 8px;
+width: calc(100% - 2rem);
+max-width: 80vw;
+min-height: 85vh;
+max-height: 85vh;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+overflow: visible;
+transition: width 0.3s ease, max-width 0.3s ease;
+}
+
 .folder-tab h2 {
   font-size: 1.8rem;
   font-weight: 600;

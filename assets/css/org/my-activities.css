@@ -10,7 +10,10 @@
   grid-template-columns: repeat(3, minmax(200px, 1fr));
   gap: 20px;
   padding: 10px;
+  max-height: 500px; 
+  overflow-y: auto; 
 }
+
 .card {
   background-color: #fff;
   border-radius: 12px;
@@ -61,3 +64,25 @@
   color: #6b7280;
   font-size: 0.85rem;
 }
+.folder-body {
+  overflow: visible; /* ✅ allow child to expand naturally */
+}
+
+.white-section {
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+
+  /* ✅ scrolls internally if its own content overflows */
+  overflow: auto;
+  max-height: 100%; /* optional if you want to limit height */
+  box-sizing: border-box;
+}
+
+
+
+
+
+
+
