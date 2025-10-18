@@ -1,8 +1,3 @@
-@font-face {
-  font-family: "PoppinsSemiBold";
-  src: url("../fonts/Poppins-SemiBold.ttf") format("truetype");
-}
-
 body, html {
   overflow-x: hidden;
 }

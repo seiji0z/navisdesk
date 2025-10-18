@@ -1,22 +1,3 @@
-@font-face {
-  font-family: "PoppinsRegular";
-  src: url("../fonts/Poppins-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Poppins";
-  src: url("../fonts/Poppins-Medium.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "PoppinsSemiBold";
-  src: url("../fonts/Poppins-SemiBold.ttf") format("truetype");
-}
-
 .sidebar {
   background-color: #073066;
   height: 93vh;
