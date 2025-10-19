@@ -1,18 +1,17 @@
 const sidebarContainer = document.querySelector("#sidebar");
 const role = sidebarContainer.getAttribute("data-role");
 
-// determines which sidebar to load
+// Determine which sidebar to load
 let sidebarPath;
-
 switch (role) {
   case "admin":
-    sidebarPath = "../components/admin/sidebar.html";
+    sidebarPath = "../../admin/components/sidebar.html";
     break;
   case "osas":
-    sidebarPath = "../components/osas/sidebar.html";
+    sidebarPath = "../../osas/components/sidebar.html";
     break;
   case "org":
-    sidebarPath = "../components/org/sidebar.html";
+    sidebarPath = "../../org/components/sidebar.html";
     break;
   default:
     sidebarPath = "../components/sidebar.html";
@@ -35,30 +34,26 @@ fetch(sidebarPath)
       });
     }
 
-    // highlight active sidebar link
-    const currentPath = window.location.pathname;
-    const currentPage = currentPath.split("/").pop();
+    const currentFile = window.location.pathname.split("/").pop().toLowerCase();
     const links = sidebar.querySelectorAll("nav a");
 
     links.forEach((link) => {
       const href = link.getAttribute("href");
       if (!href) return;
 
-      const hrefFile = href.split("/").pop();
+      const linkFile = href.split("/").pop().toLowerCase();
 
-      if (currentPage === hrefFile) {
+      if (linkFile === currentFile) {
         link.classList.add("active");
       } else {
         link.classList.remove("active");
       }
     });
 
-    // ✅ Update current date after sidebar loads
     updateCurrentDate();
   })
   .catch((error) => console.error("Sidebar failed to load:", error));
 
-// ✅ Function to display current date
 function updateCurrentDate() {
   const dateElement = document.querySelector(".current-date");
   if (dateElement) {

@@ -1,0 +1,101 @@
+.main {
+  margin-left: 16rem;
+  padding: 2rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  transition: margin-left 0.3s ease;
+}
+
+.main.collapsed-sidebar {
+  margin-left: 5rem;
+  transition: margin-left 0.3s ease;
+}
+
+.main.collapsed-sidebar .dashboard-folder {
+  max-width: 90vw;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, auto);
+  gap: 1rem;
+  row-gap: 0.5rem;
+  width: 100%;
+  max-width: inherit;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.grid-item {
+  background-color: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
+  align-items: center;
+  font-family: "PoppinsSemiBold", sans-serif;
+  color: #073066;
+}
+
+.small {
+  grid-column: span 1;
+  height: 200px;
+  margin-bottom: 20px;
+}
+
+.medium {
+  grid-column: span 2;
+  height: 460px;
+}
+
+.grid-item.small .card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+}
+
+.left-details .number {
+  font-size: 40px;
+  font-family: "PoppinsSemiBold", sans-serif;
+  margin-bottom: -10px;
+}
+
+.left-details .desc {
+  font-family: "Poppins";
+}
+
+.number#first {
+  color: #208bff;
+}
+.number#second {
+  color: #34c759;
+}
+.number#third {
+  color: #ffa325;
+}
+.number#fourth {
+  color: #ff5039;
+}
+
+.grid-item.medium .card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+}
+
+.grid-item.medium img {
+  height: 400px;
+}

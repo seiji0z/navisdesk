@@ -1,4 +1,5 @@
 // dashboard layouts by role
+
 // ---- OSAS Dashboard ----
 function loadOsasDashboard() {
   document.querySelector("#folder-body").innerHTML = `
@@ -12,7 +13,7 @@ function loadOsasDashboard() {
             <p class="desc">Total Submissions</p>
           </div>
           <div class="right-icon"> 
-            <img src="../../assets/images/blue-submissions-icon.png" alt="Submissions icon" class="card-icon" /> 
+            <img src="../../../assets/images/blue-submissions-icon.png" alt="Submissions icon" class="card-icon" /> 
           </div>
         </div>
       </div>
@@ -24,9 +25,9 @@ function loadOsasDashboard() {
             <p class="desc">Approved</p>
           </div>
           <div class="right-icon"> 
-            <img src="../../assets/images/check-icon.png" alt="Submissions icon" class="card-icon" /> 
+            <img src="../../../assets/images/check-icon.png" alt="Check icon" class="card-icon" /> 
           </div>
-        </div>z
+        </div>
       </div>
 
       <div class="grid-item small">
@@ -36,7 +37,7 @@ function loadOsasDashboard() {
             <p class="desc">Pending Review</p>
           </div>
           <div class="right-icon"> 
-            <img src="../../assets/images/clock-icon.png" alt="Submissions icon" class="card-icon" /> 
+            <img src="../../../assets/images/clock-icon.png" alt="Clock icon" class="card-icon" /> 
           </div>
         </div>
       </div>
@@ -48,7 +49,7 @@ function loadOsasDashboard() {
             <p class="desc">Returned</p>
           </div>
           <div class="right-icon"> 
-            <img src="../../assets/images/close-icon.png" alt="Submissions icon" class="card-icon" /> 
+            <img src="../../../assets/images/close-icon.png" alt="Close icon" class="card-icon" /> 
           </div>
         </div>
       </div>
@@ -57,7 +58,7 @@ function loadOsasDashboard() {
       <div class="grid-item medium">
         <div class="card chart">
           <h3>Activities by Term</h3>
-          <img src="../../assets/images/placeholder-graph.png" alt="SDG graph" />
+          <img src="../../../assets/images/placeholder-graph.png" alt="SDG graph" />
         </div>
       </div>
 
@@ -65,7 +66,7 @@ function loadOsasDashboard() {
       <div class="grid-item medium">
         <div class="card chart">
           <h3>Top SDGs</h3>
-          <img src="../../assets/images/placeholder-graph-2.png" alt="SDG graph" />
+          <img src="../../../assets/images/placeholder-graph-2.png" alt="SDG graph" />
         </div>
       </div>
 
@@ -78,7 +79,7 @@ function loadAdminDashboard() {
   document.querySelector("#folder-body").innerHTML = `
     <div class="grid-container">
 
-        <!-- Small cards -->
+      <!-- Small cards -->
       <div class="grid-item small">
         <div class="card">
           <div class="left-details">
@@ -86,7 +87,7 @@ function loadAdminDashboard() {
             <p class="desc">Total Deliverables Submitted</p>
           </div>
           <div class="right-icon">
-            <img src="../../assets/images/close-icon.png" alt="Submissions icon" class="card-icon" />
+            <img src="../../../assets/images/close-icon.png" alt="Submissions icon" class="card-icon" />
           </div>
         </div>
       </div>
@@ -98,7 +99,7 @@ function loadAdminDashboard() {
             <p class="desc">Approved Deliverables</p>
           </div>
           <div class="right-icon">
-            <img src="../../assets/images/close-icon.png" alt="Submissions icon" class="card-icon" />
+            <img src="../../../assets/images/check-icon.png" alt="Check icon" class="card-icon" />
           </div>
         </div>
       </div>
@@ -110,7 +111,7 @@ function loadAdminDashboard() {
             <p class="desc">Returned Deliverables</p>
           </div>
           <div class="right-icon">
-            <img src="../../assets/images/close-icon.png" alt="Submissions icon" class="card-icon" />
+            <img src="../../../assets/images/close-icon.png" alt="Close icon" class="card-icon" />
           </div>
         </div>
       </div>
@@ -122,7 +123,7 @@ function loadAdminDashboard() {
             <p class="desc">Organizations Recognized</p>
           </div>
           <div class="right-icon">
-            <img src="../../assets/images/close-icon.png" alt="Submissions icon" class="card-icon" />
+            <img src="../../../assets/images/org-icon.png" alt="Organizations icon" class="card-icon" />
           </div>
         </div>
       </div>
@@ -131,15 +132,15 @@ function loadAdminDashboard() {
       <div class="grid-item medium">
         <div class="card chart">
           <h3>Activities by Term</h3>
-          <img src="../../assets/images/placeholder-graph.png" alt="SDG graph" />
+          <img src="../../../assets/images/placeholder-graph.png" alt="SDG graph" />
         </div>
       </div>
 
-            <!-- Top 5 SDGs -->
+      <!-- Top 5 SDGs -->
       <div class="grid-item medium">
         <div class="card chart">
           <h3>Top SDGs</h3>
-          <img src="../../assets/images/placeholder-graph-2.png" alt="SDG graph" />
+          <img src="../../../assets/images/placeholder-graph-2.png" alt="SDG graph" />
         </div>
       </div>
     </div>
@@ -231,12 +232,10 @@ function loadUserDashboard() {
   `;
 }
 
-
-// main dashboard initializer
+// ---- INITIALIZER ----
 function initDashboard() {
-
-  const sidebar = document.querySelector("#folder-body");
-  const role = sidebar?.getAttribute("data-role") || "default";
+  const folderBody = document.querySelector("#folder-body");
+  const role = folderBody?.getAttribute("data-role") || "default";
 
   if (role === "osas") {
     loadOsasDashboard();
