@@ -1,17 +1,17 @@
-// ---- ADMIN Dashboard ----
-function loadAdminDashboard() {
+// ---- OSAS Dashboard ----
+function loadOsasDashboard() {
   document.querySelector("#folder-body").innerHTML = `
     <div class="grid-container">
 
-      <!-- Small cards -->
+      <!-- Summary Cards -->
       <div class="grid-item small">
         <div class="card">
           <div class="left-details">
-            <p class="number" id="first">1,200</p>
-            <p class="desc">Total Deliverables Submitted</p>
+            <p class="number" id="first">60</p>
+            <p class="desc">Total Submissions</p>
           </div>
-          <div class="right-icon">
-            <img src="../../../assets/images/close-icon.png" alt="Submissions icon" class="card-icon" />
+          <div class="right-icon"> 
+            <img src="../../../assets/images/blue-submissions-icon.png" alt="Submissions icon" class="card-icon" /> 
           </div>
         </div>
       </div>
@@ -19,23 +19,11 @@ function loadAdminDashboard() {
       <div class="grid-item small">
         <div class="card">
           <div class="left-details">
-            <p class="number" id="second">45</p>
-            <p class="desc">Approved Deliverables</p>
+            <p class="number" id="second">3</p>
+            <p class="desc">Approved</p>
           </div>
-          <div class="right-icon">
-            <img src="../../../assets/images/check-icon.png" alt="Check icon" class="card-icon" />
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-item small">
-        <div class="card">
-          <div class="left-details">
-            <p class="number" id="third">45</p>
-            <p class="desc">Returned Deliverables</p>
-          </div>
-          <div class="right-icon">
-            <img src="../../../assets/images/close-icon.png" alt="Close icon" class="card-icon" />
+          <div class="right-icon"> 
+            <img src="../../../assets/images/check-icon.png" alt="Check icon" class="card-icon" /> 
           </div>
         </div>
       </div>
@@ -43,15 +31,27 @@ function loadAdminDashboard() {
       <div class="grid-item small">
         <div class="card">
           <div class="left-details">
-            <p class="number" id="fourth">7</p>
-            <p class="desc">Organizations Recognized</p>
+            <p class="number" id="third">7</p>
+            <p class="desc">Pending Review</p>
           </div>
-          <div class="right-icon">
-            <img src="../../../assets/images/org-icon.png" alt="Organizations icon" class="card-icon" />
+          <div class="right-icon"> 
+            <img src="../../../assets/images/clock-icon.png" alt="Clock icon" class="card-icon" /> 
           </div>
         </div>
       </div>
-      
+
+      <div class="grid-item small">
+        <div class="card">
+          <div class="left-details">
+            <p class="number" id="fourth">0</p>
+            <p class="desc">Returned</p>
+          </div>
+          <div class="right-icon"> 
+            <img src="../../../assets/images/close-icon.png" alt="Close icon" class="card-icon" /> 
+          </div>
+        </div>
+      </div>
+
       <!-- Activities by Term -->
       <div class="grid-item medium">
         <div class="card chart">
@@ -67,13 +67,14 @@ function loadAdminDashboard() {
           <img src="../../../assets/images/placeholder-graph-2.png" alt="SDG graph" />
         </div>
       </div>
+
     </div>
   `;
 }
 
 // ---- INITIALIZER ----
 function initDashboard() {
-  loadAdminDashboard();
+  loadOsasDashboard();
 }
 
 initDashboard();
