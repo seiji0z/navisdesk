@@ -1,0 +1,265 @@
+.main {
+  height: 100vh;
+  overflow: hidden;
+  padding-left: 280px; 
+  box-sizing: border-box;
+}
+.dashboard-folder {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.folder-body {
+  flex-grow: 1;
+  overflow: hidden;
+  padding: 0 2rem 2rem 2rem;
+}
+
+.folder-content-card {
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.organizations-layout {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.summary-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 150px; 
+  flex-shrink: 0;
+}
+
+.summary-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 150px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #eee;
+  box-sizing: border-box;
+}
+
+.summary-card-bg-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  height: 24px;
+  opacity: 1;
+  pointer-events: none;
+  filter: invert(1);
+}
+
+.summary-card-icon {
+  display: none;
+}
+
+.summary-card-info {
+    margin-top: 0;
+    text-align: center;
+}
+
+.summary-card-info h3 {
+  font-family: "PoppinsSemiBold", sans-serif;
+  font-size: 2.5rem;
+  line-height: 1.1;
+  margin: 0 0 0.5rem 0;
+}
+
+.summary-card-info p {
+  font-size: 0.8rem;
+  color: #555;
+  margin: 0;
+}
+
+.summary-card.total h3 { color: #4A90E2; }
+.summary-card.active h3 { color: #7ED321; }
+.summary-card.pending h3 { color: #F5A623; }
+
+
+.content-column {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  min-height: 0; /* CRITICAL FIX: Add this line to enable scrolling on child */
+}
+
+.filter-search-organizations {
+    margin-bottom: 1.5rem;
+}
+
+.filters-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-box,
+.select-group {
+  flex: 1;
+}
+.search-box { min-width: 200px; }
+.select-group { min-width: 130px; }
+
+.input-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon input,
+.select-group select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  font-family: "Poppins", sans-serif;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+.input-icon input {
+  padding-right: 2.5rem;
+}
+
+.input-icon button {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  z-index: 1;
+}
+
+.search-box label,
+.select-group label {
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  display: block;
+  color: #073066;
+  font-family: "PoppinsMedium", sans-serif;
+}
+
+.organization-cards-grid {
+  display: grid;
+  /* MODIFIED: Reduced min-width for smaller cards */
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.5rem;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.organization-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  align-items: center; /* Vertically align items */
+  gap: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border: 2px solid #f3c751;
+}
+
+.organization-identifier {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 80px; /* Give it a fixed width */
+  flex-shrink: 0;
+}
+
+.organization-logo {
+  flex-shrink: 0;
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  background-color: #fffef5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.organization-logo img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+.organization-acronym {
+  font-family: "PoppinsSemiBold", sans-serif;
+  font-size: 0.85rem;
+  margin: 0;
+  color: #333;
+  text-align: center;
+}
+
+.organization-details {
+  flex-grow: 1; /* Allow details to take remaining space */
+}
+
+.organization-details h3 {
+  font-family: "PoppinsSemiBold", sans-serif;
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.organization-details p {
+  font-size: 0.8rem;
+  margin: 0 0 0.25rem 0; /* Adjusted margin */
+}
+
+.organization-details .status-tag {
+  display: inline-block; /* Make the tag behave properly */
+  padding: 0.2rem 0.6rem;
+  font-size: 0.7rem;
+  margin-top: 0.5rem;
+  border-radius: 4px; /* Added for softer edges */
+}
+
+.status-tag.active { 
+    background-color: #d4edda; 
+    color: #155724; 
+    border: 1px solid #c3e6cb; 
+}
+
+.status-tag.pending { 
+    background-color: #fff3cd; 
+    color: #856404; 
+    border: 1px solid #ffeeba; 
+}
+
+.search-btn img { 
+    height: 18px; 
+    filter: brightness(0) saturate(100%) invert(20%) sepia(85%) saturate(3062%) hue-rotate(200deg) brightness(97%) contrast(97%); 
+}
