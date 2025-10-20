@@ -12,7 +12,7 @@ function loadActivities() {
               <div class="input-icon">
                 <input type="text" placeholder="Search activities by keyword" />
                 <button class="search-btn">
-                  <img src="../../assets/images/review-icon.png" alt="Search" />
+                  <img src="../../../assets/images/review-icon.png" alt="Search" />
                 </button>
               </div>
             </div>
@@ -46,7 +46,7 @@ function loadActivities() {
             </div>
 
             <button class="generate-btn">
-              <img src="../../assets/images/submissions-icon.png" alt="Generate Report" />
+              <img src="../../../assets/images/submissions-icon.png" alt="Generate Report" />
               Generate Reports
             </button>
           </div>
@@ -77,7 +77,7 @@ function loadActivities() {
                 <td>First Sem</td>
                 <td><span class="status approved">Approved</span></td>
                 <td>2025-10-14, 14:00</td>
-                <td><button class="review-btn"><img src="../../assets/images/submissions-icon.png" alt="" class="btn-icon"> Activity Review</button></td>
+                <td><button class="review-btn"><img src="../../../assets/images/submissions-icon.png" alt="" class="btn-icon"> Activity Review</button></td>
               </tr>
               <tr>
                 <td>
@@ -89,7 +89,7 @@ function loadActivities() {
                 <td>First Sem</td>
                 <td><span class="status pending">Pending</span></td>
                 <td>2025-10-14, 14:00</td>
-                <td><button class="review-btn"><img src="../../assets/images/submissions-icon.png" alt="" class="btn-icon"> Activity Review</button></td>
+                <td><button class="review-btn"><img src="../../../assets/images/submissions-icon.png" alt="" class="btn-icon"> Activity Review</button></td>
               </tr>
               <tr>
                 <td>
@@ -101,7 +101,7 @@ function loadActivities() {
                 <td>First Sem</td>
                 <td><span class="status returned">Returned</span></td>
                 <td>2025-10-14, 14:00</td>
-                <td><button class="review-btn"><img src="../../assets/images/submissions-icon.png" alt="" class="btn-icon"> Activity Review</button></td>
+                <td><button class="review-btn"><img src="../../../assets/images/submissions-icon.png" alt="" class="btn-icon"> Activity Review</button></td>
               </tr>
             </tbody>
           </table>
