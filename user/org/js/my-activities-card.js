@@ -39,6 +39,13 @@ const cards = [
     iconClass: "fa-solid fa-rotate-left",
     color: "#ef4444",
   },
+    {
+    title: "Returned",
+    count: 1,
+    description: "Activities needing revision",
+    iconClass: "fa-solid fa-rotate-left",
+    color: "#ef4444",
+  },
 ];
 
 // Create and append all cards (only once)
