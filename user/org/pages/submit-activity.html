@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Submit Activity | Navi’s Desk</title>
+
+    <link rel="icon" type="image/x-icon" href="../../../assets/images/navi-logo.png"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <link rel="stylesheet" href="../css/submit-activity.css" />
+    <link rel="stylesheet" href="../../../css/style.css" />
+    <link rel="stylesheet" href="../../shared/css/sidebar.css" />
+    <link rel="stylesheet" href="../../shared/css/folder.css" />
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+    <div id="sidebar" data-role="org"></div>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="dashboard-folder">
+        <div class="header">
+          <div class="welcome">
+            <h1>Welcome, <span>ICON!</span></h1>
+          </div>
+          <div class="date-info">
+            <p>Today is <span class="current-date"></span></p>
+          </div>
+        </div>
+
+        <div class="folder-tab">
+          <h2 class="folder-title">Submit Activity</h2>
+        </div>
+
+        <!-- Folder Body -->
+        <div class="folder-body" id="folder-body" data-role="org"></div>
+      </div>
+    </main>
+
+    <!-- Scripts -->
+  <script src="../../shared/js/sidebar.js"></script>
+  <script src="../../shared/js/folder.js"></script>
+  <script type="module" src="../js/submit-activity.js"></script>
+  </body>
+</html>
