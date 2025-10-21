@@ -1,3 +1,6 @@
+/* -------------------------------
+   ORIGINAL STYLES (unchanged)
+--------------------------------*/
 .activities-cards {
   display: grid;
   grid-template-columns: repeat(4, minmax(200px, 1fr));
@@ -10,8 +13,8 @@
   grid-template-columns: repeat(3, minmax(200px, 1fr));
   gap: 20px;
   padding: 10px;
-  max-height: 500px; 
-  overflow-y: auto; 
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 .card {
@@ -64,6 +67,7 @@
   color: #6b7280;
   font-size: 0.85rem;
 }
+
 .folder-body {
   overflow: visible; /* ✅ allow child to expand naturally */
 }
@@ -75,15 +79,166 @@
   margin-bottom: 20px;
   background-color: #ffffff;
 
-  /* ✅ scrolls internally if its own content overflows */
-  overflow: auto;
-  max-height: 100%; /* optional if you want to limit height */
+  /* ✅ scrollable content */
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* -------------------------------
+   NEW: Activity Details Page Layout
+--------------------------------*/
+
+.activity-details-wrapper {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  font-family: "Inter", sans-serif;
+  animation: fadeIn 0.3s ease;
+  position: relative;
+  width: 100%;
+  height: auto;
   box-sizing: border-box;
 }
 
+/* Scroll behavior */
+.activity-details-wrapper {
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+}
 
+/* Header section */
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 15px;
+}
 
+.details-header .header-left h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #111827;
+  font-weight: 600;
+}
 
+.details-header .header-left p {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  color: #4b5563;
+  max-width: 700px;
+}
 
+.details-header .header-right {
+  display: flex;
+  align-items: center;
+}
 
+/* Details section */
+.details-section {
+  margin-bottom: 30px;
+}
 
+.details-section h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 15px;
+  border-left: 4px solid #fbbf24;
+  padding-left: 10px;
+}
+
+.details-section div {
+  font-size: 0.95rem;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+/* Supporting Documents */
+.documents-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.doc-card {
+  background-color: #f3f4f6;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1f2937;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.doc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Activity Evidence */
+.evidence-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.evidence-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.evidence-img:hover {
+  transform: scale(1.03);
+}
+
+/* -------------------------------
+   NEW: Back Button
+--------------------------------*/
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin-bottom: 20px;
+}
+
+.back-button:hover {
+  background-color: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.back-button i {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+/* Fade-in animation for dynamic switch */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
