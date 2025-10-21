@@ -2,20 +2,24 @@
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
   width: 100%;
-  max-width: 100%;
-  min-height: 80vh;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-w .activities-container {
-  font-family: "Poppins", sans-serif;
-  color: #073066;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.filter-search h2 {
-  font-family: "PoppinsSemiBold", sans-serif;
+.user-management-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  padding: 10px;
+}
+
+.filter-search {
+  flex-shrink: 0;
   margin-bottom: 1rem;
 }
 
@@ -24,7 +28,6 @@ w .activities-container {
   align-items: flex-end;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 2rem;
 }
 
 .search-box {
@@ -84,71 +87,32 @@ w .activities-container {
   height: 18px;
 }
 
-.activities-table table {
+.users-table {
+  flex-grow: 1;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.users-table table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
 }
 
-.activities-table th,
-.activities-table td {
+.users-table th,
+.users-table td {
   padding: 0.75rem 1rem;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
-.activities-table th {
+.users-table th {
   background-color: #f5f5f5;
   font-weight: 600;
-}
-
-.activity-name {
-  font-weight: 600;
-  margin-bottom: 0;
-}
-
-.activity-desc {
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 0.2rem;
-}
-
-.sdg {
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
-  color: white;
-  font-size: 0.8rem;
-}
-
-.sdg-4 {
-  background-color: #b10f2e;
-}
-.sdg-7 {
-  background-color: #f3b300;
-  color: black;
-}
-.sdg-8 {
-  background-color: #8a1538;
-}
-
-.status {
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  border: 1px solid;
-}
-
-.status.approved {
-  color: #34c759;
-  border-color: #34c759;
-}
-.status.pending {
-  color: #ffa325;
-  border-color: #ffa325;
-}
-.status.returned {
-  color: #ff5039;
-  border-color: #ff5039;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .review-btn {
@@ -171,8 +135,7 @@ w .activities-container {
   filter: invert(1);
 }
 
-.activities-table .btn-icon {
+.users-table .btn-icon {
   padding-right: 2px;
-  filter: brightness(0) saturate(100%) invert(58%) sepia(13%) saturate(5435%)
-    hue-rotate(320deg) brightness(99%) contrast(94%);
+  filter: brightness(0) saturate(100%) invert(58%) sepia(13%) saturate(5435%) hue-rotate(320deg) brightness(99%) contrast(94%);
 }
