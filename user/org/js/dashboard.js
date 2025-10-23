@@ -86,6 +86,15 @@ function loadUserDashboard() {
 // ---- INITIALIZER ----
 function initDashboard() {
   loadUserDashboard();
+
+  // Wire quick action buttons after rendering
+  const folder = document.querySelector('#folder-body');
+  if (folder) {
+    const createBtn = folder.querySelector('.create-btn');
+    const viewLink = folder.querySelector('.view-link');
+    if (createBtn) createBtn.addEventListener('click', () => { window.location.href = 'submit-activity.html'; });
+    if (viewLink) viewLink.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'my-activities.html'; });
+  }
 }
 
 initDashboard();
