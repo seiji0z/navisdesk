@@ -17,6 +17,14 @@ export class MyActivitiesController {
       this.model.getSubmissions()
     );
   }
+  updateActivityCount(title, newCount) {
+  // Update in model
+  this.model.updateActivityCount(title, newCount);
+
+  // Reflect the change in the view
+  this.view.updateActivityCounts(this.model.getActivities());
+}
+
 }
 
 // Initialize
