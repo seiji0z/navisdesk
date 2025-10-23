@@ -48,10 +48,16 @@ function loadUserModules() {
                 <option>Suspended</option>
               </select>
             </div>
-            <button class="generate-btn">
-              <img src="../../../assets/images/submissions-icon.png" alt="Generate Report" />
-              Generate Reports
-            </button>
+            <div class="btn-group">
+              <button class="add-user-btn">
+                <img src="../../../assets/images/add-icon.png" alt="Add User" />
+                Add User
+              </button>
+              <button class="generate-btn">
+                <img src="../../../assets/images/submissions-icon.png" alt="Generate Report" />
+                Generate Reports
+              </button>
+            </div>
           </div>
         </div>
 
@@ -82,9 +88,72 @@ function loadUserModules() {
   
   renderTable(users);
   setupFilters();
+
+  // Add listener for Add User button
+  document.querySelector(".add-user-btn").addEventListener("click", showAddUserModal);
 }
 
-// Render table rows
+// === Add User Modal ===
+function showAddUserModal() {
+  const modal = document.getElementById("modal");
+  const content = document.getElementById("modal-content");
+
+  content.innerHTML = `
+    <h3>Add New User</h3>
+    <label>Name</label>
+    <input type="text" id="add-name" placeholder="Enter full name" />
+    <label>Email</label>
+    <input type="email" id="add-email" placeholder="Enter email address" />
+    <label>Role</label>
+    <select id="add-role">
+      <option>Admin</option>
+      <option>OSAS Officer</option>
+      <option>Student Org</option>
+    </select>
+    <label>Status</label>
+    <select id="add-status">
+      <option>Active</option>
+      <option>Inactive</option>
+      <option>Suspended</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancel-add">Cancel</button>
+      <button class="btn-confirm" id="save-add">Add User</button>
+    </div>
+  `;
+
+  modal.style.display = "flex";
+
+  document.getElementById("cancel-add").onclick = () => (modal.style.display = "none");
+  document.getElementById("save-add").onclick = () => {
+    const name = document.getElementById("add-name").value.trim();
+    const email = document.getElementById("add-email").value.trim();
+    const role = document.getElementById("add-role").value;
+    const status = document.getElementById("add-status").value;
+
+    if (!name || !email) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString("en-GB");
+    const newUser = {
+      name,
+      email,
+      role,
+      status,
+      dateRegistered: formattedDate,
+      lastLogin: "N/A"
+    };
+
+    users.push(newUser);
+    renderTable(users);
+    modal.style.display = "none";
+  };
+}
+
+// === Render Table, Edit, Deactivate, and Filter functions ===
 function renderTable(data) {
   const tbody = document.getElementById("users-table-body");
   tbody.innerHTML = "";
@@ -108,7 +177,6 @@ function renderTable(data) {
     tbody.appendChild(row);
   });
 
-  // Add event listeners for buttons
   document.querySelectorAll(".deactivate-btn").forEach(btn =>
     btn.addEventListener("click", e => showDeactivateModal(e.target.dataset.index))
   );
@@ -118,7 +186,6 @@ function renderTable(data) {
   );
 }
 
-// === Deactivate Modal ===
 function showDeactivateModal(index) {
   const user = users[index];
   const modal = document.getElementById("modal");
@@ -138,7 +205,6 @@ function showDeactivateModal(index) {
   `;
 
   modal.style.display = "flex";
-
   document.getElementById("cancel-btn").onclick = () => (modal.style.display = "none");
   document.getElementById("confirm-btn").onclick = () => {
     users[index].status = "Inactive";
@@ -147,7 +213,6 @@ function showDeactivateModal(index) {
   };
 }
 
-// === Edit Modal ===
 function showEditModal(index) {
   const user = users[index];
   const modal = document.getElementById("modal");
@@ -190,12 +255,10 @@ function showEditModal(index) {
   };
 }
 
-// === Filter Functionality ===
 function setupFilters() {
   const searchInput = document.getElementById("search-user");
   const roleFilter = document.getElementById("filter-role");
   const statusFilter = document.getElementById("filter-status");
-
   [searchInput, roleFilter, statusFilter].forEach(el => {
     el.addEventListener("input", filterTable);
     el.addEventListener("change", filterTable);
@@ -212,17 +275,14 @@ function filterTable() {
       user.name.toLowerCase().includes(search) ||
       user.email.toLowerCase().includes(search) ||
       user.role.toLowerCase().includes(search);
-
     const matchRole = role === "" || user.role === role;
     const matchStatus = status === "" || user.status === status;
-
     return matchSearch && matchRole && matchStatus;
   });
 
   renderTable(filtered);
 }
 
-// === Init ===
 function initUserManagement() {
   loadUserModules();
 }

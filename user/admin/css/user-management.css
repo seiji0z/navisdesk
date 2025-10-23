@@ -255,3 +255,29 @@
     opacity: 1;
   }
 }
+
+.btn-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.add-user-btn {
+  background-color: #198754;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.add-user-btn:hover {
+  background-color: #146c43;
+}
+
+.add-user-btn img {
+  height: 18px;
+}
