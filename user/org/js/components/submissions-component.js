@@ -1,8 +1,15 @@
 export class SubmissionsComponent {
-  render(submissions) {
-    this.container = document.createElement("div");
-    this.container.id = "submission-cards";
-    this.container.classList.add("submission-cards");
+  render(submissions, viewType = "cards") {
+    if (viewType === "table") {
+      return this.renderTable(submissions);
+    } else {
+      return this.renderCards(submissions);
+    }
+  }
+
+  renderCards(submissions) {
+    const container = document.createElement("div");
+    container.classList.add("submission-cards");
 
     submissions.forEach((s) => {
       const card = document.createElement("div");
@@ -27,16 +34,59 @@ export class SubmissionsComponent {
         <p class="card-date">Submitted: ${s.submittedDate}</p>
       `;
 
-      this.container.appendChild(card);
+      container.appendChild(card);
     });
 
-    return this.container;
+    return container;
+  }
+
+  renderTable(submissions) {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("submissions-table-wrapper");
+
+    const table = document.createElement("table");
+    table.classList.add("submissions-table");
+
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>Status</th>
+          <th>Submitted</th>
+          <th>Date</th>
+          <th>Venue</th>
+          <th>Participants</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${submissions.map((s) => `
+          <tr data-id="${s.id}">
+            <td>${s.activity}</td>
+            <td><span class="status-badge" style="${
+              s.status === "Approved"
+                ? "background-color:#22c55e;color:white;"
+                : s.status === "Pending"
+                ? "background-color:#facc15;color:black;"
+                : s.status === "Needs Attention"
+                ? "background-color:#ef4444;color:white;"
+                : ""
+            }">${s.status}</span></td>
+            <td>${s.submittedDate}</td>
+            <td>${s.date}</td>
+            <td>${s.venue}</td>
+            <td>${s.participants}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    `;
+    wrapper.appendChild(table);
+    return wrapper;
   }
 
   bindSubmissionClick(handler) {
-    this.container.addEventListener("click", (e) => {
-      const card = e.target.closest(".card");
-      if (card && card.dataset.id) handler(parseInt(card.dataset.id));
+    document.addEventListener("click", (e) => {
+      const element = e.target.closest(".card, tr[data-id]");
+      if (element && element.dataset.id) handler(parseInt(element.dataset.id));
     });
   }
 }
