@@ -29,7 +29,7 @@ async function loadUserModules() {
               <div class="input-icon">
                 <input type="text" id="search-user" placeholder="Type user name..." />
                 <button class="search-btn">
-                  <img src="../../../assets/images/search-icon.png" alt="Search" />
+                  <img src="../../assets/images/search-icon.png" alt="Search" />
                 </button>
               </div>
             </div>
@@ -55,7 +55,7 @@ async function loadUserModules() {
             </div>
 
             <button class="generate-btn">
-              <img src="../../../assets/images/submissions-icon.png" alt="Generate Report" />
+              <img src="../../assets/images/submissions-icon.png" alt="Generate Report" />
               Generate Reports
             </button>
           </div>

@@ -57,7 +57,6 @@
   cursor: pointer;
 }
 
-/* Labels */
 .search-box label,
 .select-group label {
   font-size: 0.9rem;
@@ -65,7 +64,6 @@
   display: block;
 }
 
-/* Select Dropdown */
 .select-group select {
   padding: 0.5rem;
   border: 1px solid #ccc;
@@ -73,7 +71,6 @@
   outline: none;
 }
 
-/* Generate Button */
 .generate-btn {
   background-color: #073066;
   color: white;
@@ -88,10 +85,8 @@
 
 .generate-btn img {
   height: 18px;
-  filter: brightness(0) saturate(100%) invert(72%) sepia(58%) saturate(2300%) hue-rotate(350deg) brightness(104%) contrast(101%);
 }
 
-/* Table */
 .users-table {
   flex-grow: 1;
   overflow-y: auto;
@@ -132,17 +127,15 @@
 
 .review-btn img {
   height: 16px;
-  filter: brightness(0) saturate(100%) invert(72%) sepia(58%) saturate(2300%) hue-rotate(350deg) brightness(104%) contrast(101%);
 }
 
 .search-btn img {
-  padding-right: 10px;
   margin-top: 5px;
   height: 18px;
-  filter: brightness(0) saturate(100%) invert(72%) sepia(58%) saturate(2300%) hue-rotate(350deg) brightness(104%) contrast(101%);
+  filter: invert(1);
 }
 
 .users-table .btn-icon {
-  padding-right: 20px;
-  filter: brightness(0) saturate(100%) invert(72%) sepia(58%) saturate(2300%) hue-rotate(350deg) brightness(104%) contrast(101%);
+  padding-right: 2px;
+  filter: brightness(0) saturate(100%) invert(58%) sepia(13%) saturate(5435%) hue-rotate(320deg) brightness(99%) contrast(94%);
 }

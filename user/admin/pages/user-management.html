@@ -3,7 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <title>User Management | Navi’s Desk</title>
-    <link rel="icon" type="image/x-icon" href="../../../assets/images/navi-logo.png" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../../../assets/images/navi-logo.png"
+    />
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="../../../css/style.css" />
@@ -38,5 +42,9 @@
     <!-- Scripts -->
     <script src="../../shared/js/sidebar.js"></script>
     <script type="module" src="../js/user-management.js"></script>
+    <script src="../../../js/auth-guard.js"></script>
+    <script>
+      protectPage("admin");
+    </script>
   </body>
 </html>
