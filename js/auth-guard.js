@@ -14,10 +14,4 @@ function protectPage(expectedRole) {
     window.location.href = "../../../login.html";
     return;
   }
-
-  console.log(`Welcome, ${userData.name} (${userRole})`);
-  document.body.insertAdjacentHTML(
-    "beforeend",
-    `<p>Welcome, ${userData.name} (${userRole.toUpperCase()})</p>`
-  );
 }
