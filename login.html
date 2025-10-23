@@ -3,49 +3,77 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title>Navi's Desk — Login</title>
     <link rel="icon" type="image/x-icon" href="assets/images/navi-logo.png" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/pages/login.css" />
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
 
   <body>
-    <div class="container">
-      <div class="left-panel">
-        <h3>Welcome back!</h3>
-        <p>Log in to your account</p>
+    <main class="container">
+      <!-- Left panel -->
+      <section class="left-panel">
+        <div class="signin-header">
+          <h2>Welcome back!</h2>
+          <p>Log in to your account</p>
+        </div>
 
-        <form>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" required />
-          </div>
+        <div
+          id="g_id_onload"
+          data-client_id="1083325548999-sm0paco4eo4tmn7d4hsdb0fbbltgaftr.apps.googleusercontent.com"
+          data-callback="handleCredentialResponse"
+          data-auto_prompt="false"
+        ></div>
 
-          <div class="form-group password-wrapper">
-            <div class="label-row">
-              <label for="password">Password</label>
-              <a href="reset.html" class="reset-password" id="reset"
-                >Reset password</a
-              >
-            </div>
-            <input type="password" id="password" required />
-          </div>
+        <div
+          class="g_id_signin"
+          data-type="standard"
+          data-shape="pill"
+          data-theme="outline"
+          data-text="signin_with"
+          data-size="large"
+        ></div>
 
-          <button type="submit" class="signin">Sign in</button>
+        <div id="user-info"></div>
+      </section>
 
-          <div class="divider">OR</div>
+      <!-- Right panel -->
+      <section class="right-panel">
+        <div class="brand-overlay">
+          <img
+            src="assets/images/navi-logo.png"
+            alt="Navi logo"
+            class="brand-logo"
+          />
+          <h1 class="brand-title">Navi's Desk</h1>
+        </div>
+        <div class="carousel">
+          <img
+            src="assets/images/login-carousel/carousel-maryheights.jpg"
+            class="carousel-image active"
+          />
+          <img
+            src="assets/images/login-carousel/carousel-museum.jpg"
+            class="carousel-image"
+          />
+          <img
+            src="assets/images/login-carousel/carousel-teaching-space.jpg"
+            class="carousel-image"
+          />
+          <img
+            src="assets/images/login-carousel/carousel-theater.jpg"
+            class="carousel-image"
+          />
+        </div>
+      </section>
+    </main>
 
-          <button type="button" class="google-btn">
-            <img src="assets/images/google-icon.png" alt="Google logo" />
-            Continue with Google
-          </button>
-        </form>
-      </div>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="js/google-auth.js"></script>
 
-      <div class="right-panel">
-        <img src="assets/images/navi-logo.png" alt="Navi's Desk Logo" />
-        <h2>Navi's Desk</h2>
-      </div>
-    </div>
+    <script src="js/carousel.js"></script>
   </body>
 </html>

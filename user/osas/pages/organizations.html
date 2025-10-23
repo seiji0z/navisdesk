@@ -10,11 +10,10 @@
     />
     <link rel="stylesheet" href="../css/organizations.css" />
     <link rel="stylesheet" href="../../../css/style.css" />
-    <link rel="stylesheet" href="../../shared/css/sidebar.css">
-    <link rel="stylesheet" href="../../shared/css/folder.css">
+    <link rel="stylesheet" href="../../shared/css/sidebar.css" />
+    <link rel="stylesheet" href="../../shared/css/folder.css" />
   </head>
   <body>
-
     <div id="sidebar" data-role="osas"></div>
 
     <main class="main">
@@ -38,5 +37,9 @@
 
     <script src="../../shared/js/sidebar.js"></script>
     <script src="../js/organizations.js"></script>
+    <script src="../../../js/auth-guard.js"></script>
+    <script>
+      protectPage("osas");
+    </script>
   </body>
 </html>
