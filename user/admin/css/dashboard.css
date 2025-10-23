@@ -15,19 +15,11 @@
   transition: margin-left 0.3s ease;
 }
 
-.main.collapsed-sidebar .dashboard-folder {
-  max-width: 90vw;
-}
-
 .grid-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(6, auto);
   gap: 1rem;
-  row-gap: 0.5rem;
   width: 100%;
-  max-width: inherit;
-  margin: 0 auto;
   padding: 2rem;
 }
 
@@ -36,8 +28,8 @@
   border-radius: 8px;
   display: flex;
   justify-content: center;
-  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
   align-items: center;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
   font-family: "PoppinsSemiBold", sans-serif;
   color: #073066;
 }
@@ -60,7 +52,6 @@
   align-items: center;
   width: 100%;
   padding: 1rem 2rem;
-  box-sizing: border-box;
 }
 
 .left-details .number {
@@ -80,10 +71,10 @@
   color: #34c759;
 }
 .number#third {
-  color: #ffa325;
+  color: #ff5039;
 }
 .number#fourth {
-  color: #ff5039;
+  color: #ffa325;
 }
 
 .grid-item.medium .card {
@@ -93,9 +84,11 @@
   align-items: center;
   width: 100%;
   padding: 1rem 2rem;
-  box-sizing: border-box;
 }
 
-.grid-item.medium img {
-  height: 400px;
+.grid-item.medium canvas {
+  width: 100% !important;
+  height: 380px !important;
 }
+
+
