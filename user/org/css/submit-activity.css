@@ -3,6 +3,10 @@ html, body {
   overflow: hidden;
 }
 
+:root {
+  --folder-yellow: #ffb901;
+}
+
 .folder-body {
   font-family: "Poppins", sans-serif;
   padding: 40px;
@@ -28,10 +32,100 @@ html, body {
 }
 
 .activity-section h3 {
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   font-weight: 600;
   color: #1f2937;
   margin-bottom: 15px;
+}
+
+/* SDG color classes */
+:root {
+  --sdg-1: #E5233D;
+  --sdg-2: #DDA73A;
+  --sdg-3: #4CA146;
+  --sdg-4: #C5192D;
+  --sdg-5: #EF402C;
+  --sdg-6: #27BFE6;
+  --sdg-7: #FBC412;
+  --sdg-8: #A31C44;
+  --sdg-9: #F26A2D;
+  --sdg-10: #E01483;
+  --sdg-11: #F89D2A;
+  --sdg-12: #BF8D2C;
+  --sdg-13: #407F46;
+  --sdg-14: #1F97D4;
+  --sdg-15: #59BA48;
+  --sdg-16: #126A9F;
+  --sdg-17: #13496B;
+}
+
+.sdg-grid .sdg-checkbox {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  align-items: center;
+}
+
+.sdg-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+
+.sdg-label {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 700;
+  flex: 0 0 36px;
+  margin-left: 6px;
+}
+
+.sdg-1 .sdg-label { background: var(--sdg-1); }
+.sdg-2 .sdg-label { background: var(--sdg-2); color: #1f2937; }
+.sdg-3 .sdg-label { background: var(--sdg-3); }
+.sdg-4 .sdg-label { background: var(--sdg-4); }
+.sdg-5 .sdg-label { background: var(--sdg-5); }
+.sdg-6 .sdg-label { background: var(--sdg-6); color:#072; }
+.sdg-7 .sdg-label { background: var(--sdg-7); color:#111; }
+.sdg-8 .sdg-label { background: var(--sdg-8); }
+.sdg-9 .sdg-label { background: var(--sdg-9); }
+.sdg-10 .sdg-label { background: var(--sdg-10); }
+.sdg-11 .sdg-label { background: var(--sdg-11); color:#111; }
+.sdg-12 .sdg-label { background: var(--sdg-12); color:#111; }
+.sdg-13 .sdg-label { background: var(--sdg-13); }
+.sdg-14 .sdg-label { background: var(--sdg-14); }
+.sdg-15 .sdg-label { background: var(--sdg-15); }
+.sdg-16 .sdg-label { background: var(--sdg-16); }
+.sdg-17 .sdg-label { background: var(--sdg-17); }
+
+/* Review card styling */
+.review-card {
+  background: #f8fafc;
+  border: 1px solid #e6eef8;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.review-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.review-label {
+  min-width: 160px;
+  color: #374151;
+  font-weight: 600;
+}
+
+.review-value {
+  color: #111827;
 }
 
 .section-content {
@@ -73,7 +167,7 @@ html, body {
 .sdg-checkbox {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   font-size: 0.95rem;
 }
 
@@ -121,8 +215,45 @@ html, body {
 
 /* Upload box styles */
 .upload-row {
-  display: flex;
+  display: grid;
+  /* Enforce two columns on regular/viewports with enough width, fall back to one column on small screens */
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+}
+
+/* Responsive: collapse to single column on small screens */
+@media (max-width: 640px) {
+  .upload-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* When there is only one upload box, center it visually.
+   - CSS-only fallback: target the single child and center it inside the grid.
+   - Add a helper class `.single` that JS can apply if desired for broader browser support.
+   - Use :has() for modern browsers as an alternative way to target the parent when it contains only one child. */
+.upload-row > .upload-box:only-child {
+  grid-column: 1 / -1; /* span the available grid area */
+  justify-self: center; /* center horizontally */
+  width: 70%;
+  max-width: 720px;
+}
+
+/* Helper class for JS to enforce single-column centered layout when only one box exists */
+.upload-row.single {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+.upload-row.single .upload-box {
+  width: 70%;
+  max-width: 720px;
+}
+
+/* Modern selector: if parent contains only one upload-box, make it a single centered column.
+   This is optional and will only apply in browsers that support :has(). */
+.upload-row:has(.upload-box:only-child) {
+  grid-template-columns: 1fr;
+  justify-items: center;
 }
 
 .upload-box {
@@ -140,6 +271,76 @@ html, body {
   cursor: pointer;
   transition: border-color 0.15s ease, background-color 0.15s ease;
   text-align: center;
+}
+
+.upload-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.small-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.add-more-btn { background: #2563eb; color: #fff; }
+.remove-btn { background: #ef4444; color: #fff; }
+
+/* Controls row that sits at the top of each upload section */
+.section-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.upload-box .upload-type {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+/* Back button styling */
+.back-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: #fff;
+  color: #374151;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+  border: 1px solid #d1d5db;
+}
+
+/* When back button also has remove-btn class, use the remove (red) styling */
+.back-btn.remove-btn {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+}
+
+/* Scrollbar styling for the folder body to match folder yellow */
+.folder-body {
+  scrollbar-width: thin;
+  scrollbar-color: #fff var(--folder-yellow);
+}
+.folder-body::-webkit-scrollbar {
+  width: 12px;
+}
+.folder-body::-webkit-scrollbar-track {
+  background: var(--folder-yellow);
+}
+.folder-body::-webkit-scrollbar-thumb {
+  background: #fff;
+  border-radius: 8px;
+  border: 3px solid var(--folder-yellow);
 }
 
 .upload-box .upload-icon {
@@ -170,6 +371,31 @@ html, body {
 .upload-box .upload-filename {
   font-size: 0.85rem;
   color: #6b7280;
+}
+
+/* Preview area inside upload boxes */
+.upload-preview {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.upload-thumb {
+  width: 96px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.upload-file-row {
+  background: #f3f4f6;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #374151;
 }
 
 .upload-box.dragover {
