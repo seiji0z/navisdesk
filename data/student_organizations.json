@@ -1,0 +1,38 @@
+[
+  {
+    "_id": { "$oid": "6716001a9b8c1001abcd0001" },
+    "name": "CeeJay",
+    "email": "ceejay@slu.edu.ph",
+    "role": "Admin",
+    "status": "Active",
+    "created_at": "2025-10-01T00:00:00Z",
+    "last_log": "2025-10-10T00:00:00Z",
+    "actions": [
+      { "$oid": "6716001a9b8c4001abcd1001" },
+      { "$oid": "6716001a9b8c4001abcd1002" }
+    ]
+  },
+  {
+    "_id": { "$oid": "6716001a9b8c1001abcd0002" },
+    "name": "Anjelo Esperanzate",
+    "email": "adminjelo@slu.edu.ph",
+    "role": "OSAS Officer",
+    "status": "Active",
+    "created_at": "2025-02-15T00:00:00Z",
+    "last_log": "2025-10-11T00:00:00Z",
+    "actions": [
+      { "$oid": "6716001a9b8c4001abcd1003" },
+      { "$oid": "6716001a9b8c4001abcd1004" }
+    ]
+  },
+  {
+    "_id": { "$oid": "6716001a9b8c1001abcd0003" },
+    "name": "Admin Sample",
+    "email": "admin@slu.edu.ph",
+    "role": "Admin",
+    "status": "Active",
+    "created_at": "2025-10-01T00:00:00Z",
+    "last_log": "2025-10-10T00:00:00Z",
+    "actions": []
+  }
+]
