@@ -1,0 +1,173 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", Arial, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0b2c56, #16467c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+
+/* Main container */
+.container {
+  display: flex;
+  width: 850px;
+  max-width: 95%;
+  background-color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+  height: 600px;
+}
+
+/* Left Panel */
+.left-panel {
+  flex: 1;
+  padding: 50px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.signin-header {
+  margin-bottom: 30px;
+  padding-bottom: 10rem;
+}
+
+.signin-header h2 {
+  font-size: 40px;
+  color: #0b2c56;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.signin-header p {
+  color: #777;
+  font-size: 15px;
+}
+
+/* Google Button */
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 25px;
+  width: 100%;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.google-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.google-btn:hover {
+  background-color: #f3f3f3;
+  transform: scale(1.02);
+}
+
+/* Right Carousel Panel */
+.right-panel {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  filter: brightness(50%);
+}
+
+.carousel-image.active {
+  opacity: 1;
+}
+
+.carousel .overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.brand-logo {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 0 8px rgba(44, 103, 230, 0.4));
+}
+
+.brand-title {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
+.brand-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffff;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Media Query */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column-reverse;
+    max-width: 500px;
+  }
+
+  .left-panel,
+  .right-panel {
+    width: 100%;
+    padding: 40px 30px;
+  }
+
+  .brand-logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .brand-title {
+    font-size: 24px;
+  }
+}

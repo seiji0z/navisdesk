@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Activities | Navi’s Desk</title>
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../../../assets/images/navi-logo.png"
+    />
+
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/my-activities.css" />
+    <link rel="stylesheet" href="../../../css/style.css" />
+    <link rel="stylesheet" href="../../shared/css/sidebar.css" />
+    <link rel="stylesheet" href="../../shared/css/folder.css" />
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+    <div id="sidebar" data-role="org"></div>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="dashboard-folder">
+        <div class="header">
+          <div class="welcome">
+            <h1>Welcome, <span>ORG!</span></h1>
+          </div>
+          <div class="date-info">
+            <p>Today is <span class="current-date"></span></p>
+          </div>
+        </div>
+
+        <div class="folder-tab">
+          <h2 class="folder-title">My Activities</h2>
+        </div>
+
+        <!-- Folder Body (Card Container) -->
+        <div class="folder-body" id="folder-body" data-role="osas">
+          <div class="white-section">
+            <div class="activities-cards" id="activities-cards"></div>
+            <h2>All Submissions</h2>
+            <div class="submission-cards" id="submission-cards"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../../shared/js/sidebar.js"></script>
+    <script type="module" src="../js/my-activities-controller.js"></script>
+    <script src="../../../js/auth-guard.js"></script>
+    <script>
+      protectPage("org");
+    </script>
+  </body>
+</html>

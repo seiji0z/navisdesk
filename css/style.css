@@ -1,0 +1,99 @@
+/* POPPINS FONT FAMILY - FULL SETUP */
+
+@font-face {
+  font-family: "PoppinsThin";
+  src: url("../assets/fonts/Poppins-Thin.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsThinItalic";
+  src: url("../assets/fonts/Poppins-ThinItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsExtraLight";
+  src: url("../assets/fonts/Poppins-ExtraLight.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsExtraLightItalic";
+  src: url("../assets/fonts/Poppins-ExtraLightItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsLight";
+  src: url("../assets/fonts/Poppins-Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsLightItalic";
+  src: url("../assets/fonts/Poppins-LightItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../assets/fonts/Poppins-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsItalic";
+  src: url("../assets/fonts/Poppins-Italic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsMedium";
+  src: url("../assets/fonts/Poppins-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsMediumItalic";
+  src: url("../assets/fonts/Poppins-MediumItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsSemiBold";
+  src: url("../assets/fonts/Poppins-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsSemi";
+  src: url(".../assets/fonts/Poppins-SemiBoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsBold";
+  src: url("../assets/fonts/Poppins-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsBoldItalic";
+  src: url("../assets/fonts/Poppins-BoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsExtraBold";
+  src: url("../assets/fonts/Poppins-ExtraBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsExtraBoldItalic";
+  src: url("../assets/fonts/Poppins-ExtraBoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsBlack";
+  src: url("../assets/fonts/Poppins-Black.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PoppinsItalic";
+  src: url("../assets/fonts/Poppins-BlackItalic.ttf") format("truetype");
+}
+
+/* Default font reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}

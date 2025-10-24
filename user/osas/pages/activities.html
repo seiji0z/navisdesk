@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Activities | Navi’s Desk</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../../../assets/images/navi-logo.png"
+    />
+    <link rel="stylesheet" href="../css/activities.css" />
+    <link rel="stylesheet" href="../../../css/style.css" />
+    <link rel="stylesheet" href="../../shared/css/sidebar.css" />
+    <link rel="stylesheet" href="../../shared/css/folder.css" />
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div id="sidebar" data-role="osas"></div>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="dashboard-folder">
+        <div class="header">
+          <div class="welcome">
+            <h1>Welcome, <span>OSAS!</span></h1>
+          </div>
+          <div class="date-info">
+            <p>Today is <span class="current-date"></span></p>
+          </div>
+        </div>
+
+        <div class="folder-tab">
+          <h2 class="folder-title">Activities</h2>
+        </div>
+
+        <div class="folder-body" id="folder-body" data-role="osas"></div>
+      </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../../shared/js/sidebar.js"></script>
+    <script src="../js/activities.js"></script>
+    <script src="../../../js/auth-guard.js"></script>
+    <script>
+      protectPage("osas");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,160 @@
+.sidebar {
+  background-color: #073066;
+  height: 93vh;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  width: 16rem;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  padding: 1rem 1.5rem;
+  align-items: flex-start;
+  transition: width 0.3s ease;
+}
+
+.toggle-btn {
+  position: absolute;
+  right: -0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+.toggle-btn:hover {
+  background-color: #d5f3ff;
+}
+
+.arrow {
+  margin-top: 1px;
+  font-size: 1rem;
+  color: #073066;
+}
+
+.sidebar-logo {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.sidebar-logo .sidebar-logo-img {
+  height: 6.5rem;
+  margin-left: -10px;
+}
+
+.sidebar-logo p {
+  font-size: 20px;
+  font-family: "Poppins", sans-serif;
+  color: #ffffff;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  padding: 0.75rem 0;
+  width: 100%;
+  gap: 0.75rem;
+  transition: background-color 0.2s ease;
+}
+
+/*------------ WHEN COLLAPSED ------------*/
+.sidebar.collapsed {
+  width: 5rem;
+  align-items: center;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-logo p,
+.sidebar.collapsed nav a span:not(.sidebar-icon),
+.sidebar.collapsed .user-profile span {
+  display: none;
+}
+
+.sidebar.collapsed nav a {
+  justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-logo-img {
+  height: 3rem;
+  margin: 0;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.sidebar.collapsed .user-profile {
+  justify-content: center;
+}
+
+.sidebar.collapsed .arrow {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+/*------------ NAV LINKS ------------*/
+.sidebar img {
+  height: auto;
+  max-width: 8rem;
+}
+
+.sidebar a.active {
+  color: #ffc000;
+  font-family: "PoppinsSemiBold", sans-serif;
+}
+
+.sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+}
+
+.sidebar-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.sidebar-icon img {
+  height: 1.7rem;
+  width: auto;
+}
+
+/*------------ USER PROFILE ------------*/
+.user-profile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  width: 90%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.user-profile img {
+  height: 3rem;
+  border-radius: 100px;
+}
+
+.user-profile span {
+  color: #ffffff;
+  text-align: left;
+}

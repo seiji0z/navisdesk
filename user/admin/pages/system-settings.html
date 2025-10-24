@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard | Navi’s Desk</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../../../assets/images/navi-logo.png"
+    />
+
+    <!-- Global & Page-Specific Styles -->
+    <link rel="stylesheet" href="../../../css/style.css" />
+    <link rel="stylesheet" href="../css/system-settings.css" />
+    <link rel="stylesheet" href="../../shared/css/sidebar.css" />
+    <link rel="stylesheet" href="../../shared/css/folder.css" />
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div id="sidebar" data-role="admin"></div>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="dashboard-folder">
+        <div class="header">
+          <div class="welcome">
+            <h1>Welcome, <span>admin</span></h1>
+          </div>
+          <div class="date-info">
+            <p>Today is <span class="current-date"></span></p>
+          </div>
+        </div>
+
+        <div class="folder-tab">
+          <h2 class="folder-title">Settings</h2>
+        </div>
+
+        <div class="folder-body" id="folder-body" data-role="admin">
+          <div class="folder-content-card">
+            <div
+              class="settings-container"
+              style="display: flex; flex-direction: column"
+            >
+              <div class="grid-item small" style="background-color: red">
+                <div class="card">
+                  <div class="left-details">
+                    <p class="number" id="first">1,200</p>
+                    <p class="desc">Total Deliverables Submitted</p>
+                  </div>
+                  <div class="right-icon">
+                    <img
+                      src="../../assets/images/close-icon.png"
+                      alt="Submissions icon"
+                      class="card-icon"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid-item small" style="background-color: green">
+                <div class="card">
+                  <div class="left-details">
+                    <p class="number" id="first">1,200</p>
+                    <p class="desc">Total Deliverables Submitted</p>
+                  </div>
+                  <div class="right-icon">
+                    <img
+                      src="../../assets/images/close-icon.png"
+                      alt="Submissions icon"
+                      class="card-icon"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../../shared/js/sidebar.js"></script>
+    <!-- <script type="module" src="../../assets/js/scripts/system-settings.js"></script> -->
+    <script src="../../../js/auth-guard.js"></script>
+    <script>
+      protectPage("admin");
+    </script>
+  </body>
+</html>
