@@ -19,7 +19,7 @@ function renderProfileContent() {
           <section class="card-section basic-info">
             <h3>Basic Information</h3>
             <div class="section-content">
-              <label for="official-name">Official name</label>
+              <label for="official-name">Official Name</label>
               <input id="official-name" type="text" required />
 
               <label for="acronym">Acronym</label>
@@ -34,30 +34,39 @@ function renderProfileContent() {
             <h3>Social Media Links</h3>
             <div class="section-content">
               <div class="social-group">
-                <label><span class="social-icon"><!-- placeholder SVG -->
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#6B7280" stroke-width="1.2"/><path d="M8 12h8" stroke="#6B7280" stroke-width="1.2" stroke-linecap="round"/></svg>
-                  </span>Facebook</label>
-                <div id="facebook-list"><!-- facebook link rows --></div>
+                <label>
+                  <span class="social-icon">
+                    <img src="../../../assets/images/facebook.png" alt="Facebook Icon" />
+                  </span>
+                  Facebook
+                </label>
+                <div id="facebook-list"></div>
                 <div class="link-actions">
                   <button id="add-fb-btn" class="small-btn add-more-btn">Add Facebook Link</button>
                 </div>
               </div>
 
               <div class="social-group">
-                <label><span class="social-icon"><!-- placeholder SVG -->
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#6B7280" stroke-width="1.2"/><path d="M7 7l10 10" stroke="#6B7280" stroke-width="1.2" stroke-linecap="round"/></svg>
-                  </span>Instagram</label>
-                <div id="instagram-list"><!-- instagram link rows --></div>
+                <label>
+                  <span class="social-icon">
+                    <img src="../../../assets/images/instagram.png" alt="Instagram Icon" />
+                  </span>
+                  Instagram
+                </label>
+                <div id="instagram-list"></div>
                 <div class="link-actions">
                   <button id="add-ig-btn" class="small-btn add-more-btn">Add Instagram Link</button>
                 </div>
               </div>
 
               <div class="social-group">
-                <label><span class="social-icon"><!-- placeholder SVG -->
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#6B7280" stroke-width="1.2"/><path d="M12 7v10" stroke="#6B7280" stroke-width="1.2" stroke-linecap="round"/></svg>
-                  </span>Website</label>
-                <div id="website-list"><!-- website link rows --></div>
+                <label>
+                  <span class="social-icon">
+                    <img src="../../../assets/images/web.png" alt="Website Icon" />
+                  </span>
+                  Website
+                </label>
+                <div id="website-list"></div>
                 <div class="link-actions">
                   <button id="add-web-btn" class="small-btn add-more-btn">Add Website Link</button>
                 </div>
@@ -80,6 +89,7 @@ function renderProfileContent() {
     </div>
   `;
 }
+
 
 // Inject content
 if (folderBody) {
@@ -171,24 +181,10 @@ function wireProfileBehaviors() {
   if (cancelBtn) {
     cancelBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      document.getElementById('official-name').value = initialState.officialName;
-      document.getElementById('acronym').value = initialState.acronym;
-      document.getElementById('slu-email').value = initialState.sluEmail;
-      // reset social lists to one empty input each
-      if (facebookList) {
-        facebookList.innerHTML = '';
-        facebookList.appendChild(createLinkRow('', 'https://facebook.com/your-page'));
+      const confirmExit = confirm("Are you sure you want to cancel and return to the dashboard?");
+      if (confirmExit) {
+      window.location.href = "../../../user/org/pages/dashboard.html";
       }
-      if (instagramList) {
-        instagramList.innerHTML = '';
-        instagramList.appendChild(createLinkRow('', 'https://instagram.com/your-handle'));
-      }
-      if (websiteList) {
-        websiteList.innerHTML = '';
-        websiteList.appendChild(createLinkRow('', 'https://your-website.com'));
-      }
-      if (orgAvatar) orgAvatar.src = initialState.avatarSrc;
-      if (avatarInput) avatarInput.value = '';
     });
   }
 
