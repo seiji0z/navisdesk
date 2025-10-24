@@ -2,11 +2,28 @@
 const folderBody = document.getElementById("folder-body");
 
 // Helper function: create form section card
+// Map card titles to icon filenames
+const cardIcons = {
+  "Activity Details": "activity-details.svg",
+  "Date and Time": "date-and-time.svg",
+  "Venue": "venue.svg",
+  "SDG Alignment": "sdg-alignment.svg",
+  "Supporting Documents": "supporting-document.svg",
+  "Evidence of Activity": "evidence-of-activity.svg",
+};
+
 function createSection(title, innerHTML) {
   const section = document.createElement("div");
   section.classList.add("activity-section");
+  // Icon HTML if available
+  const iconFile = cardIcons[title];
+  const iconHTML = iconFile
+    ? `<img src='../../../assets/images/${iconFile}' alt='' class='card-title-icon' style='width:28px;height:28px;margin-right:12px;vertical-align:middle;' />`
+    : "";
   section.innerHTML = `
-    <h3>${title}</h3>
+    <h3 style="display:flex;align-items:center;gap:10px;">
+      ${iconHTML}<span>${title}</span>
+    </h3>
     <div class="section-content">
       ${innerHTML}
     </div>
@@ -344,7 +361,7 @@ function createSupportingBox(index) {
         <option value="endorsementLetter">Endorsement Letter</option>
       </select>
     </div>
-    <div class="upload-icon"><img src="../../../assets/images/cloud-upload.png" alt="upload icon" /></div>
+    <div class="upload-icon"><img src="../../../assets/images/upload.svg" alt="upload icon" /></div>
     <div class="upload-text"><strong>Click to upload</strong> or drag and drop</div>
     <div class="upload-preview"></div>
     <div class="upload-filename">No file chosen</div>
@@ -394,7 +411,7 @@ function createEvidenceBox(index) {
   box.classList.add('upload-box');
   box.setAttribute('data-index', index);
   box.innerHTML = `
-    <div class="upload-icon"><img src="../../../assets/images/cloud-upload.png" alt="upload icon" /></div>
+    <div class="upload-icon"><img src="../../../assets/images/upload.svg" alt="upload icon" /></div>
     <div class="upload-text"><strong>Click to upload</strong> or drag and drop</div>
     <div class="upload-preview"></div>
     <div class="upload-filename">No files chosen</div>

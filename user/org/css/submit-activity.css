@@ -36,6 +36,22 @@ html, body {
   font-weight: 600;
   color: #1f2937;
   margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-title-icon {
+  width: 28px;
+  height: 28px;
+  margin-right: 12px;
+  vertical-align: middle;
+  flex-shrink: 0;
+  object-fit: contain;
+  display: inline-block;
+  /* Optional: for SVGs with viewBox, remove background/border */
+  background: none;
+  border-radius: 0;
 }
 
 /* SDG color classes */
@@ -349,13 +365,12 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f3f4f6;
   border-radius: 8px;
 }
 
 .upload-box .upload-icon img {
-  width: 28px;
-  height: 28px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
 }
 
