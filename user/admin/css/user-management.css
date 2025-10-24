@@ -281,3 +281,69 @@
 .add-user-btn img {
   height: 18px;
 }
+
+.modal-content {
+  position: relative;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  width: 550px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding-right: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Scrollbar styling */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-content::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Close button inside popup */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #555;
+  transition: 0.2s ease;
+}
+.close-btn:hover {
+  color: #ce0404;
+  transform: scale(1.1);
+}
+
+/* Make description textarea same width */
+.modal-content textarea {
+  width: 100%;
+  padding: 0.45rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 0.25rem;
+  resize: none;
+}
+
+.preview-details {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.preview-details p {
+  margin: 0.25rem 0;
+}
