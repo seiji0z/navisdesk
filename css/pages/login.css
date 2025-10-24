@@ -18,75 +18,22 @@ body {
 /* Main container */
 .container {
   display: flex;
+  flex-direction: column;
   width: 850px;
   max-width: 95%;
   background-color: #fff;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
-  height: 600px;
+  height: 700px;
 }
 
-/* Left Panel */
-.left-panel {
-  flex: 1;
-  padding: 50px 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.signin-header {
-  margin-bottom: 30px;
-  padding-bottom: 10rem;
-}
-
-.signin-header h2 {
-  font-size: 40px;
-  color: #0b2c56;
-  margin-bottom: 5px;
-  font-weight: 600;
-}
-
-.signin-header p {
-  color: #777;
-  font-size: 15px;
-}
-
-/* Google Button */
-.google-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border: 1px solid #ddd;
-  padding: 12px;
-  border-radius: 25px;
-  width: 100%;
-  background-color: #fff;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  color: #333;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.google-btn img {
-  width: 20px;
-  height: 20px;
-}
-
-.google-btn:hover {
-  background-color: #f3f3f3;
-  transform: scale(1.02);
-}
-
-/* Right Carousel Panel */
-.right-panel {
-  flex: 1;
+/* Top Panel */
+.top-panel {
+  flex: 2;
   position: relative;
   overflow: hidden;
-  height: 100%;
+  height: 50%;
 }
 
 .carousel {
@@ -97,7 +44,7 @@ body {
 
 .carousel-image {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   object-fit: cover;
   position: absolute;
   top: 0;
@@ -120,9 +67,7 @@ body {
 }
 
 .brand-logo {
-  width: 120px;
-  height: 120px;
-  margin-bottom: 15px;
+  height: 240px;
   filter: drop-shadow(0 0 8px rgba(44, 103, 230, 0.4));
 }
 
@@ -135,39 +80,47 @@ body {
 
 .brand-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #ffff;
+  color: #fff;
   text-align: center;
   background: rgba(0, 0, 0, 0.25);
 }
 
-/* Media Query */
+/* Bottom Panel */
+.bottom-panel {
+  flex: 1;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #fff;
+}
+
+.signin-header {
+  margin-bottom: 30px;
+}
+
+.signin-header h2 {
+  font-size: 40px;
+  color: #0b2c56;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.signin-header p {
+  color: #777;
+  font-size: 15px;
+}
+
 @media (max-width: 768px) {
-  .container {
-    flex-direction: column-reverse;
-    max-width: 500px;
-  }
-
-  .left-panel,
-  .right-panel {
-    width: 100%;
-    padding: 40px 30px;
-  }
-
-  .brand-logo {
-    width: 100px;
-    height: 100px;
-  }
-
-  .brand-title {
-    font-size: 24px;
+  .top-panel {
+    flex: 1;
   }
 }

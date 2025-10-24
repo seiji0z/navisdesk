@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Navi's Desk — Login</title>
+    <title>Navi's Desk | Login</title>
     <link rel="icon" type="image/x-icon" href="assets/images/navi-logo.png" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/pages/login.css" />
@@ -14,34 +14,9 @@
 
   <body>
     <main class="container">
-      <!-- Left panel -->
-      <section class="left-panel">
-        <div class="signin-header">
-          <h2>Welcome back!</h2>
-          <p>Log in to your account</p>
-        </div>
-
-        <div
-          id="g_id_onload"
-          data-client_id="1083325548999-sm0paco4eo4tmn7d4hsdb0fbbltgaftr.apps.googleusercontent.com"
-          data-callback="handleCredentialResponse"
-          data-auto_prompt="false"
-        ></div>
-
-        <div
-          class="g_id_signin"
-          data-type="standard"
-          data-shape="pill"
-          data-theme="outline"
-          data-text="signin_with"
-          data-size="large"
-        ></div>
-
-        <div id="user-info"></div>
-      </section>
-
-      <!-- Right panel -->
-      <section class="right-panel">
+      
+      <!-- Top panel-->
+      <section class="top-panel">
         <div class="brand-overlay">
           <img
             src="assets/images/navi-logo.png"
@@ -69,6 +44,33 @@
           />
         </div>
       </section>
+      
+      <!-- Bottom panel -->
+      <section class="bottom-panel">
+        <div class="signin-header">
+          <h2>Welcome back!</h2>
+          <p>Log in to your account</p>
+        </div>
+
+        <div
+          id="g_id_onload"
+          data-client_id="1083325548999-sm0paco4eo4tmn7d4hsdb0fbbltgaftr.apps.googleusercontent.com"
+          data-callback="handleCredentialResponse"
+          data-auto_prompt="false"
+        ></div>
+
+        <div
+          class="g_id_signin"
+          data-type="standard"
+          data-shape="pill"
+          data-theme="outline"
+          data-text="signin_with"
+          data-size="large"
+        ></div>
+
+        <div id="user-info"></div>
+      </section>
+
     </main>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
