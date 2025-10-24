@@ -80,6 +80,7 @@ function loadOrganizations() {
                 <p>Type: <strong>Publication</strong></p>
                 <p>Adviser: <strong>Prof. Name Name</strong></p>
                 <span class="status-tag active">Active</span>
+                <img src="../../../assets/images/arrow-up-right.png" alt="View" class="card-link-icon" onclick="loadOrganizationDetails()" />
               </div>
             </div>
 
@@ -96,6 +97,7 @@ function loadOrganizations() {
                 <p>Type: <strong>Extra-Curricular</strong></p>
                 <p>Adviser: <strong>Prof. Name Name</strong></p>
                 <span class="status-tag pending">Inactive</span>
+                <img src="../../../assets/images/arrow-up-right.png" alt="View" class="card-link-icon" onclick="loadOrganizationDetails()" />
               </div>
             </div>
 
@@ -112,6 +114,7 @@ function loadOrganizations() {
                 <p>Type: <strong>Extra-Curricular</strong></p>
                 <p>Adviser: <strong>Prof. Name Name</strong></p>
                 <span class="status-tag active">Active</span>
+                <img src="../../../assets/images/arrow-up-right.png" alt="View" class="card-link-icon" onclick="loadOrganizationDetails()" />
               </div>
             </div>
 
@@ -128,6 +131,7 @@ function loadOrganizations() {
                 <p>Type: <strong>Publication</strong></p>
                 <p>Adviser: <strong>Prof. Name Name</strong></p>
                 <span class="status-tag active">Active</span>
+                <img src="../../../assets/images/arrow-up-right.png" alt="View" class="card-link-icon" onclick="loadOrganizationDetails()" />
               </div>
             </div>
 
@@ -144,6 +148,7 @@ function loadOrganizations() {
                 <p>Type: <strong>Extra-Curricular</strong></p>
                 <p>Adviser: <strong>Prof. Name Name</strong></p>
                 <span class="status-tag pending">Inactive</span>
+                <img src="../../../assets/images/arrow-up-right.png" alt="View" class="card-link-icon" onclick="loadOrganizationDetails()" />
               </div>
             </div>
 
@@ -160,6 +165,7 @@ function loadOrganizations() {
                 <p>Type: <strong>Extra-Curricular</strong></p>
                 <p>Adviser: <strong>Prof. Name Name</strong></p>
                 <span class="status-tag active">Active</span>
+                <img src="../../../assets/images/arrow-up-right.png" alt="View" class="card-link-icon" onclick="loadOrganizationDetails()" />
               </div>
             </div>
 
@@ -176,6 +182,7 @@ function loadOrganizations() {
                 <p>Type: <strong>Publication</strong></p>
                 <p>Adviser: <strong>Prof. Name Name</strong></p>
                 <span class="status-tag active">Active</span>
+                <img src="../../../assets/images/arrow-up-right.png" alt="View" class="card-link-icon" onclick="loadOrganizationDetails()" />
               </div>
             </div>
             <div class="organization-card">
@@ -191,6 +198,7 @@ function loadOrganizations() {
                 <p>Type: <strong>Extra-Curricular</strong></p>
                 <p>Adviser: <strong>Prof. Name Name</strong></p>
                 <span class="status-tag pending">Inactive</span>
+                <img src="../../../assets/images/arrow-up-right.png" alt="View" class="card-link-icon" onclick="loadOrganizationDetails()" />
               </div>
             </div>
              <div class="organization-card">
@@ -206,6 +214,7 @@ function loadOrganizations() {
                 <p>Type: <strong>Extra-Curricular</strong></p>
                 <p>Adviser: <strong>Prof. Name Name</strong></p>
                 <span class="status-tag active">Active</span>
+                <img src="../../../assets/images/arrow-up-right.png" alt="View" class="card-link-icon" onclick="loadOrganizationDetails()" />
               </div>
             </div>
              <div class="organization-card">
@@ -221,6 +230,7 @@ function loadOrganizations() {
                 <p>Type: <strong>Extra-Curricular</strong></p>
                 <p>Adviser: <strong>Prof. Name Name</strong></p>
                 <span class="status-tag active">Active</span>
+                <img src="../../../assets/images/arrow-up-right.png" alt="View" class="card-link-icon" onclick="loadOrganizationDetails()" />
               </div>
             </div>
           </div>
@@ -228,6 +238,160 @@ function loadOrganizations() {
       </div>
     </div>
   `;
+}
+
+function loadOrganizationDetails() {
+  document.querySelector("#folder-body").innerHTML = `
+    <div class="folder-content-card">
+      <div class="organization-detail-layout">
+        
+        <div class="detail-main-column">
+          <button class="back-btn" onclick="loadOrganizations()">
+            <img src="../../../assets/images/arrow-left-circle.png" alt="Back" />
+          </button>
+          
+          <div class="detail-inner-layout">
+            
+            <div class="detail-header">
+              <div class="detail-logo">
+                <img src="../../../assets/images/schema-logo.png" alt="SCHEMA logo" />
+              </div>
+              <div class="detail-title">
+                <h1>SCHEMA</h1>
+                <span id="organizationStatusTag" class="status-tag active" onclick="promptToggleStatus()">Active</span>
+              </div>
+            </div>
+
+            <div class="detail-content">
+              <p class="description">
+                Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </p>
+              
+              <div class="detail-info-list">
+                <p><strong>Name or Organization:</strong> <span>SCHEMA</span></p>
+                <p><strong>Acronym/Short Name:</strong> <span>SCHEMA</span></p>
+                <p><strong>Department:</strong> <span>School of Accountancy, Management, Computing and Information Studies | SAMCIS</span></p>
+                <p><strong>Official SLU Institution Email:</strong> <span>schema@slu.edu.ph</span></p>
+                <p><strong>Type of Organization:</strong> <span>Publication</span></p>
+                <p><strong>Name of Adviser:</strong> <span>Ms. Prof Name</span></p>
+                <p><strong>Date Created:</strong> <span>August 26, 2025</span></p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="detail-sidebar-column">
+          <div class="history-sidebar-card">
+            <h3>History of submissions</h3>
+            <ul class="history-list">
+              <li>
+                <img src="../../../assets/images/blue-submissions-icon.png" alt="doc" />
+                <span>Montes, Prague</span>
+                <span class="date">August 10, 2025</span>
+              </li>
+              <li>
+                <img src="../../../assets/images/blue-submissions-icon.png" alt="doc" />
+                <span>Prague, Montes</span>
+                <span class="date">August 10, 2025</span>
+              </li>
+              <li>
+                <img src="../../../assets/images/blue-submissions-icon.png" alt="doc" />
+                <span>Prague, Montes</span>
+                <span class="date">August 10, 2025</span>
+              </li>
+              <li>
+                <img src="../../../assets/images/blue-submissions-icon.png" alt="doc" />
+                <span>Prague, Montes</span>
+                <span class="date">August 10, 2025</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+function showConfirmationModal(message, confirmText, confirmClass, onConfirm) {
+  closeConfirmationModal();
+
+  const modalOverlay = document.createElement("div");
+  modalOverlay.className = "modal-overlay";
+  modalOverlay.id = "confirmationModal";
+
+  const modalContent = document.createElement("div");
+  modalContent.className = "modal-content";
+
+  modalContent.innerHTML = `
+    <h4>Confirmation</h4>
+    <p>${message}</p>
+    <div class="modal-buttons">
+      <button class="modal-btn modal-btn-cancel" onclick="closeConfirmationModal()">Cancel</button>
+      <button class="modal-btn modal-btn-confirm ${confirmClass}" id="modalConfirmButton">${confirmText}</button>
+    </div>
+  `;
+
+  modalOverlay.appendChild(modalContent);
+  document.body.appendChild(modalOverlay);
+
+  document.getElementById("modalConfirmButton").onclick = function() {
+    onConfirm();
+    closeConfirmationModal();
+  };
+
+  modalOverlay.onclick = function(e) {
+    if (e.target === modalOverlay) {
+      closeConfirmationModal();
+    }
+  };
+}
+
+function closeConfirmationModal() {
+  const modal = document.getElementById("confirmationModal");
+  if (modal) {
+    modal.parentNode.removeChild(modal);
+  }
+}
+
+function promptToggleStatus() {
+  const statusTag = document.getElementById("organizationStatusTag");
+  const isCurrentlyActive = statusTag.classList.contains("active");
+
+  if (isCurrentlyActive) {
+    showConfirmationModal(
+      "Are you sure you want to mark SCHEMA as Inactive?",
+      "Mark as Inactive",
+      "inactive",
+      updateStatusToInactive
+    );
+  } else {
+    showConfirmationModal(
+      "Are you sure you want to mark SCHEMA as Active?",
+      "Mark as Active",
+      "active",
+      updateStatusToActive
+    );
+  }
+}
+
+function updateStatusToInactive() {
+  const statusTag = document.getElementById("organizationStatusTag");
+  if (statusTag) {
+    statusTag.textContent = "Inactive";
+    statusTag.classList.remove("active");
+    statusTag.classList.add("pending"); 
+  }
+}
+
+function updateStatusToActive() {
+  const statusTag = document.getElementById("organizationStatusTag");
+  if (statusTag) {
+    statusTag.textContent = "Active";
+    statusTag.classList.remove("pending");
+    statusTag.classList.add("active");
+  }
 }
 
 function initOrganizations() {
