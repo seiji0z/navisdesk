@@ -153,17 +153,14 @@ w .activities-container {
 }
 
 .review-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  color: #f26e21;
-  background: none;
+  padding: 0.4rem 0.8rem;
   border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
   cursor: pointer;
-}
-
-.review-btn img {
-  height: 16px;
+  transition: background-color 0.2s ease;
+  background-color: #073066;
+  color: #fff;
 }
 
 .search-btn img {

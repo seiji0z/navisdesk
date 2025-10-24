@@ -77,7 +77,7 @@ function loadActivities() {
                 <td>First Sem</td>
                 <td><span class="status approved">Approved</span></td>
                 <td>2025-10-14, 14:00</td>
-                <td><button class="review-btn"><img src="../../../assets/images/submissions-icon.png" alt="" class="btn-icon"> Activity Review</button></td>
+                <td><button class="review-btn">Review</button></td>
               </tr>
               <tr>
                 <td>
@@ -89,7 +89,7 @@ function loadActivities() {
                 <td>First Sem</td>
                 <td><span class="status pending">Pending</span></td>
                 <td>2025-10-14, 14:00</td>
-                <td><button class="review-btn"><img src="../../../assets/images/submissions-icon.png" alt="" class="btn-icon"> Activity Review</button></td>
+                <td><button class="review-btn">Review</button></td>
               </tr>
               <tr>
                 <td>
@@ -101,7 +101,7 @@ function loadActivities() {
                 <td>First Sem</td>
                 <td><span class="status returned">Returned</span></td>
                 <td>2025-10-14, 14:00</td>
-                <td><button class="review-btn"><img src="../../../assets/images/submissions-icon.png" alt="" class="btn-icon"> Activity Review</button></td>
+                <td><button class="review-btn">Review</button></td>
               </tr>
             </tbody>
           </table>

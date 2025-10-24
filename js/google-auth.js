@@ -4,7 +4,8 @@ const ALLOWED_EMAILS = [
   "2240853@slu.edu.ph",
   "2240841@slu.edu.ph",
   "2240385@slu.edu.ph",
-  "2242592@slu.edu.ph"
+  "2242592@slu.edu.ph",
+  "2240602@slu.edu.ph"
   // may add here
 ];
 
