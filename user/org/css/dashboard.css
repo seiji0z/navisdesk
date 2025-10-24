@@ -1,3 +1,9 @@
+/* =======================================================
+   UPDATED ORG DASHBOARD CSS
+   Theme aligned with My-Activities.css
+   Font: Poppins | Color: #073066 (primary)
+========================================================= */
+
 body, html {
   overflow-x: hidden;
 }
@@ -9,7 +15,9 @@ body, html {
   font-family: "Poppins", sans-serif;
 }
 
-/* Sections */
+/* -------------------------------------
+   Sections
+------------------------------------- */
 .top-section {
   display: flex;
   gap: 1.5rem;
@@ -20,16 +28,27 @@ body, html {
   gap: 1.5rem;
 }
 
-/* Cards */
+/* -------------------------------------
+   Card Styles
+------------------------------------- */
 .card {
   background-color: #fff;
   border-radius: 15px;
   padding: 1.5rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   flex: 1;
+  font-family: "Poppins", sans-serif;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Quick Actions */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* -------------------------------------
+   Quick Actions
+------------------------------------- */
 .quick-actions {
   max-width: 300px;
   display: flex;
@@ -41,6 +60,8 @@ body, html {
 .quick-actions h3 {
   align-self: flex-start;
   margin-bottom: 1rem;
+  font-weight: 600;
+  color: #073066;
 }
 
 .create-btn {
@@ -51,11 +72,12 @@ body, html {
   border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .create-btn:hover {
   background-color: #0a418c;
+  transform: translateY(-2px);
 }
 
 .view-link {
@@ -63,11 +85,20 @@ body, html {
   color: #073066;
   font-size: 0.9rem;
   text-decoration: underline;
+  transition: color 0.3s ease;
 }
 
-/* Submission Overview */
+.view-link:hover {
+  color: #0a418c;
+}
+
+/* -------------------------------------
+   Submission Overview
+------------------------------------- */
 .submission-overview h3 {
   margin-bottom: 1rem;
+  color: #073066;
+  font-weight: 600;
 }
 
 .status-container {
@@ -81,8 +112,37 @@ body, html {
 }
 
 .status-title {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* space between icon and text */
   font-weight: 600;
   margin-bottom: 0.3rem;
+  color: #073066;
+}
+
+.status-title.approved::before,
+.status-title.review::before,
+.status-title.attention::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Icons for each status */
+.status-title.approved::before {
+  background-image: url("../../../assets/images/approved.png");
+}
+
+.status-title.review::before {
+  background-image: url("../../../assets/images/under-review.png");
+}
+
+.status-title.attention::before {
+  background-image: url("../../../assets/images/attention.png");
 }
 
 .status-count {
@@ -108,7 +168,9 @@ body, html {
   background: linear-gradient(to right, #e74c3c, #f7b1ac);
 }
 
-/* Recent Activities */
+/* -------------------------------------
+   Recent Activities
+------------------------------------- */
 .recent-activities {
   flex: 2;
 }
@@ -118,6 +180,12 @@ body, html {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.8rem;
+}
+
+.section-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #073066;
 }
 
 .activity-list {
@@ -130,25 +198,35 @@ body, html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 0.5rem;
+  background: #fff;
+  border-radius: 12px;
+  padding: 0.9rem 1.2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.activity-item:hover {
+  background: #f9fafb;
+  transform: translateY(-2px);
 }
 
 .activity-title {
   font-weight: 550;
+  color: #073066;
 }
 
 .activity-desc {
   font-size: 0.9rem;
-  color: #666;
+  color: #555;
 }
 
 .status-badge {
-  padding: 0.3rem 0.75rem;
+  padding: 0.35rem 0.9rem;
   border-radius: 15px;
   font-size: 0.8rem;
   font-weight: 600;
   color: #fff;
+  text-transform: capitalize;
 }
 
 .status-badge.approved {
@@ -163,35 +241,179 @@ body, html {
   background-color: #e74c3c;
 }
 
-/* Reminders */
+/* -------------------------------------
+   Reminders
+------------------------------------- */
 .reminders {
   flex: 1;
 }
 
 .reminder-item {
+  background: #ffffff;
+  border-left: 5px solid #073066;
+  border-radius: 12px;
+  padding: 1rem;
   margin-bottom: 1rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s ease, transform 0.2s ease;
+}
+
+.reminder-item:hover {
+  border-color: #3498db;
+  transform: translateX(4px);
 }
 
 .reminder-title {
-  font-weight: 500;
+  font-weight: 600;
+  color: #073066;
+  margin-bottom: 0.3rem;
 }
 
 .reminder-date {
   font-size: 0.9rem;
+  color: #555;
 }
 
-.reminder-date.orange {
-  color: #f39c12;
-}
-
-.reminder-date.blue {
-  color: #3498db;
-}
-
-/* Dashboard Folder Styling */
+/* -------------------------------------
+   Dashboard Folder Styling
+------------------------------------- */
 .dashboard-folder {
   background-color: #ffb901;
   padding: 2rem;
   border-radius: 20px;
   color: #000;
+}
+
+/* =======================================================
+   FOLDER BODY (Modern + Thematic Match)
+========================================================= */
+.folder-body {
+  font-family: "Poppins", sans-serif;
+  padding: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background-color: #f9fafb;
+  border-radius: 20px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+  max-height: calc(85vh - 40px);
+  overflow-y: auto;
+}
+
+/* Scrollbar */
+.folder-body::-webkit-scrollbar {
+  width: 8px;
+}
+.folder-body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+.folder-body::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+/* White Section Containers */
+.folder-body .white-section {
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Folder Body Cards */
+.folder-body .card {
+  border-radius: 15px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.folder-body .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Folder Body Headers */
+.folder-body h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #073066;
+  padding-left: 10px;
+  margin-bottom: 0.75rem;
+}
+
+/* Folder Buttons */
+.folder-body .create-btn {
+  background-color: #073066;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.folder-body .create-btn:hover {
+  background-color: #0a418c;
+  transform: translateY(-1px);
+}
+
+/* Folder View Link */
+.folder-body .view-link {
+  color: #073066;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.folder-body .view-link:hover {
+  color: #0a418c;
+  text-decoration: underline;
+}
+
+/* Folder Activity Items */
+.folder-body .activity-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 0.9rem 1.2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.folder-body .activity-item:hover {
+  background: #f3f4f6;
+  transform: translateY(-1px);
+}
+
+/* Folder Reminders */
+.folder-body .reminder-item {
+  background-color: #fff;
+  border-left: 5px solid #073066;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s ease, transform 0.2s ease;
+}
+
+.folder-body .reminder-item:hover {
+  border-color: #ffb901;
+  transform: translateX(3px);
+}
+
+/* Folder Progress Bars */
+.folder-body .progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  transition: filter 0.3s ease;
+}
+
+.folder-body .progress-bar:hover {
+  filter: brightness(1.1);
 }

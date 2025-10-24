@@ -21,12 +21,12 @@ function loadUserDashboard() {
             </div>
             <div class="status-item">
               <p class="status-title review">Under Review</p>
-              <p class="status-count">3</p>
+              <p class="status-count">2</p>
               <div class="progress-bar review"></div>
             </div>
             <div class="status-item">
               <p class="status-title attention">Needs Attention</p>
-              <p class="status-count">3</p>
+              <p class="status-count">4</p>
               <div class="progress-bar attention"></div>
             </div>
           </div>
