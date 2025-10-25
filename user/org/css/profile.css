@@ -114,6 +114,19 @@ html, body {
 .social-icon { display: inline-flex; width: 18px; height: 18px; margin-right: 8px; vertical-align: middle; }
 .social-icon svg { width: 18px; height: 18px; display: block; }
 
+/* Add proper spacing within each social-group section */
+.social-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* space between label, input rows, and add button */
+  padding: 10px 0; /* vertical whitespace inside each group */
+  border-bottom: 1px solid #e5e7eb; /* subtle divider between groups */
+}
+
+.social-group:last-child {
+  border-bottom: none; /* remove border from the last group */
+}
+
 /* Small button variants used for add/remove actions */
 .small-btn {
   padding: 6px 10px;
