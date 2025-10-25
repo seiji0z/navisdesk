@@ -103,7 +103,7 @@ function renderTable(userList) {
   userList.forEach((user, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${user.name}</td>
+      <td class="clickable-user" onclick="showUserDetails(${index})">${user.name}</td>
       <td>${user.email}</td>
       <td>${user.role}</td>
       <td>${user.status}</td>
@@ -117,6 +117,39 @@ function renderTable(userList) {
     tbody.appendChild(row);
   });
 }
+// ======== VIEW USER DETAILS MODAL ========
+function showUserDetails(index) {
+  const user = users[index];
+  const modal = document.getElementById("modal");
+  const content = document.getElementById("modal-content");
+
+  content.innerHTML = `
+    <span class="close-btn" id="close-details">&times;</span>
+    <h3>User Details</h3>
+    <div class="user-details-modal">
+      <p><strong>Name:</strong> ${user.name}</p>
+      <p><strong>Email:</strong> ${user.email}</p>
+      <p><strong>Role:</strong> ${user.role}</p>
+      <p><strong>Status:</strong> ${user.status}</p>
+      <p><strong>Date Registered:</strong> ${user.dateRegistered}</p>
+      <p><strong>Last Login:</strong> ${user.lastLogin}</p>
+      ${user.department ? `<p><strong>Department:</strong> ${user.department}</p>` : ""}
+      ${user.adviserName ? `<p><strong>Adviser:</strong> ${user.adviserName}</p>` : ""}
+      ${user.adviserEmail ? `<p><strong>Adviser Email:</strong> ${user.adviserEmail}</p>` : ""}
+      ${user.officer1Name ? `<p><strong>President:</strong> ${user.officer1Name}</p>` : ""}
+      ${user.officer1Email ? `<p><strong>President Email:</strong> ${user.officer1Email}</p>` : ""}
+      ${user.description ? `<p><strong>Description:</strong> ${user.description}</p>` : ""}
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="close-details-btn">Close</button>
+    </div>
+  `;
+
+  modal.style.display = "flex";
+  document.getElementById("close-details").onclick = () => (modal.style.display = "none");
+  document.getElementById("close-details-btn").onclick = () => (modal.style.display = "none");
+}
+
 
 
 // ======== ADD USER MODAL ========
@@ -442,3 +475,4 @@ initUserManagement();
 
 window.showEditModal = showEditModal;
 window.showDeactivateModal = showDeactivateModal;
+window.showUserDetails = showUserDetails;
