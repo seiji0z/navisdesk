@@ -180,7 +180,7 @@ function renderActivitiesTable(activities, orgMap) {
                     ${activitySdgs.map(sdg => {
                         const sdgNumberMatch = sdg.match(/\d+/);
                         const sdgNumber = sdgNumberMatch ? sdgNumberMatch[0] : '';
-                        const sdgClass = `sdg sdg-goal-${sdgNumber}`;
+                        const sdgClass = `sdg sdg-${sdgNumber}`;
                         return `<span class="${sdgClass}">${sdg}</span>`;
                     }).join(' ')}
                 </div>

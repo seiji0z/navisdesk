@@ -90,6 +90,45 @@
   src: url("../assets/fonts/Poppins-BlackItalic.ttf") format("truetype");
 }
 
+:root {
+  --sdg-1: #E5233D; 
+  --sdg-2: #DDA73A;  
+  --sdg-3: #4CA146; 
+  --sdg-4: #C5192D; 
+  --sdg-5: #EF402C; 
+  --sdg-6: #27BFE6;  
+  --sdg-7: #FBC412;  
+  --sdg-8: #A31C44; 
+  --sdg-9: #F26A2D;  
+  --sdg-10: #E01483; 
+  --sdg-11: #F89D2A; 
+  --sdg-12: #BF8D2C; 
+  --sdg-13: #407F46; 
+  --sdg-14: #1F97D4; 
+  --sdg-15: #59BA48; 
+  --sdg-16: #126A9F; 
+  --sdg-17: #13496B; 
+}
+
+/* Utility classes for SDG colors */
+.sdg-1 { background-color: var(--sdg-1); color: #fff; }
+.sdg-2 { background-color: var(--sdg-2); color: #fff; }
+.sdg-3 { background-color: var(--sdg-3); color: #fff; }
+.sdg-4 { background-color: var(--sdg-4); color: #fff; }
+.sdg-5 { background-color: var(--sdg-5); color: #fff; }
+.sdg-6 { background-color: var(--sdg-6); color: #fff; }
+.sdg-7 { background-color: var(--sdg-7); color: #000; }
+.sdg-8 { background-color: var(--sdg-8); color: #fff; }
+.sdg-9 { background-color: var(--sdg-9); color: #fff; }
+.sdg-10 { background-color: var(--sdg-10); color: #fff; }
+.sdg-11 { background-color: var(--sdg-11); color: #000; }
+.sdg-12 { background-color: var(--sdg-12); color: #fff; }
+.sdg-13 { background-color: var(--sdg-13); color: #fff; }
+.sdg-14 { background-color: var(--sdg-14); color: #fff; }
+.sdg-15 { background-color: var(--sdg-15); color: #fff; }
+.sdg-16 { background-color: var(--sdg-16); color: #fff; }
+.sdg-17 { background-color: var(--sdg-17); color: #fff; }
+
 /* Default font reset */
 * {
   box-sizing: border-box;
