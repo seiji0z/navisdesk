@@ -1,18 +1,42 @@
+.main {
+  height: 100vh;
+  overflow: hidden;
+  padding-left: 280px; 
+  box-sizing: border-box;
+}
+.dashboard-folder {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.folder-body {
+  flex-grow: 1;
+  overflow: hidden;
+  padding: 0 2rem 2rem 2rem;
+}
+
 .folder-content-card {
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   width: 100%;
-  max-width: 100%;
-  min-height: 80vh;
-  margin: 0 auto;
+  height: 100%;
   box-sizing: border-box;
+  overflow: hidden; 
 }
 
-w .activities-container {
+.activities-container {
   font-family: "Poppins", sans-serif;
   color: #073066;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.filter-search {
+    flex-shrink: 0; 
 }
 
 .filter-search h2 {
@@ -85,10 +109,23 @@ w .activities-container {
   height: 18px;
 }
 
+.activities-table {
+    flex-grow: 1; 
+    overflow-y: auto; 
+    min-height: 0; 
+}
+
 .activities-table table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
+  position: relative;
+}
+
+.activities-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10; 
 }
 
 .activities-table th,
@@ -173,4 +210,62 @@ w .activities-container {
   padding-right: 2px;
   filter: brightness(0) saturate(100%) invert(58%) sepia(13%) saturate(5435%)
     hue-rotate(320deg) brightness(99%) contrast(94%);
+}
+
+.sdg-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sdg-count {
+  background-color: #073066;
+  color: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.sdg-tooltip-content {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  color: #073066;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  padding: 0.5rem;
+  min-width: 200px;
+  z-index: 10;
+  transition: opacity 0.2s ease;
+  text-align: center;
+}
+
+.sdg-tooltip-content .sdg {
+  display: inline-block;
+  margin: 3px;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.sdg-tooltip:hover .sdg-tooltip-content {
+  visibility: visible;
+  opacity: 1;
+}
+
+.sdg-tooltip-content::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
 }
