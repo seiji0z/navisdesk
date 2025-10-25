@@ -1,139 +1,109 @@
-body, html {
+html, body {
   height: 100%;
   overflow: hidden;
 }
 
 :root {
   --folder-yellow: #ffb901;
-  --primary-blue: #073066;
-
-  /* SDG Colors */
-  --sdg-1: #E5233D;
-  --sdg-2: #DDA73A;
-  --sdg-3: #4CA146;
-  --sdg-4: #C5192D;
-  --sdg-5: #EF402C;
-  --sdg-6: #27BFE6;
-  --sdg-7: #FBC412;
-  --sdg-8: #A31C44;
-  --sdg-9: #F26A2D;
-  --sdg-10: #E01483;
-  --sdg-11: #F89D2A;
-  --sdg-12: #BF8D2C;
-  --sdg-13: #407F46;
-  --sdg-14: #1F97D4;
-  --sdg-15: #59BA48;
-  --sdg-16: #126A9F;
-  --sdg-17: #13496B;
 }
-
-/* =======================================================
-   FOLDER BODY STYLING
-========================================================= */
 
 .folder-body {
   font-family: "Poppins", sans-serif;
-  padding: 30px 40px;
-  margin-top: 15px;
-  margin-bottom: 15px;
+  padding: 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  border-radius: 15px;
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.05);
-  overflow-y: auto;
+  gap: 20px;
   max-height: calc(85vh - 40px);
-  scrollbar-width: thin;
-  scrollbar-color: #fff var(--folder-yellow);
-}
-
-.folder-body::-webkit-scrollbar {
-  width: 12px;
-}
-.folder-body::-webkit-scrollbar-track {
-  background: var(--folder-yellow);
-}
-.folder-body::-webkit-scrollbar-thumb {
-  background: #fff;
-  border-radius: 8px;
-  border: 3px solid var(--folder-yellow);
+  overflow: auto;
 }
 
 .dashboard-folder {
   overflow: hidden;
 }
 
-/* =======================================================
-   SECTION CARDS
-========================================================= */
-
+/* Section Cards */
 .activity-section {
   background: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
-  padding: 30px 35px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.activity-section:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 40px;
 }
 
 .activity-section h3 {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   font-weight: 600;
-  color: var(--primary-blue);
+  color: #1f2937;
+  margin-bottom: 15px;
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 1rem;
 }
 
 .card-title-icon {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
+  width: 28px;
+  height: 28px;
+  margin-right: 12px;
+  vertical-align: middle;
   flex-shrink: 0;
+  object-fit: contain;
+  display: inline-block;
+  /* Optional: for SVGs with viewBox, remove background/border */
+  background: none;
+  border-radius: 0;
 }
 
-/* =======================================================
-   REVIEW CARD
-========================================================= */
+.sdg-grid .sdg-checkbox {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  align-items: center;
+}
 
+.sdg-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+
+.sdg-label {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 700;
+  flex: 0 0 36px;
+  margin-left: 6px;
+}
+
+/* Review card styling */
 .review-card {
-  background: #f3f6fb;
-  border: 1px solid #dce4f2;
+  background: #f8fafc;
+  border: 1px solid #e6eef8;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(7, 48, 102, 0.08);
-  transition: background-color 0.2s ease;
-}
-
-.review-card:hover {
-  background-color: #eef3fb;
+  border-radius: 10px;
 }
 
 .review-row {
   display: flex;
-  gap: 18px;
+  gap: 16px;
   align-items: flex-start;
-  margin-bottom: 10px;
 }
 
 .review-label {
   min-width: 160px;
-  color: var(--primary-blue);
+  color: #374151;
   font-weight: 600;
 }
 
 .review-value {
-  color: #374151;
+  color: #111827;
 }
-
-/* =======================================================
-   INPUTS, TEXTAREAS, AND FORMS
-========================================================= */
 
 .section-content {
   display: flex;
@@ -152,14 +122,11 @@ body, html {
 .section-content input[type="number"],
 .section-content textarea {
   width: 100%;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
   font-family: "Poppins", sans-serif;
   font-size: 0.95rem;
-  color: #111827;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .section-content textarea {
@@ -167,17 +134,60 @@ body, html {
   min-height: 80px;
 }
 
-.section-content input:focus,
-.section-content textarea:focus {
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgba(7, 48, 102, 0.15);
-  outline: none;
+/* SDG Grid */
+.sdg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 8px;
 }
 
-/* =======================================================
-   DATE-TIME ROW
-========================================================= */
+.sdg-checkbox.sdg-1 { border-color: var(--sdg-1); }
+.sdg-checkbox.sdg-2 { border-color: var(--sdg-2); }
+.sdg-checkbox.sdg-3 { border-color: var(--sdg-3); }
+.sdg-checkbox.sdg-4 { border-color: var(--sdg-4); }
+.sdg-checkbox.sdg-5 { border-color: var(--sdg-5); }
+.sdg-checkbox.sdg-6 { border-color: var(--sdg-6); }
+.sdg-checkbox.sdg-7 { border-color: var(--sdg-7); }
+.sdg-checkbox.sdg-8 { border-color: var(--sdg-8); }
+.sdg-checkbox.sdg-9 { border-color: var(--sdg-9); }
+.sdg-checkbox.sdg-10 { border-color: var(--sdg-10); }
+.sdg-checkbox.sdg-11 { border-color: var(--sdg-11); }
+.sdg-checkbox.sdg-12 { border-color: var(--sdg-12); }
+.sdg-checkbox.sdg-13 { border-color: var(--sdg-13); }
+.sdg-checkbox.sdg-14 { border-color: var(--sdg-14); }
+.sdg-checkbox.sdg-15 { border-color: var(--sdg-15); }
+.sdg-checkbox.sdg-16 { border-color: var(--sdg-16); }
+.sdg-checkbox.sdg-17 { border-color: var(--sdg-17); }
 
+.sdg-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+/* File Inputs */
+.file-input {
+  display: block;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #f9fafb;
+  font-size: 0.9rem;
+}
+
+/* Hidden inputs used with custom upload boxes */
+.file-input.hidden {
+  display: none;
+}
+
+.file-name {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: -4px;
+}
+
+/* Date-Time Row */
 .date-time-row {
   display: flex;
   gap: 20px;
@@ -189,164 +199,64 @@ body, html {
   flex-direction: column;
 }
 
-/* =======================================================
-   SDG GRID
-========================================================= */
-
-.sdg-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-}
-
-.sdg-checkbox {
-  background: #fff;
-  border: 1px solid #dbe4f0;
-  border-radius: 10px;
-  padding: 10px 14px;
+/* Buttons */
+.button-container {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  box-shadow: 0 2px 5px rgba(7, 48, 102, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.3s ease;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
-.sdg-checkbox:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(7, 48, 102, 0.1);
-}
-
-.sdg-label {
-  width: 36px;
-  height: 36px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  color: #fff;
-  font-weight: 700;
-  flex: 0 0 36px;
-  margin-left: 6px;
-  font-size: 0.9rem;
-}
-
-/* SDG COLOR ASSIGNMENTS */
-.sdg-1 .sdg-label { background: var(--sdg-1); }
-.sdg-2 .sdg-label { background: var(--sdg-2); }
-.sdg-3 .sdg-label { background: var(--sdg-3); }
-.sdg-4 .sdg-label { background: var(--sdg-4); }
-.sdg-5 .sdg-label { background: var(--sdg-5); }
-.sdg-6 .sdg-label { background: var(--sdg-6); }
-.sdg-7 .sdg-label { background: var(--sdg-7); }
-.sdg-8 .sdg-label { background: var(--sdg-8); }
-.sdg-9 .sdg-label { background: var(--sdg-9); }
-.sdg-10 .sdg-label { background: var(--sdg-10); }
-.sdg-11 .sdg-label { background: var(--sdg-11); }
-.sdg-12 .sdg-label { background: var(--sdg-12); }
-.sdg-13 .sdg-label { background: var(--sdg-13); }
-.sdg-14 .sdg-label { background: var(--sdg-14); }
-.sdg-15 .sdg-label { background: var(--sdg-15); }
-.sdg-16 .sdg-label { background: var(--sdg-16); }
-.sdg-17 .sdg-label { background: var(--sdg-17); }
-
-/* SDG Checkbox Checked State Border Colors */
-.sdg-1:has(input:checked) {
-  border-color: var(--sdg-1);
-}
-
-.sdg-2:has(input:checked) {
-  border-color: var(--sdg-2);
-}
-
-.sdg-3:has(input:checked) {
-  border-color: var(--sdg-3);
-}
-
-.sdg-4:has(input:checked) {
-  border-color: var(--sdg-4);
-}
-
-.sdg-5:has(input:checked) {
-  border-color: var(--sdg-5);
-}
-
-.sdg-6:has(input:checked) {
-  border-color: var(--sdg-6);
-}
-
-.sdg-7:has(input:checked) {
-  border-color: var(--sdg-7);
-}
-
-.sdg-8:has(input:checked) {
-  border-color: var(--sdg-8);
-}
-
-.sdg-9:has(input:checked) {
-  border-color: var(--sdg-9);
-}
-
-.sdg-10:has(input:checked) {
-  border-color: var(--sdg-10);
-}
-
-.sdg-11:has(input:checked) {
-  border-color: var(--sdg-11);
-}
-
-.sdg-12:has(input:checked) {
-  border-color: var(--sdg-12);
-}
-
-.sdg-13:has(input:checked) {
-  border-color: var(--sdg-13);
-}
-
-.sdg-14:has(input:checked) {
-  border-color: var(--sdg-14);
-}
-
-.sdg-15:has(input:checked) {
-  border-color: var(--sdg-15);
-}
-
-.sdg-16:has(input:checked) {
-  border-color: var(--sdg-16);
-}
-
-.sdg-17:has(input:checked) {
-  border-color: var(--sdg-17);
-}
-
-/* =======================================================
-   UPLOAD BOXES
-========================================================= */
-
+/* Upload box styles */
 .upload-row {
   display: grid;
+  /* Enforce two columns on regular/viewports with enough width, fall back to one column on small screens */
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
 
+/* Responsive: collapse to single column on small screens */
 @media (max-width: 640px) {
   .upload-row {
     grid-template-columns: 1fr;
   }
 }
 
+/* When there is only one upload box, center it visually.
+   - CSS-only fallback: target the single child and center it inside the grid.
+   - Add a helper class `.single` that JS can apply if desired for broader browser support.
+   - Use :has() for modern browsers as an alternative way to target the parent when it contains only one child. */
 .upload-row > .upload-box:only-child {
-  grid-column: 1 / -1;
-  justify-self: center;
+  grid-column: 1 / -1; /* span the available grid area */
+  justify-self: center; /* center horizontally */
   width: 70%;
   max-width: 720px;
 }
 
+/* Helper class for JS to enforce single-column centered layout when only one box exists */
+.upload-row.single {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+.upload-row.single .upload-box {
+  width: 70%;
+  max-width: 720px;
+}
+
+/* Modern selector: if parent contains only one upload-box, make it a single centered column.
+   This is optional and will only apply in browsers that support :has(). */
+.upload-row:has(.upload-box:only-child) {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
 .upload-box {
   flex: 1;
-  border: 2px dashed #cbd5e1;
-  border-radius: 15px;
-  padding: 30px;
-  min-height: 350px;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 18px;
+  min-height: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -354,32 +264,110 @@ body, html {
   gap: 8px;
   background-color: #ffffff;
   cursor: pointer;
-  transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
   text-align: center;
 }
 
-.upload-box:hover {
-  border-color: var(--primary-blue);
-  background: #f5f8fc;
-  transform: translateY(-2px);
+.upload-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
 }
 
-.upload-box.dragover {
-  border-color: #2563eb;
-  background-color: #f0f7ff;
+.small-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.add-more-btn { background: #2563eb; color: #fff; }
+.remove-btn { background: #ef4444; color: #fff; }
+
+/* Controls row that sits at the top of each upload section */
+.section-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.upload-box .upload-type {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+/* Back button styling */
+.back-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: #fff;
+  color: #374151;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+  border: 1px solid #d1d5db;
+}
+
+/* When back button also has remove-btn class, use the remove (red) styling */
+.back-btn.remove-btn {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+}
+
+/* Scrollbar styling for the folder body to match folder yellow */
+.folder-body {
+  scrollbar-width: thin;
+  scrollbar-color: #fff var(--folder-yellow);
+}
+.folder-body::-webkit-scrollbar {
+  width: 12px;
+}
+.folder-body::-webkit-scrollbar-track {
+  background: var(--folder-yellow);
+}
+.folder-body::-webkit-scrollbar-thumb {
+  background: #fff;
+  border-radius: 8px;
+  border: 3px solid var(--folder-yellow);
+}
+
+.upload-box .upload-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
 }
 
 .upload-box .upload-icon img {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
 }
 
 .upload-box .upload-text {
   font-size: 0.95rem;
-  color: var(--primary-blue);
+  color: #374151;
 }
 
+.upload-box .upload-text strong {
+  font-weight: 700;
+}
+
+.upload-box .upload-filename {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* Preview area inside upload boxes */
 .upload-preview {
   display: flex;
   gap: 8px;
@@ -392,51 +380,27 @@ body, html {
   width: 96px;
   height: 72px;
   object-fit: cover;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 6px rgba(7, 48, 102, 0.1);
-  transition: transform 0.2s ease;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
 }
 
-.upload-thumb:hover {
-  transform: scale(1.05);
-}
-
-.file-input {
-  opacity:0;
-  position:absolute;
-  z-index:-1;
-}
-
-/* =======================================================
-   BUTTONS
-========================================================= */
-
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-/* Small button variants used for add/remove actions */
-.small-btn {
+.upload-file-row {
+  background: #f3f4f6;
   padding: 6px 10px;
   border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
+  font-size: 0.9rem;
+  color: #374151;
 }
-.add-more-btn { background: #2563eb; color: #fff; }
-.add-more-btn:hover { background: #1e40af; }
-.remove-btn { background: #ef4444; color: #fff; }
-.remove-btn:hover { background: #dc2626; }
+
+.upload-box.dragover {
+  border-color: #2563eb;
+  background-color: #f0f7ff;
+}
 
 .submit-btn,
 .cancel-btn {
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 10px 18px;
+  border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
@@ -445,50 +409,19 @@ body, html {
 }
 
 .submit-btn {
-  background-color: var(--primary-blue);
+  background-color: #2563eb;
   color: #fff;
 }
 
 .submit-btn:hover {
-  background-color: #0a418c;
-  transform: translateY(-2px);
+  background-color: #1e40af;
 }
 
 .cancel-btn {
   background-color: #e5e7eb;
-  color: var(--primary-blue);
+  color: #374151;
 }
 
 .cancel-btn:hover {
   background-color: #d1d5db;
-}
-
-/* =======================================================
-   BACK BUTTON
-========================================================= */
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: var(--primary-blue);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 18px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.back-btn:hover {
-  background-color: #0a418c;
-  transform: translateY(-1px);
-}
-
-.back-btn.remove-btn {
-  background: #ef4444;
-  color: #fff;
-  border: none;
 }

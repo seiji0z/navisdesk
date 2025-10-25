@@ -117,7 +117,7 @@ const sdgs = Array.from({ length: 17 }, (_, i) => {
   return `
     <label class="sdg-checkbox sdg-${n}">
       <input type="checkbox" data-sdg="${n}" />
-      <span class="sdg-label">${n}</span>
+      <span class="sdg-label sdg-${n}">${n}</span>
       <span style="margin-left:8px">${titles[i]}</span>
     </label>
   `;

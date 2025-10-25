@@ -1,7 +1,11 @@
+/* ================================== */
+/* CSS from Table (activities.css) */
+/* ================================== */
+
 .main {
   height: 100vh;
   overflow: hidden;
-  padding-left: 280px; 
+  padding-left: 280px;
   box-sizing: border-box;
 }
 .dashboard-folder {
@@ -10,10 +14,16 @@
   height: 100%;
 }
 
+/* MODIFICATION: Make folder-body from table CSS handle scrolling */
 .folder-body {
   flex-grow: 1;
-  overflow: hidden;
-  padding: 0 2rem 2rem 2rem;
+  overflow: auto; /* Changed from hidden to auto */
+  padding: 2rem; /* Adjusted padding */
+  /* These were removed to avoid conflict with review page:
+  gap: 20px; 
+  display: flex; 
+  flex-direction: column;
+  */
 }
 
 .folder-content-card {
@@ -24,7 +34,7 @@
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .activities-container {
@@ -36,7 +46,7 @@
 }
 
 .filter-search {
-    flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
 .filter-search h2 {
@@ -110,9 +120,9 @@
 }
 
 .activities-table {
-    flex-grow: 1; 
-    overflow-y: auto; 
-    min-height: 0; 
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .activities-table table {
@@ -123,9 +133,9 @@
 }
 
 .activities-table thead {
-    position: sticky;
-    top: 0;
-    z-index: 10; 
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .activities-table th,
@@ -156,17 +166,6 @@
   border-radius: 6px;
   color: white;
   font-size: 0.8rem;
-}
-
-.sdg-4 {
-  background-color: #C31F33;
-}
-.sdg-7 {
-  background-color: #FBC412;
-  color: black;
-}
-.sdg-8 {
-  background-color: #A31C44;
 }
 
 .status {
@@ -238,7 +237,7 @@
   background-color: #fff;
   color: #073066;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   padding: 0.5rem;
   min-width: 200px;
   z-index: 10;
