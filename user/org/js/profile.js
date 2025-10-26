@@ -1,5 +1,17 @@
 const folderBody = document.getElementById('folder-body');
 
+// Fetch organization data (simulation for ICON)
+async function fetchOrganizations() {
+  try {
+    const response = await fetch("../../../data/student_organizations.json");
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Could not fetch organization data:", error);
+    return null;
+  }
+}
+
 // Template builder for the profile content
 function renderProfileContent() {
   return `
@@ -19,14 +31,40 @@ function renderProfileContent() {
           <section class="card-section basic-info">
             <h3>Basic Information</h3>
             <div class="section-content">
-              <label for="official-name">Official Name</label>
+              <label for="official-name">Organization Name</label>
               <input id="official-name" type="text" required />
 
-              <label for="acronym">Acronym</label>
+              <label for="acronym">Acronym / Short Name</label>
               <input id="acronym" type="text" required />
 
-              <label for="slu-email">SLU Email</label>
+              <label for="org-description">Organization Description</label>
+              <textarea id="org-description" rows="3" placeholder="Enter a short description about your organization..."></textarea>
+
+              <label for="department">Department</label>
+              <select id="department" required>
+                <option value="SAMCIS">School of Accountancy, Management, Computing and Information Studies | SAMCIS</option>
+                <option value="SEA">School of Engineering and Architecture | SEA</option>
+                <option value="SOL">School of Law | SOL</option>
+                <option value="SOM">School of Medicine | SOM</option>
+                <option value="SONAHBS">School of Nursing, Allied Health, and Biological Sciences Natural Sciences | SONAHBS</option>
+                <option value="STELA">School of Teacher Education and Liberal Arts | STELA</option>
+              </select>
+
+              <label for="slu-email">Official SLU Institution Email</label>
               <input id="slu-email" type="email" required />
+
+              <label for="org-type">Type of Organization</label>
+              <select id="org-type" required>
+                <option value="Academic">Academic</option>
+                <option value="Publication">Publication</option>
+                <option value="Universal">Universal</option>
+              </select>
+
+              <label>Adviser</label>
+              <div class="adviser-row">
+                <input id="adviser-name" type="text" placeholder="Adviser Name" />
+                <input id="adviser-email" type="email" placeholder="Adviser Email" />
+              </div>
             </div>
           </section>
 
@@ -90,7 +128,6 @@ function renderProfileContent() {
   `;
 }
 
-
 // Inject content
 if (folderBody) {
   folderBody.innerHTML = renderProfileContent();
@@ -106,39 +143,39 @@ function createLinkRow(value = '', placeholder = 'https://example.com') {
       <button class="small-btn remove-btn remove-link">Remove</button>
     </div>
   `;
-  // wire remove
   wrapper.querySelector('.remove-link').addEventListener('click', () => wrapper.remove());
   return wrapper;
 }
 
-// After injection, wire interactive elements
-function wireProfileBehaviors() {
+// Wire interactive elements and populate data
+async function wireProfileBehaviors() {
+  const orgData = await fetchOrganizations();
+  const org = orgData?.find(o => o._id.$oid === "6716001a9b8c2001abcd0001"); // ICON as default logged in org
+
   const avatarInput = document.getElementById('avatar-input');
   const orgAvatar = document.getElementById('org-avatar');
   const cancelBtn = document.getElementById('cancel-btn');
   const updateBtn = document.getElementById('update-btn');
-  // (no generic linksList anymore) 
 
-  // initial state
-  const initialState = {
-    avatarSrc: orgAvatar ? orgAvatar.src : '',
-    officialName: '',
-    acronym: '',
-    sluEmail: '',
-    facebook: [],
-    instagram: [],
-    website: []
-  };
-
-  // References to the three lists
   const facebookList = document.getElementById('facebook-list');
   const instagramList = document.getElementById('instagram-list');
   const websiteList = document.getElementById('website-list');
 
-  // ensure each list starts with one empty input
-  facebookList.appendChild(createLinkRow('', 'https://facebook.com/your-page'));
-  instagramList.appendChild(createLinkRow('', 'https://instagram.com/your-handle'));
-  websiteList.appendChild(createLinkRow('', 'https://your-website.com'));
+  facebookList.appendChild(createLinkRow(org?.fb_link || '', 'https://facebook.com/your-page'));
+  instagramList.appendChild(createLinkRow(org?.ig_link || '', 'https://instagram.com/your-handle'));
+  websiteList.appendChild(createLinkRow(org?.website_link || '', 'https://your-website.com'));
+
+  // Prefill fields if data is available
+  if (org) {
+    document.getElementById('official-name').value = org.name || '';
+    document.getElementById('acronym').value = org.abbreviation || '';
+    document.getElementById('org-description').value = org.description || '';
+    document.getElementById('department').value = org.department || '';
+    document.getElementById('slu-email').value = org.email || '';
+    document.getElementById('org-type').value = org.type || '';
+    document.getElementById('adviser-name').value = org.adviser?.name || '';
+    document.getElementById('adviser-email').value = org.adviser?.email || '';
+  }
 
   // Image preview
   if (avatarInput && orgAvatar) {
@@ -153,71 +190,44 @@ function wireProfileBehaviors() {
     });
   }
 
-  // Add link handlers for each social type
-  const addFbBtn = document.getElementById('add-fb-btn');
-  const addIgBtn = document.getElementById('add-ig-btn');
-  const addWebBtn = document.getElementById('add-web-btn');
+  // Add link buttons
+  document.getElementById('add-fb-btn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    facebookList.appendChild(createLinkRow('', 'https://facebook.com/your-page'));
+  });
+  document.getElementById('add-ig-btn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    instagramList.appendChild(createLinkRow('', 'https://instagram.com/your-handle'));
+  });
+  document.getElementById('add-web-btn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    websiteList.appendChild(createLinkRow('', 'https://your-website.com'));
+  });
 
-  if (addFbBtn) {
-    addFbBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      facebookList.appendChild(createLinkRow('', 'https://facebook.com/your-page'));
-    });
-  }
-  if (addIgBtn) {
-    addIgBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      instagramList.appendChild(createLinkRow('', 'https://instagram.com/your-handle'));
-    });
-  }
-  if (addWebBtn) {
-    addWebBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      websiteList.appendChild(createLinkRow('', 'https://your-website.com'));
-    });
-  }
-
-  // Cancel: reset fields and avatar
-  if (cancelBtn) {
-    cancelBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const confirmExit = confirm("Are you sure you want to cancel and return to the dashboard?");
-      if (confirmExit) {
+  // Cancel button
+  cancelBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const confirmExit = confirm("Are you sure you want to cancel and return to the dashboard?");
+    if (confirmExit) {
       window.location.href = "../../../user/org/pages/dashboard.html";
-      }
-    });
-  }
+    }
+  });
 
-  // Update: validate required fields and show success alert
-  if (updateBtn) {
-    updateBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const official = document.getElementById('official-name');
-      const acronym = document.getElementById('acronym');
-      const email = document.getElementById('slu-email');
+  // Update button
+  updateBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
 
-      if (!official.value.trim()) { official.focus(); alert('Official name is required.'); return; }
-      if (!acronym.value.trim()) { acronym.focus(); alert('Acronym is required.'); return; }
-      if (!email.value.trim()) { email.focus(); alert('SLU Email is required.'); return; }
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(email.value.trim())) { email.focus(); alert('Please enter a valid email address.'); return; }
+    const official = document.getElementById('official-name');
+    const acronym = document.getElementById('acronym');
+    const email = document.getElementById('slu-email');
 
-      // collect link values per social type
-      const fbValues = Array.from(facebookList.querySelectorAll('.link-input')).map(i => i.value.trim()).filter(Boolean);
-      const igValues = Array.from(instagramList.querySelectorAll('.link-input')).map(i => i.value.trim()).filter(Boolean);
-      const webValues = Array.from(websiteList.querySelectorAll('.link-input')).map(i => i.value.trim()).filter(Boolean);
+    if (!official.value.trim()) { official.focus(); alert('Organization name is required.'); return; }
+    if (!acronym.value.trim()) { acronym.focus(); alert('Acronym is required.'); return; }
+    if (!email.value.trim()) { email.focus(); alert('Official SLU email is required.'); return; }
 
-      // Here you'd send the data to the backend. For now, just log and show success.
-      console.log('facebook', fbValues);
-      console.log('instagram', igValues);
-      console.log('website', webValues);
-
-      alert('Profile updated successfully.');
-    });
-  }
+    alert("Your updated profile information will be reviewed by the Office of Student Affairs and Services (OSAS) before final approval.");
+  });
 }
 
 // Initialize behaviors after DOM injection
 wireProfileBehaviors();
-
-// Expose nothing; module keeps page scope clean
