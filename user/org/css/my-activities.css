@@ -1,7 +1,8 @@
 /* =======================================================
-   MY-ACTIVITIES.CSS (Unified + Cleaned)
+   MY-ACTIVITIES.CSS (Enhanced Status Colors)
    Theme: Org Dashboard | Font: Poppins | Primary: #073066
-======================================================= */
+   Update: Color-coded cards + matching table highlights
+========================================================= */
 
 body, html {
   overflow-x: hidden;
@@ -41,18 +42,62 @@ body, html {
 }
 
 .activities-cards .card {
-  background: #fff;
   border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   text-align: center;
   padding: 1.5rem;
   font-family: "Poppins", sans-serif;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  color: #073066;
 }
 
 .activities-cards .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* --- Individual Card Themes --- */
+.activities-cards .card:nth-child(1) {
+  background-color: #eafaf1; /* Light green tint */
+  border-left: 6px solid #27ae60;
+}
+
+.activities-cards .card:nth-child(2) {
+  background-color: #fff4e5; /* Light orange tint */
+  border-left: 6px solid #e67e22;
+}
+
+.activities-cards .card:nth-child(3) {
+  background-color: #fdecea; /* Light red tint */
+  border-left: 6px solid #c0392b;
+}
+
+.activities-cards .card:nth-child(4) {
+  background-color: #fffbea; /* Light yellow tint */
+  border-left: 6px solid #f1c40f;
+}
+
+/* Titles inside cards */
+.activities-cards .card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* Color titles */
+.activities-cards .card:nth-child(1) h3 { color: #27ae60; }
+.activities-cards .card:nth-child(2) h3 { color: #e67e22; }
+.activities-cards .card:nth-child(3) h3 { color: #c0392b; }
+.activities-cards .card:nth-child(4) h3 { color: #f1c40f; }
+
+.activities-cards .card h3::after {
+  content: "";
+  display: block;
+  width: 45px;
+  height: 3px;
+  border-radius: 3px;
+  margin: 6px auto 0;
+  background-color: currentColor;
 }
 
 /* -------------------------------------
@@ -86,9 +131,8 @@ body, html {
 }
 
 .table-toggle-btn:hover {
-  background-color: #073066;
-  color: #fff;
-  transform: translateY(-1px);
+  background-color: #e5e7eb;
+  transform: scale(1.03);
 }
 
 .table-toggle-btn.active {
@@ -121,7 +165,28 @@ body, html {
 
 .submission-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+/* Status-based card highlights */
+.submission-card.approved {
+  background-color: #eafaf1;
+  border-left: 5px solid #27ae60;
+}
+
+.submission-card.pending {
+  background-color: #fffbea;
+  border-left: 5px solid #f1c40f;
+}
+
+.submission-card.rejected {
+  background-color: #fdecea;
+  border-left: 5px solid #c0392b;
+}
+
+.submission-card.attention {
+  background-color: #fff4e5;
+  border-left: 5px solid #e67e22;
 }
 
 .submission-card h3 {
@@ -145,15 +210,10 @@ body, html {
   color: #fff;
 }
 
-.status.approved {
-  background-color: #2ecc71;
-}
-.status.pending {
-  background-color: #f5a623;
-}
-.status.rejected {
-  background-color: #d9534f;
-}
+.status.approved { background-color: #27ae60; }
+.status.pending { background-color: #f1c40f; }
+.status.rejected { background-color: #c0392b; }
+.status.attention { background-color: #e67e22; }
 
 /* -------------------------------------
    Table View Styles
@@ -184,13 +244,31 @@ body, html {
   color: #073066;
 }
 
-.submissions-table tr:hover {
-  background: #f3f4f6;
-  cursor: pointer;
+/* Colored rows based on status */
+.submissions-table tr.approved { background-color: #f3fdf6; }
+.submissions-table tr.pending { background-color: #fffdf2; }
+.submissions-table tr.rejected { background-color: #fff2f0; }
+.submissions-table tr.attention { background-color: #fff8f1; }
+
+/* Table badges */
+.submissions-table .status {
+  display: inline-block;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.85rem;
+  text-align: center;
+  min-width: 90px;
 }
 
+.submissions-table .status.approved { background-color: #27ae60; }
+.submissions-table .status.pending { background-color: #f1c40f; }
+.submissions-table .status.rejected { background-color: #c0392b; }
+.submissions-table .status.attention { background-color: #e67e22; }
+
 /* -------------------------------------
-   Activity Details View
+   Activity Details View (Final)
 ------------------------------------- */
 .activity-details {
   background-color: #ffffff;
@@ -223,8 +301,8 @@ body, html {
 }
 
 .back-btn:hover {
-  background-color: #0a418c;
-  transform: translateY(-1px);
+  background-color: #0a3a80;
+  transform: translateY(-2px);
 }
 
 .back-btn i {
@@ -313,44 +391,15 @@ body, html {
    Responsive Adjustments
 ------------------------------------- */
 @media (max-width: 1024px) {
-  .activities-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .submissions-container.cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .activities-cards { grid-template-columns: repeat(2, 1fr); }
+  .submissions-container.cards { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 640px) {
   .activities-cards,
-  .submissions-container.cards {
-    grid-template-columns: 1fr;
-  }
+  .submissions-container.cards { grid-template-columns: 1fr; }
 }
+
 .submissions-container {
   overflow-y: scroll;
-}/* -------------------------------------
-   Status Badges (Table Cells)
-------------------------------------- */
-.submissions-table .status {
-  display: inline-block;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 0.85rem;
-  text-align: center;
-  min-width: 90px;
-}
-
-.submissions-table .status.approved {
-  background-color: #2ecc71;
-}
-
-.submissions-table .status.pending {
-  background-color: #f5a623;
-}
-
-.submissions-table .status.rejected {
-  background-color: #d9534f;
 }
