@@ -17,7 +17,7 @@
     "submitted_at": "",
     "reviewed_by": { "$oid": "6716001a9b8c1001abcd0002" },
     "reviewed_at": "",
-    "status": "Approved",
+    "status": "Pending",
     "created_at": "2025-09-10T00:00:00Z"
   },
   {
@@ -32,6 +32,27 @@
     "venue": "Maryheights Campus",
     "objectives": "Promote environmental awareness.",
     "sdgs": ["SDG 13", "SDG 15"],
+    "evidences": [],
+    "supporting_docs": [],
+    "submitted_by": { "$oid": "6716001a9b8c2001abcd0001" },
+    "submitted_at": "",
+    "reviewed_by": { "$oid": "6716001a9b8c1001abcd0001" },
+    "reviewed_at": "",
+    "status": "Revise",
+    "created_at": "2025-09-20T00:00:00Z"
+  },
+  {
+    "_id": { "$oid": "6716001a9b8c3001abcd0003" },
+    "org_id": { "$oid": "6716001a9b8c2001abcd0001" },
+    "title": "ICON Montes Progue",
+    "description": "A staple programming competition for teams to showcase their skills and mastery of algorithms and problem solving.",
+    "acad_year": "2025-2026",
+    "term": "1st Semester",
+    "date_start": "2025-12-10T00:00:00Z",
+    "date_end": "2025-12-11T00:00:00Z",
+    "venue": "Maryheights Campus",
+    "objectives": "To honor the legacy of Sir Montes by challenging students in advanced programming and algorithm design, fostering excellence in problem-solving and teamwork.",
+    "sdgs": ["SDG 4"],
     "evidences": [],
     "supporting_docs": [],
     "submitted_by": { "$oid": "6716001a9b8c2001abcd0001" },
@@ -59,7 +80,7 @@
     "submitted_at": "",
     "reviewed_by": { "$oid": "6716001a9b8c1001abcd0002" },
     "reviewed_at": "",
-    "status": "Approved",
+    "status": "Pending",
     "created_at": "2025-09-28T00:00:00Z"
   }
 ]
