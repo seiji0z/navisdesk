@@ -51,6 +51,29 @@ fetch(sidebarPath)
     });
 
     updateCurrentDate();
+
+    const userProfile = document.getElementById("userProfile");
+    const logoutDropdown = document.getElementById("logoutDropdown");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (userProfile && logoutDropdown) {
+      userProfile.addEventListener("click", (e) => {
+        e.stopPropagation(); 
+        logoutDropdown.classList.toggle("show");
+      });
+
+      document.addEventListener("click", () => {
+        logoutDropdown.classList.remove("show");
+      });
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.clear(); 
+        window.location.href = "../../../login.html";
+      });
+    }
+
   })
   .catch((error) => console.error("Sidebar failed to load:", error));
 

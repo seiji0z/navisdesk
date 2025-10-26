@@ -140,6 +140,8 @@
 /*------------ USER PROFILE ------------*/
 .user-profile {
   display: flex;
+  position: relative;
+  cursor: pointer;
   flex-direction: row;
   align-items: center;
   gap: 10px;
@@ -157,4 +159,46 @@
 .user-profile span {
   color: #ffffff;
   text-align: left;
+}
+
+.logout-dropdown {
+  visibility: hidden;       
+  opacity: 0;
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem 0;
+  width: 100%;
+  text-align: center;
+  z-index: 10000;
+  transition: opacity 0.1s ease, visibility 0.1s ease;
+}
+
+.logout-dropdown.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+.logout-dropdown button {
+  background: none;
+  border: none;
+  color: #073066;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.95rem;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.logout-dropdown button:hover {
+  background-color: #f2f2f2;
+}
+
+.sidebar.collapsed .user-profile {
+  cursor: default;
+  pointer-events: none; 
 }
