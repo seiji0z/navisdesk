@@ -1,53 +1,60 @@
-const activities = [
-  { 
-    _id: "6716001a9b8c4001abcd1004",
-    user_id: "6716001a9b8c1001abcd0002",
-    userName: "Anjelo Esperanzate",
-    role: "OSAS Officer",
-    action: "Reviewed Green Core Clean-Up Drive",
-    timestamp: "2025-10-01T00:00:00Z"
-  },
-  { 
-    _id: "6716001a9b8c4001abcd1005",
-    user_id: "6716001a9b8c2001abcd0001",
-    userName: "Integrated Confederacy",
-    role: "Student Org",
-    action: "Submitted ICON Leadership Training 2025",
-    timestamp: "2025-09-10T00:00:00Z"
-  },
-  { 
-    _id: "6716001a9b8c4001abcd1006",
-    user_id: "6716001a9b8c2001abcd0001",
-    userName: "Integrated Confederacy",
-    role: "Student Org",
-    action: "Submitted ICON Environmental Summit",
-    timestamp: "2025-09-20T00:00:00Z"
-  },
-  { 
-    _id: "6716001a9b8c4001abcd1007",
-    user_id: "6716001a9b8c2001abcd0001",
-    userName: "Integrated Confederacy",
-    role: "Student Org",
-    action: "Uploaded supporting documents for Leadership Training",
-    timestamp: "2025-09-15T00:00:00Z"
-  },
-  { 
-    _id: "6716001a9b8c4001abcd1008",
-    user_id: "6716001a9b8c2001abcd0002",
-    userName: "Green Core Society",
-    role: "Student Org",
-    action: "Submitted Green Core Clean-Up Drive",
-    timestamp: "2025-09-28T00:00:00Z"
-  },
-  { 
-    _id: "6716001a9b8c4001abcd1009",
-    user_id: "6716001a9b8c2001abcd0003",
-    userName: "Junior Financial Executives of the Philippines",
-    role: "Student Org",
-    action: "Submitted JFINEX Financial Literacy Seminar",
-    timestamp: "2025-09-25T00:00:00Z"
+// ======== LOAD AND RENDER ACTIVITY LOG ========
+
+async function loadActivityLogData() {
+  try {
+    // Load all JSON data at once
+    const [logsRes, adminRes, orgRes] = await Promise.all([
+      fetch("../../../data/user_logs.json"),
+      fetch("../../../data/admin_osas.json"),
+      fetch("../../../data/student_organizations.json")
+    ]);
+
+    if (!logsRes.ok || !adminRes.ok || !orgRes.ok) {
+      throw new Error("Failed to load one or more JSON files. Check file paths.");
+    }
+
+    const [logsData, adminData, orgData] = await Promise.all([
+      logsRes.json(),
+      adminRes.json(),
+      orgRes.json()
+    ]);
+
+    // Create quick lookup maps for efficiency
+    const adminMap = new Map(adminData.map(a => [a._id.$oid, a.name]));
+    const orgMap = new Map(orgData.map(o => [o._id.$oid, o.name]));
+
+    // Combine all logs with user info
+    const activities = logsData.map(log => {
+      const userId = log.user_id.$oid;
+      const role = log.role || "Unknown";
+      const username =
+        adminMap.get(userId) ||
+        orgMap.get(userId) ||
+        "Unknown User";
+
+      return {
+        _id: log._id.$oid,
+        user_id: userId,
+        userName: username,
+        role: role,
+        action: log.action,
+        timestamp: log.timestamp
+      };
+    });
+
+    renderActivityTable(activities);
+    setupActivityFilters(activities);
+
+  } catch (error) {
+    console.error(error);
+    document.getElementById("activities-table-body").innerHTML = `
+      <tr><td colspan="4" style="text-align:center;color:red;">
+        Failed to load activity log data. Check JSON paths or structure.
+      </td></tr>`;
   }
-];
+}
+
+// ======== RENDER ACTIVITY LOG UI ========
 
 function loadActivityModules() {
   document.querySelector("#folder-body").innerHTML = `
@@ -75,12 +82,9 @@ function loadActivityModules() {
                 <option>Student Org</option>
               </select>
             </div>
-            <button class="generate-btn">
-              <img src="../../../assets/images/submissions-icon.png" alt="Generate Report" />
-              Generate Reports
-            </button>
           </div>
         </div>
+
         <!-- Activities Table -->
         <div class="activities-table">
           <table>
@@ -98,37 +102,30 @@ function loadActivityModules() {
       </div>
     </div>
   `;
-  
-  renderTable(activities);
-  
-  // Filters
-  const searchInput = document.getElementById("search-activity");
-  const roleFilter = document.getElementById("filter-role");
-  
-  [searchInput, roleFilter].forEach(el => {
-    el.addEventListener("input", filterTable);
-    el.addEventListener("change", filterTable);
-  });
+
+  // Load the JSON data after the table is ready
+  loadActivityLogData();
 }
 
-// Render Table
-function renderTable(data) {
+// ======== TABLE RENDER FUNCTION ========
+
+function renderActivityTable(data) {
   const tbody = document.getElementById("activities-table-body");
   tbody.innerHTML = "";
-  
+
   // Sort by timestamp (newest first)
   const sortedData = [...data].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  
+
   sortedData.forEach(activity => {
     const row = document.createElement("tr");
-    const formattedDate = new Date(activity.timestamp).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    const formattedDate = new Date(activity.timestamp).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
     });
-    
+
     row.innerHTML = `
       <td>${activity.userName}</td>
       <td>${activity.role}</td>
@@ -139,26 +136,38 @@ function renderTable(data) {
   });
 }
 
-// Filter Function
-function filterTable() {
-  const search = document.getElementById("search-activity").value.toLowerCase();
-  const role = document.getElementById("filter-role").value;
-  
-  const filtered = activities.filter(activity => {
-    const matchSearch = activity.userName.toLowerCase().includes(search) ||
-                       activity.role.toLowerCase().includes(search) ||
-                       activity.action.toLowerCase().includes(search);
-    
-    const matchRole = role === "" || activity.role === role;
-    
-    return matchSearch && matchRole;
+// ======== FILTERS ========
+
+function setupActivityFilters(activities) {
+  const searchInput = document.getElementById("search-activity");
+  const roleFilter = document.getElementById("filter-role");
+
+  function filterTable() {
+    const search = searchInput.value.toLowerCase();
+    const role = roleFilter.value;
+
+    const filtered = activities.filter(a => {
+      const matchSearch =
+        a.userName.toLowerCase().includes(search) ||
+        a.role.toLowerCase().includes(search) ||
+        a.action.toLowerCase().includes(search);
+      const matchRole = role === "" || a.role === role;
+      return matchSearch && matchRole;
+    });
+
+    renderActivityTable(filtered);
+  }
+
+  [searchInput, roleFilter].forEach(el => {
+    el.addEventListener("input", filterTable);
+    el.addEventListener("change", filterTable);
   });
-  
-  renderTable(filtered);
 }
+
+// ======== INITIALIZATION ========
 
 function initActivityLog() {
   loadActivityModules();
 }
 
-initActivityLog();
+document.addEventListener("DOMContentLoaded", initActivityLog);

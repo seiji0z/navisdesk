@@ -1,22 +1,60 @@
-// ======== USER DATA ========
-const users = [
-  { name: "Kristelle Tenorio", email: "2240841@slu.edu.ph", role: "Admin", status: "Active", dateRegistered: "01-10-2025", lastLogin: "10-10-2025" },
-  { name: "Anjelo Esperanzate", email: "admin@slu.edu.ph", role: "OSAS Officer", status: "Active", dateRegistered: "02-15-2025", lastLogin: "10-11-2025" },
-  { name: "Green Core Society", email: "gcssamcis@slu.edu.ph", role: "Student Org", status: "Active", dateRegistered: "03-05-2025", lastLogin: "10-12-2025" },
-  { name: "Integrated Confederacy", email: "iconsamcis@slu.edu.ph", role: "Student Org", status: "Active", dateRegistered: "04-10-2025", lastLogin: "10-13-2025" },
-  { name: "Junior Financial Executives of the Philippines", email: "jrfinexsamcis@slu.edu.ph", role: "Student Org", status: "Active", dateRegistered: "05-12-2025", lastLogin: "10-14-2025" },
-  { name: "Junior Philippine Institute of Accountants", email: "jpiasamcis@slu.edu.ph", role: "Student Org", status: "Active", dateRegistered: "06-18-2025", lastLogin: "10-15-2025" },
-  { name: "Louisians Imbibed with Genuine Hospitality Transformation", email: "lightsamcis@slu.edu.ph", role: "Student Org", status: "Active", dateRegistered: "07-20-2025", lastLogin: "10-16-2025" },
-  { name: "Marketing Mixers", email: "mmsamcis@slu.edu.ph", role: "Student Org", status: "Active", dateRegistered: "08-25-2025", lastLogin: "10-17-2025" },
-  { name: "Rated Production Guild", email: "rpgsamcis@slu.edu.ph", role: "Student Org", status: "Active", dateRegistered: "09-05-2025", lastLogin: "10-18-2025" },
-  { name: "SAMCIS Assembly", email: "samcisssc@slu.edu.ph", role: "Student Org", status: "Active", dateRegistered: "10-10-2025", lastLogin: "10-19-2025" },
-  { name: "SCHEMA (Publication)", email: "schemasamcis@slu.edu.ph", role: "Student Org", status: "Active", dateRegistered: "10-11-2025", lastLogin: "10-20-2025" },
-  { name: "Society of Integrated Commercians for Academic Progress", email: "sicapsamcis@slu.edu.ph", role: "Student Org", status: "Active", dateRegistered: "10-12-2025", lastLogin: "10-21-2025" },
-  { name: "Young Entrepreneurs Society", email: "yessamcis@slu.edu.ph", role: "Student Org", status: "Active", dateRegistered: "10-13-2025", lastLogin: "10-22-2025" }
-];
+// ======== GLOBAL USERS ARRAY ========
+let users = [];
 
+// ======== LOAD USERS FROM JSON ========
+async function loadUsersFromJSON() {
+  try {
+    const [adminRes, orgRes] = await Promise.all([
+      fetch("../../../data/admin_osas.json"),
+      fetch("../../../data/student_organizations.json")
+    ]);
 
-// ======== MAIN CONTAINER LOADER ========
+    if (!adminRes.ok || !orgRes.ok) {
+      throw new Error("Failed to load JSON files. Check file paths.");
+    }
+
+    const adminData = await adminRes.json();
+    const orgData = await orgRes.json();
+
+    const adminUsers = adminData.map(u => ({
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      status: u.status || "Active",
+      dateRegistered: formatDate(u.created_at),
+      lastLogin: formatDate(u.last_log)
+    }));
+
+    const orgUsers = orgData.map(u => ({
+      name: u.name,
+      email: u.email,
+      role: "Student Org",
+      status: u.status || "Active",
+      dateRegistered: formatDate(u.created_at),
+      lastLogin: formatDate(u.last_log)
+    }));
+
+    users = [...adminUsers, ...orgUsers];
+    renderTable(users);
+    setupFilters(users);
+  } catch (error) {
+    console.error(error);
+    document.getElementById("users-table-body").innerHTML =
+      `<tr><td colspan="7" style="text-align:center;color:red;">
+        Failed to load user data. Check your JSON files or path.
+      </td></tr>`;
+  }
+}
+
+// ======== FORMAT DATE ========
+function formatDate(isoString) {
+  if (!isoString) return "N/A";
+  const date = new Date(isoString);
+  if (isNaN(date)) return "Invalid Date";
+  return date.toLocaleDateString("en-GB");
+}
+
+// ======== LOAD MAIN PAGE ========
 function loadUserModules() {
   document.querySelector("#folder-body").innerHTML = `
     <div class="folder-content-card">
@@ -52,13 +90,9 @@ function loadUserModules() {
               </select>
             </div>
             <div class="btn-group">
-              <button class="add-user-btn">
+              <button class="add-user-btn" onclick="showAddUserModal()">
                 <img src="../../../assets/images/add-user.png" alt="Add User" />
                 Add User
-              </button>
-              <button class="generate-btn">
-                <img src="../../../assets/images/submissions-icon.png" alt="Generate Report" />
-                Generate Reports
               </button>
             </div>
           </div>
@@ -88,12 +122,9 @@ function loadUserModules() {
       <div class="modal-content" id="modal-content"></div>
     </div>
   `;
-  
-  renderTable(users);
-  setupFilters();
-  document.querySelector(".add-user-btn").addEventListener("click", showAddUserModal);
-}
 
+  loadUsersFromJSON();
+}
 
 // ======== TABLE RENDER FUNCTION ========
 function renderTable(userList) {
@@ -124,59 +155,68 @@ function showAddUserModal() {
   const modal = document.getElementById("modal");
   const content = document.getElementById("modal-content");
 
+  const departments = ["SAMCIS", "SOHNABS", "STELA", "SEA", "SOM", "SOL"];
+  const orgTypes = ["Academic Org", "Publication", "Universal Org"];
+
+  function renderRoleFields(role) {
+    if (role === "Organization") {
+      return `
+        <label>Name</label>
+        <input type="text" id="add-name" placeholder="Enter organization name" />
+        <label>Abbreviation</label>
+        <input type="text" id="add-abbr" placeholder="Enter abbreviation" />
+        <label>Email</label>
+        <input type="email" id="add-email" placeholder="Enter email" />
+        <label>Department</label>
+        <select id="add-dept">
+          <option value="">Select Department</option>
+          ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
+        </select>
+        <label>Description</label>
+        <textarea id="add-desc" rows="3" placeholder="Enter organization description"></textarea>
+        <label>Type of Organization</label>
+        <select id="add-org-type">
+          <option value="">Select Type</option>
+          ${orgTypes.map(t => `<option value="${t}">${t}</option>`).join("")}
+        </select>
+        <label>Adviser Name</label>
+        <input type="text" id="add-adv-name" placeholder="Enter adviser name" />
+        <label>Adviser Email</label>
+        <input type="email" id="add-adv-email" placeholder="Enter adviser email" />
+        <label>Facebook Link</label>
+        <input type="url" id="add-fb" placeholder="Enter Facebook link" />
+        <label>Instagram Link (Optional)</label>
+        <input type="url" id="add-ig" placeholder="Enter Instagram link" />
+        <label>Website Link (Optional)</label>
+        <input type="url" id="add-web" placeholder="Enter website link" />
+      `;
+    } else if (role === "OSAS" || role === "Admin") {
+      return `
+        <label>Name</label>
+        <input type="text" id="add-name" placeholder="Enter full name" />
+        <label>Email</label>
+        <input type="email" id="add-email" placeholder="Enter email" />
+        <label>Department</label>
+        <select id="add-dept">
+          <option value="">Select Department</option>
+          ${[...departments, "UNIV WIDE"].map(d => `<option value="${d}">${d}</option>`).join("")}
+        </select>
+      `;
+    }
+    return "";
+  }
+
   content.innerHTML = `
     <span class="close-btn" id="close-add">&times;</span>
     <h3>Add New User</h3>
-    
-    <label>Name</label>
-    <input type="text" id="add-name" placeholder="Enter full name" />
-
-    <label>Abbreviation</label>
-    <input type="text" id="add-abbr" placeholder="Enter abbreviation" />
-
-    <label>Email</label>
-    <input type="email" id="add-email" placeholder="Enter email" />
-
-    <label>Department</label>
-    <select id="add-dept">
-      <option value="">Select Department</option>
-      <option value="SAMCIS">SAMCIS</option>
-      <option value="STELA">STELA</option>
-      <option value="SEA">SEA</option>
-      <option value="SOHNABS">SOHNABS</option>
-      <option value="SOM">SOM</option>
-    </select>
-
     <label>Role</label>
-    <select id="add-type">
+    <select id="add-role">
       <option value="">Select Role</option>
+      <option value="Organization">Organization</option>
+      <option value="OSAS">OSAS</option>
       <option value="Admin">Admin</option>
-      <option value="OSAS Officer">OSAS Officer</option>
-      <option value="Student Org">Student Org</option>
     </select>
-
-    <label>Adviser Name</label>
-    <input type="text" id="add-adv-name" placeholder="Enter adviser name" />
-
-    <label>Adviser Email</label>
-    <input type="email" id="add-adv-email" placeholder="Enter adviser email" />
-
-    <label>Org President Name</label>
-    <input type="text" id="add-off1-name" placeholder="Enter president name" />
-
-    <label>Org President Email</label>
-    <input type="email" id="add-off1-email" placeholder="Enter president email" />
-
-    <label>Description</label>
-    <textarea id="add-desc" rows="3" style="width:100%;" placeholder="Enter description"></textarea>
-
-    <label>Status</label>
-    <select id="add-status">
-      <option>Active</option>
-      <option>Inactive</option>
-      <option>Suspended</option>
-    </select>
-
+    <div id="role-fields"></div>
     <div class="modal-actions">
       <button class="btn-cancel" id="cancel-add">Cancel</button>
       <button class="btn-confirm" id="save-add">Save User</button>
@@ -184,73 +224,52 @@ function showAddUserModal() {
   `;
 
   modal.style.display = "flex";
+
+  const roleSelect = content.querySelector("#add-role");
+  const roleFields = content.querySelector("#role-fields");
+
+  roleSelect.addEventListener("change", () => {
+    roleFields.innerHTML = renderRoleFields(roleSelect.value);
+  });
+
   document.getElementById("close-add").onclick = () => (modal.style.display = "none");
   document.getElementById("cancel-add").onclick = () => (modal.style.display = "none");
 
-  // When "Save User" is clicked — show preview modal before final save
   document.getElementById("save-add").onclick = () => {
+    const role = roleSelect.value;
+    if (!role) return alert("Please select a role.");
+
     const newUser = {
-      name: document.getElementById("add-name").value.trim(),
-      abbreviation: document.getElementById("add-abbr").value.trim(),
-      email: document.getElementById("add-email").value.trim(),
-      department: document.getElementById("add-dept").value.trim(),
-      type: document.getElementById("add-type").value.trim(),
-      adviserName: document.getElementById("add-adv-name").value.trim(),
-      adviserEmail: document.getElementById("add-adv-email").value.trim(),
-      officer1Name: document.getElementById("add-off1-name").value.trim(),
-      officer1Email: document.getElementById("add-off1-email").value.trim(),
-      description: document.getElementById("add-desc").value.trim(),
-      status: document.getElementById("add-status").value,
+      role,
+      name: document.getElementById("add-name")?.value.trim() || "",
+      email: document.getElementById("add-email")?.value.trim() || "",
+      department: document.getElementById("add-dept")?.value || "",
+      status: "Active",
       dateRegistered: new Date().toLocaleDateString("en-GB"),
-      lastLogin: "N/A"
+      lastLogin: "N/A",
     };
 
-    if (!newUser.name || !newUser.email) {
-      alert("Please fill in required fields (Name and Email).");
-      return;
+    if (role === "Organization") {
+      newUser.abbreviation = document.getElementById("add-abbr")?.value.trim() || "";
+      newUser.description = document.getElementById("add-desc")?.value.trim() || "";
+      newUser.orgType = document.getElementById("add-org-type")?.value || "";
+      newUser.adviserName = document.getElementById("add-adv-name")?.value.trim() || "";
+      newUser.adviserEmail = document.getElementById("add-adv-email")?.value.trim() || "";
+      newUser.fb = document.getElementById("add-fb")?.value.trim() || "";
+      newUser.ig = document.getElementById("add-ig")?.value.trim() || "";
+      newUser.website = document.getElementById("add-web")?.value.trim() || "";
     }
 
-    // === Show Preview Confirmation Modal ===
-    content.innerHTML = `
-      <span class="close-btn" id="close-preview">&times;</span>
-      <h3>Confirm User Details</h3>
-      <p>Review the information below before adding:</p>
-      <div class="preview-details">
-        <p><strong>Name:</strong> ${newUser.name}</p>
-        <p><strong>Abbreviation:</strong> ${newUser.abbreviation}</p>
-        <p><strong>Email:</strong> ${newUser.email}</p>
-        <p><strong>Department:</strong> ${newUser.department}</p>
-        <p><strong>Type:</strong> ${newUser.type}</p>
-        <p><strong>Adviser Name:</strong> ${newUser.adviserName}</p>
-        <p><strong>Adviser Email:</strong> ${newUser.adviserEmail}</p>
-        <p><strong>President Name:</strong> ${newUser.officer1Name}</p>
-        <p><strong>President Email:</strong> ${newUser.officer1Email}</p>
-        <p><strong>Description:</strong> ${newUser.description}</p>
-        <p><strong>Status:</strong> ${newUser.status}</p>
-      </div>
-      <p>Are you sure you want to add this user?</p>
-      <div class="modal-actions">
-        <button class="btn-cancel" id="back-add">Go Back</button>
-        <button class="btn-confirm" id="confirm-add">Yes, Add User</button>
-      </div>
-    `;
+    if (!newUser.name || !newUser.email)
+      return alert("Please fill in the required fields (Name, Email).");
 
-    document.getElementById("close-preview").onclick = () => (modal.style.display = "none");
-    document.getElementById("back-add").onclick = () => showAddUserModal();
-
-    document.getElementById("confirm-add").onclick = () => {
-      users.push({
-        name: newUser.name,
-        email: newUser.email,
-        role: newUser.type || "Student Org",
-        status: newUser.status,
-        dateRegistered: newUser.dateRegistered,
-        lastLogin: "N/A"
-      });
+    //Show confirmation preview modal
+    showPreviewModal(newUser, () => {
+      users.push(newUser);
       renderTable(users);
       modal.style.display = "none";
-      alert("User successfully added!");
-    };
+      alert(`${role} user added successfully!`);
+    });
   };
 }
 
@@ -260,58 +279,75 @@ function showEditModal(index) {
   const modal = document.getElementById("modal");
   const content = document.getElementById("modal-content");
 
-  // Main edit form
+  const departments = ["SAMCIS", "SOHNABS", "STELA", "SEA", "SOM", "SOL"];
+  const orgTypes = ["Academic Org", "Publication", "Universal Org"];
+
+  function renderEditFields(role) {
+    if (role === "Organization") {
+      return `
+        <label>Name</label>
+        <input type="text" id="edit-name" value="${user.name || ""}" />
+        <label>Abbreviation</label>
+        <input type="text" id="edit-abbr" value="${user.abbreviation || ""}" />
+        <label>Email</label>
+        <input type="email" id="edit-email" value="${user.email || ""}" />
+        <label>Department</label>
+        <select id="edit-dept">
+          ${departments.map(d => `<option value="${d}" ${user.department === d ? "selected" : ""}>${d}</option>`).join("")}
+        </select>
+        <label>Description</label>
+        <textarea id="edit-desc">${user.description || ""}</textarea>
+        <label>Type of Organization</label>
+        <select id="edit-org-type">
+          ${orgTypes.map(t => `<option value="${t}" ${user.orgType === t ? "selected" : ""}>${t}</option>`).join("")}
+        </select>
+        <label>Adviser Name</label>
+        <input type="text" id="edit-adv-name" value="${user.adviserName || ""}" />
+        <label>Adviser Email</label>
+        <input type="email" id="edit-adv-email" value="${user.adviserEmail || ""}" />
+        <label>Facebook Link</label>
+        <input type="url" id="edit-fb" value="${user.fb || ""}" />
+        <label>Instagram Link (Optional)</label>
+        <input type="url" id="edit-ig" value="${user.ig || ""}" />
+        <label>Website Link (Optional)</label>
+        <input type="url" id="edit-web" value="${user.website || ""}" />
+        <label>Status</label>
+        <select id="edit-status">
+          <option ${user.status === "Active" ? "selected" : ""}>Active</option>
+          <option ${user.status === "Inactive" ? "selected" : ""}>Inactive</option>
+          <option ${user.status === "Suspended" ? "selected" : ""}>Suspended</option>
+        </select>
+      `;
+    } else {
+      return `
+        <label>Name</label>
+        <input type="text" id="edit-name" value="${user.name || ""}" />
+        <label>Email</label>
+        <input type="email" id="edit-email" value="${user.email || ""}" />
+        <label>Department</label>
+        <select id="edit-dept">
+          ${[...departments, "UNIV WIDE"].map(d => `<option value="${d}" ${user.department === d ? "selected" : ""}>${d}</option>`).join("")}
+        </select>
+        <label>Status</label>
+        <select id="edit-status">
+          <option ${user.status === "Active" ? "selected" : ""}>Active</option>
+          <option ${user.status === "Inactive" ? "selected" : ""}>Inactive</option>
+          <option ${user.status === "Suspended" ? "selected" : ""}>Suspended</option>
+        </select>
+      `;
+    }
+  }
+
   content.innerHTML = `
     <span class="close-btn" id="close-edit">&times;</span>
-    <h3>Edit User Details</h3>
-    
-    <label>Name</label>
-    <input type="text" id="edit-name" value="${user.name}" />
-
-    <label>Abbreviation</label>
-    <input type="text" id="edit-abbr" value="${user.abbr || ""}" />
-
-    <label>Email</label>
-    <input type="email" id="edit-email" value="${user.email}" />
-
-    <label>Department</label>
-    <select id="edit-dept">
-      <option value="SAMCIS" ${user.department === "SAMCIS" ? "selected" : ""}>SAMCIS</option>
-      <option value="STELA" ${user.department === "STELA" ? "selected" : ""}>STELA</option>
-      <option value="SEA" ${user.department === "SEA" ? "selected" : ""}>SEA</option>
-      <option value="SOHNABS" ${user.department === "SOHNABS" ? "selected" : ""}>SOHNABS</option>
-      <option value="SOM" ${user.department === "SOM" ? "selected" : ""}>SOM</option>
-    </select>
-
+    <h3>Edit User</h3>
     <label>Role</label>
-    <select id="edit-type">
+    <select id="edit-role">
+      <option value="Organization" ${user.role === "Organization" ? "selected" : ""}>Organization</option>
+      <option value="OSAS" ${user.role === "OSAS" ? "selected" : ""}>OSAS</option>
       <option value="Admin" ${user.role === "Admin" ? "selected" : ""}>Admin</option>
-      <option value="OSAS Officer" ${user.role === "OSAS Officer" ? "selected" : ""}>OSAS Officer</option>
-      <option value="Student Org" ${user.role === "Student Org" ? "selected" : ""}>Student Org</option>
     </select>
-
-    <label>Adviser Name</label>
-    <input type="text" id="edit-adv-name" value="${user.adviserName || ""}" />
-
-    <label>Adviser Email</label>
-    <input type="email" id="edit-adv-email" value="${user.adviserEmail || ""}" />
-
-    <label>Org President Name</label>
-    <input type="text" id="edit-off1-name" value="${user.officer1Name || ""}" />
-    
-    <label>Org President Email</label>
-    <input type="email" id="edit-off1-email" value="${user.officer1Email || ""}" />
-
-    <label>Description</label>
-    <textarea id="edit-desc" rows="3" style="width:100%;">${user.description || ""}</textarea>
-
-    <label>Status</label>
-    <select id="edit-status">
-      <option ${user.status === "Active" ? "selected" : ""}>Active</option>
-      <option ${user.status === "Inactive" ? "selected" : ""}>Inactive</option>
-      <option ${user.status === "Suspended" ? "selected" : ""}>Suspended</option>
-    </select>
-
+    <div id="edit-fields">${renderEditFields(user.role)}</div>
     <div class="modal-actions">
       <button class="btn-cancel" id="cancel-edit">Cancel</button>
       <button class="btn-confirm" id="save-edit">Save Changes</button>
@@ -319,66 +355,85 @@ function showEditModal(index) {
   `;
 
   modal.style.display = "flex";
+
+  const roleSelect = document.getElementById("edit-role");
+  const fieldsContainer = document.getElementById("edit-fields");
+
+  roleSelect.addEventListener("change", () => {
+    fieldsContainer.innerHTML = renderEditFields(roleSelect.value);
+  });
+
   document.getElementById("close-edit").onclick = () => (modal.style.display = "none");
   document.getElementById("cancel-edit").onclick = () => (modal.style.display = "none");
 
-  // When Save Changes is clicked, show preview confirmation
   document.getElementById("save-edit").onclick = () => {
     const updatedUser = {
+      ...user,
+      role: roleSelect.value,
       name: document.getElementById("edit-name").value.trim(),
-      abbr: document.getElementById("edit-abbr").value.trim(),
       email: document.getElementById("edit-email").value.trim(),
-      department: document.getElementById("edit-dept").value.trim(),
-      role: document.getElementById("edit-type").value.trim(),
-      adviserName: document.getElementById("edit-adv-name").value.trim(),
-      adviserEmail: document.getElementById("edit-adv-email").value.trim(),
-      officer1Name: document.getElementById("edit-off1-name").value.trim(),
-      officer1Email: document.getElementById("edit-off1-email").value.trim(),
-      description: document.getElementById("edit-desc").value.trim(),
-      status: document.getElementById("edit-status").value
+      department: document.getElementById("edit-dept").value,
+      status: document.getElementById("edit-status").value,
     };
 
-    if (!updatedUser.name || !updatedUser.email) {
-      alert("Please fill in required fields (Name and Email).");
-      return;
+    if (updatedUser.role === "Organization") {
+      updatedUser.abbreviation = document.getElementById("edit-abbr").value.trim();
+      updatedUser.description = document.getElementById("edit-desc").value.trim();
+      updatedUser.orgType = document.getElementById("edit-org-type").value;
+      updatedUser.adviserName = document.getElementById("edit-adv-name").value.trim();
+      updatedUser.adviserEmail = document.getElementById("edit-adv-email").value.trim();
+      updatedUser.fb = document.getElementById("edit-fb").value.trim();
+      updatedUser.ig = document.getElementById("edit-ig").value.trim();
+      updatedUser.website = document.getElementById("edit-web").value.trim();
     }
 
-    // Show preview modal
-    content.innerHTML = `
-      <span class="close-btn" id="close-preview-edit">&times;</span>
-      <h3>Confirm Updated Details</h3>
-      <p>Review the information below before saving:</p>
-      <div class="preview-details">
-        <p><strong>Name:</strong> ${updatedUser.name}</p>
-        <p><strong>Abbreviation:</strong> ${updatedUser.abbr}</p>
-        <p><strong>Email:</strong> ${updatedUser.email}</p>
-        <p><strong>Department:</strong> ${updatedUser.department}</p>
-        <p><strong>Type:</strong> ${updatedUser.role}</p>
-        <p><strong>Adviser Name:</strong> ${updatedUser.adviserName}</p>
-        <p><strong>Adviser Email:</strong> ${updatedUser.adviserEmail}</p>
-        <p><strong>President Name:</strong> ${updatedUser.officer1Name}</p>
-        <p><strong>President Email:</strong> ${updatedUser.officer1Email}</p>
-        <p><strong>Description:</strong> ${updatedUser.description}</p>
-        <p><strong>Status:</strong> ${updatedUser.status}</p>
-      </div>
-      <p>Are you sure you want to save these changes?</p>
-      <div class="modal-actions">
-        <button class="btn-cancel" id="back-edit">Go Back</button>
-        <button class="btn-confirm" id="confirm-edit">Yes, Save Changes</button>
-      </div>
-    `;
-
-    // Handle preview confirmation actions
-    document.getElementById("close-preview-edit").onclick = () => (modal.style.display = "none");
-    document.getElementById("back-edit").onclick = () => showEditModal(index);
-
-    document.getElementById("confirm-edit").onclick = () => {
-      Object.assign(users[index], updatedUser);
+    // 🔹 Show confirmation preview modal before saving
+    showPreviewModal(updatedUser, () => {
+      Object.assign(user, updatedUser);
       renderTable(users);
       modal.style.display = "none";
-      alert("User details successfully updated!");
-    };
+      alert("User details updated successfully!");
+    });
   };
+}
+
+// ======== PREVIEW MODAL ========
+function showPreviewModal(data, onConfirm) {
+  const previewModal = document.createElement("div");
+  previewModal.className = "preview-modal";
+  previewModal.style.cssText = `
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+  `;
+
+  const detailsHTML = Object.entries(data)
+    .map(([key, value]) => `<tr><td><strong>${key}</strong></td><td>${value || "—"}</td></tr>`)
+    .join("");
+
+  previewModal.innerHTML = `
+    <div style="background: #fff; padding: 20px 25px; border-radius: 12px; width: 450px; max-height: 80vh; overflow-y: auto;">
+      <h3 style="text-align:center;margin-bottom:10px;">Review Details</h3>
+      <p style="text-align:center;">Please review the details before saving. Are all the details correct?</p>
+      <table style="width:100%;border-collapse:collapse;margin:10px 0;">
+        ${detailsHTML}
+      </table>
+      <div style="text-align:center;margin-top:15px;">
+        <button id="confirm-preview" style="background:#28a745;color:white;padding:8px 14px;border:none;border-radius:6px;margin-right:8px;">Confirm</button>
+        <button id="cancel-preview" style="background:#dc3545;color:white;padding:8px 14px;border:none;border-radius:6px;">Go Back</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(previewModal);
+
+  previewModal.querySelector("#confirm-preview").onclick = () => {
+    onConfirm();
+    previewModal.remove();
+  };
+
+  previewModal.querySelector("#cancel-preview").onclick = () => previewModal.remove();
 }
 
 
@@ -440,5 +495,6 @@ function initUserManagement() {
 }
 initUserManagement();
 
+window.showAddUserModal = showAddUserModal;
 window.showEditModal = showEditModal;
 window.showDeactivateModal = showDeactivateModal;
