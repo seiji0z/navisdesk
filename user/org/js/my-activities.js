@@ -166,7 +166,7 @@ class ActivityDetailsComponent {
                       `<li><strong>${h.date}:</strong> ${h.status} - ${h.remarks}</li>`
                   )
                   .join("")}
-              </ul>`
+              </ul>` 
             : "<p>No history records found.</p>"
         }
       </section>

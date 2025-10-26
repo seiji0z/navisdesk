@@ -395,3 +395,195 @@ body, html {
 .submissions-container {
   overflow-y: scroll;
 }
+
+
+/* =======================================================
+   ACTIVITY DETAILS (Enhanced Design)
+   Organized layout + styled info boxes + rich visuals
+========================================================= */
+
+/* Wrap each logical section in a card-like block */
+.details-section {
+  background: #f9fafc;
+  border-radius: 12px;
+  padding: 1.5rem 1.8rem;
+  margin-bottom: 1.5rem;
+  border-left: 5px solid #0730661a;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.details-section:hover {
+  box-shadow: 0 4px 12px rgba(7, 48, 102, 0.08);
+  transform: translateY(-3px);
+}
+
+/* Highlight headers inside details */
+.details-section h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #073066;
+  border-left: 4px solid #ffb901;
+  padding-left: 10px;
+  margin-bottom: 1rem;
+}
+
+/* Information line styling */
+.details-section p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  margin: 6px 0;
+  padding: 6px 0;
+  border-bottom: 1px dashed #e5e7eb;
+}
+
+.details-section p strong {
+  color: #073066;
+  font-weight: 600;
+  flex: 1;
+}
+
+.details-section p span {
+  flex: 2;
+  text-align: right;
+}
+
+/* SDG Tags */
+.details-section .sdg-tag {
+  display: inline-block;
+  background-color: #073066;
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin: 4px 6px 4px 0;
+}
+
+/* -------------------------------------
+   Supporting Documents Grid
+------------------------------------- */
+.details-section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.details-section ul li {
+  background: #fff;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.details-section ul li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(7, 48, 102, 0.1);
+}
+
+.details-section ul li a {
+  color: #073066;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.details-section ul li a:hover {
+  text-decoration: underline;
+}
+
+.file-type {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.upload-date {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-left: 8px;
+}
+
+/* -------------------------------------
+   Evidence Section (Enhanced Grid)
+------------------------------------- */
+.evidence {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.evidence-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.evidence-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 14px rgba(7, 48, 102, 0.12);
+}
+
+.evidence-item img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.evidence-item p {
+  font-size: 0.85rem;
+  margin: 6px 0 2px;
+  color: #073066;
+  font-weight: 500;
+}
+
+/* -------------------------------------
+   History Section
+------------------------------------- */
+.details-section ul.history-list li {
+  border-left: 4px solid #073066;
+  background: #ffffff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(7, 48, 102, 0.05);
+  position: relative;
+}
+
+.details-section ul.history-list li strong {
+  color: #073066;
+}
+
+/* Subtle timeline dot */
+.details-section ul.history-list li::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 16px;
+  width: 8px;
+  height: 8px;
+  background: #ffb901;
+  border-radius: 50%;
+}
+
+/* -------------------------------------
+   Responsive Improvements
+------------------------------------- */
+@media (max-width: 768px) {
+  .details-section p {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .details-section p strong,
+  .details-section p span {
+    text-align: left;
+    width: 100%;
+  }
+}
