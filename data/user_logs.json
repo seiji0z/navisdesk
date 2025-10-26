@@ -30,35 +30,35 @@
   {
     "_id": { "$oid": "6716001a9b8c4001abcd1005" },
     "user_id": { "$oid": "6716001a9b8c2001abcd0001" },
-    "role": "Student Org",
+    "role": "Organization",
     "action": "Submitted ICON Leadership Training 2025",
     "timestamp": "2025-09-10T00:00:00Z"
   },
   {
     "_id": { "$oid": "6716001a9b8c4001abcd1006" },
     "user_id": { "$oid": "6716001a9b8c2001abcd0001" },
-    "role": "Student Org",
+    "role": "Organization",
     "action": "Submitted ICON Environmental Summit",
     "timestamp": "2025-09-20T00:00:00Z"
   },
   {
     "_id": { "$oid": "6716001a9b8c4001abcd1007" },
     "user_id": { "$oid": "6716001a9b8c2001abcd0001" },
-    "role": "Student Org",
+    "role": "Organization",
     "action": "Uploaded supporting documents for Leadership Training",
     "timestamp": "2025-09-15T00:00:00Z"
   },
   {
     "_id": { "$oid": "6716001a9b8c4001abcd1008" },
     "user_id": { "$oid": "6716001a9b8c2001abcd0002" },
-    "role": "Student Org",
+    "role": "Organization",
     "action": "Submitted Green Core Clean-Up Drive",
     "timestamp": "2025-09-28T00:00:00Z"
   },
   {
     "_id": { "$oid": "6716001a9b8c4001abcd1009" },
     "user_id": { "$oid": "6716001a9b8c2001abcd0003" },
-    "role": "Student Org",
+    "role": "Organization",
     "action": "Submitted JFINEX Financial Literacy Seminar",
     "timestamp": "2025-09-25T00:00:00Z"
   }
