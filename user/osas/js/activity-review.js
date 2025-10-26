@@ -81,28 +81,49 @@ export function showActivityReview(activity) {
     .getElementById("back-to-table-btn")
     .addEventListener("click", loadActivities);
 
+  const handleAcceptActivity = () => {
+    const remarks = document.getElementById("osas-remarks").value;
+    alert(
+      `Activity "${activity.title}" ACCEPTED.\nRemarks: ${remarks || "None"}`
+    );
+    loadActivities();
+  };
+
   document
     .getElementById("accept-activity-btn")
     .addEventListener("click", () => {
-      const remarks = document.getElementById("osas-remarks").value;
-      alert(
-        `Activity "${activity.title}" ACCEPTED.\nRemarks: ${remarks || "None"}`
+      showConfirmationModal(
+        "Are you sure you want to accept this activity?", 
+        "Accept Activity",                               
+        "active",                                        
+        handleAcceptActivity                           
       );
-      loadActivities();
     });
+
+  const handleReturnActivity = () => {
+    const remarks = document.getElementById("osas-remarks").value;
+    alert(
+      `Activity "${activity.title}" RETURNED.\nRemarks: ${remarks}`
+    );
+    loadActivities();
+  };
 
   document
     .getElementById("return-activity-btn")
     .addEventListener("click", () => {
       const remarks = document.getElementById("osas-remarks").value;
+
       if (!remarks || remarks.trim() === "") {
         alert("Please provide remarks before returning the activity.");
         return;
       }
-      alert(
-        `Activity "${activity.title}" RETURNED.\nRemarks: ${remarks}`
+
+      showConfirmationModal(
+        "Are you sure you want to return this activity with your remarks?",
+        "Return Activity",                                               
+        "inactive",                                                      
+        handleReturnActivity                                           
       );
-      loadActivities();
     });
 }
 
@@ -207,9 +228,16 @@ function generateReview(activity) {
       <button class="remove-btn" id="return-activity-btn">Return Activity</button>
     </div>
   `;
+  
+  const backButtonHTML = `
+   <button class="back-btn" id="back-to-table-btn">
+      <img src="../../../assets/images/arrow-left-circle.png" alt="Back" />
+    </button>
+  `;
 
   // combine all sections
   return `
+    ${backButtonHTML}
     ${detailsSection}
     ${dateTimeSection}
     ${venueSection}
@@ -219,4 +247,48 @@ function generateReview(activity) {
     ${osasSection}
     ${decisionButtons}
   `;
+}
+
+// confirmation prompt
+function showConfirmationModal(message, confirmText, confirmClass, onConfirm) {
+  closeConfirmationModal(); 
+
+  const modalOverlay = document.createElement("div");
+  modalOverlay.className = "modal-overlay";
+  modalOverlay.id = "confirmationModal";
+
+  const modalContent = document.createElement("div");
+  modalContent.className = "modal-content";
+
+  modalContent.innerHTML = `
+    <h4>Confirmation</h4>
+    <p>${message}</p>
+    <div class="modal-buttons">
+      <button class="modal-btn modal-btn-cancel" onclick="closeConfirmationModal()">Cancel</button>
+      <button class="modal-btn modal-btn-confirm ${confirmClass}" id="modalConfirmButton">${confirmText}</button>
+    </div>
+  `;
+
+  modalOverlay.appendChild(modalContent);
+  document.body.appendChild(modalOverlay);
+
+  document.getElementById("modalConfirmButton").onclick = function() {
+    onConfirm();
+    closeConfirmationModal();
+  };
+
+  modalOverlay.onclick = function(e) {
+    if (e.target === modalOverlay) {
+      closeConfirmationModal();
+    }
+  };
+  
+  window.closeConfirmationModal = closeConfirmationModal;
+}
+
+function closeConfirmationModal() {
+  const modal = document.getElementById("confirmationModal");
+  if (modal) {
+    modal.parentNode.removeChild(modal);
+  }
 }
