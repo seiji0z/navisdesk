@@ -1,104 +1,10 @@
 /* =======================================================
-   UPDATED MY-ACTIVITIES.CSS
-   Theme aligned with Org Dashboard Styles
-   Font: Poppins | Color: #073066 (primary)
+   MY-ACTIVITIES.CSS (Unified + Cleaned)
+   Theme: Org Dashboard | Font: Poppins | Primary: #073066
 ======================================================= */
 
 body, html {
   overflow-x: hidden;
-}
-
-/* -------------------------------------
-   Activities & Submissions Layout
-------------------------------------- */
-.activities-cards {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(220px, 1fr));
-  gap: 20px;
-  padding: 10px;
-  margin-bottom: 25px;
-  flex-shrink: 0;
-}
-
-.submission-cards {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
-  gap: 20px;
-  padding: 10px;
-  flex: 1;
-  overflow-y: auto;
-  box-sizing: border-box;
-  min-height: 0;
-}
-
-/* -------------------------------------
-   Card Styles
-------------------------------------- */
-.card {
-  background-color: #fff;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  font-family: "Poppins", sans-serif;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  cursor: pointer;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-/* -------------------------------------
-   Card Header
-------------------------------------- */
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
-.card-header h3 {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #073066;
-  margin: 0;
-}
-
-/* Status badge */
-.status-badge {
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 12px;
-  color: #fff;
-}
-
-.status-badge.approved {
-  background-color: #2ecc71;
-}
-
-.status-badge.review {
-  background-color: #f5a623;
-}
-
-.status-badge.attention {
-  background-color: #e74c3c;
-}
-
-/* -------------------------------------
-   Card Body
-------------------------------------- */
-.card-description {
-  color: #333;
-  font-size: 0.9rem;
-  margin-bottom: 0.75rem;
-}
-
-.card-date {
-  color: #777;
-  font-size: 0.85rem;
 }
 
 /* -------------------------------------
@@ -123,169 +29,40 @@ body, html {
 }
 
 /* -------------------------------------
-   Activity Details Layout
+   Activities Summary (Status Cards)
 ------------------------------------- */
-.activity-details-wrapper {
-  background-color: #fff;
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  font-family: "Poppins", sans-serif;
-  animation: fadeIn 0.3s ease;
-  overflow-y: auto;
-  max-height: 100%;
-}
-
-/* Details Header */
-.details-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 1rem;
-}
-
-.details-header .header-left h2 {
-  margin: 0;
-  font-size: 1.6rem;
-  color: #073066;
-  font-weight: 600;
-}
-
-.details-header .header-left p {
-  margin-top: 6px;
-  font-size: 0.95rem;
-  color: #555;
-  max-width: 700px;
-}
-
-.details-header .header-right {
-  display: flex;
-  align-items: center;
-}
-
-/* -------------------------------------
-   Sections
-------------------------------------- */
-.details-section {
-  margin-bottom: 2rem;
-}
-
-.details-section h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #073066;
-  margin-bottom: 0.75rem;
-  border-left: 5px solid #ffb901;
-  padding-left: 10px;
-}
-
-.details-section div {
-  font-size: 0.95rem;
-  color: #374151;
-  margin-bottom: 6px;
-}
-
-/* -------------------------------------
-   Supporting Documents
-------------------------------------- */
-.documents-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.doc-card {
-  background-color: #f3f4f6;
-  border-radius: 10px;
-  padding: 12px 18px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #1f2937;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.doc-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* -------------------------------------
-   Evidence Section
-------------------------------------- */
-.evidence-container {
+.activities-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 10px;
+  margin-bottom: 25px;
+  box-sizing: border-box;
 }
 
-.evidence-img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.25s ease;
+.activities-cards .card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 1.5rem;
+  font-family: "Poppins", sans-serif;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.evidence-img:hover {
-  transform: scale(1.05);
-}
-
-/* -------------------------------------
-   Back Button
-------------------------------------- */
-.back-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #073066;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-bottom: 20px;
-}
-
-.back-button:hover {
-  background-color: #0a418c;
-  transform: translateY(-1px);
-}
-
-.back-button i {
-  font-size: 1rem;
-  color: #fff;
+.activities-cards .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* -------------------------------------
-   Animation
-------------------------------------- */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* -------------------------------------
-   Submissions Header (Title + Toggle)
+   Submissions Header
 ------------------------------------- */
 .submissions-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
-  margin-bottom: 10px;
+  margin: 25px 10px 10px;
 }
 
 .toggle-container {
@@ -294,7 +71,7 @@ body, html {
 }
 
 /* -------------------------------------
-   Table Toggle Buttons
+   Toggle Buttons
 ------------------------------------- */
 .table-toggle-btn {
   background-color: #f3f4f6;
@@ -321,11 +98,69 @@ body, html {
 }
 
 /* -------------------------------------
+   Submissions Grid (Cards View)
+------------------------------------- */
+.submissions-container.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+.submission-card {
+  background: #fff;
+  border-radius: 15px;
+  padding: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.submission-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+.submission-card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #073066;
+  margin-bottom: 8px;
+}
+
+.submission-card p {
+  font-size: 0.9rem;
+  color: #374151;
+  margin: 4px 0;
+}
+
+/* Status text inside cards */
+.submission-card .status {
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 8px;
+  color: #fff;
+}
+
+.status.approved {
+  background-color: #2ecc71;
+}
+.status.pending {
+  background-color: #f5a623;
+}
+.status.rejected {
+  background-color: #d9534f;
+}
+
+/* -------------------------------------
    Table View Styles
 ------------------------------------- */
 .submissions-table-wrapper {
   overflow-y: auto;
-  max-height: 400px; /* ✅ scrollable area */
+  max-height: 400px;
   border-radius: 10px;
 }
 
@@ -352,4 +187,170 @@ body, html {
 .submissions-table tr:hover {
   background: #f3f4f6;
   cursor: pointer;
+}
+
+/* -------------------------------------
+   Activity Details View
+------------------------------------- */
+.activity-details {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif;
+  animation: fadeIn 0.3s ease;
+  color: #1f2937;
+  overflow-y: auto;
+  max-height: 80vh;
+  box-sizing: border-box;
+}
+
+/* Back Button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #073066;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-bottom: 20px;
+}
+
+.back-btn:hover {
+  background-color: #0a418c;
+  transform: translateY(-1px);
+}
+
+.back-btn i {
+  font-size: 1rem;
+  color: #fff;
+}
+
+/* -------------------------------------
+   Headings & Text
+------------------------------------- */
+.activity-details h2 {
+  font-size: 1.6rem;
+  color: #073066;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.activity-details h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #073066;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  border-left: 5px solid #ffb901;
+  padding-left: 10px;
+}
+
+.activity-details p {
+  font-size: 0.95rem;
+  color: #374151;
+  margin: 5px 0;
+}
+
+/* -------------------------------------
+   Evidence Section
+------------------------------------- */
+.evidence {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.evidence img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.25s ease;
+}
+
+.evidence img:hover {
+  transform: scale(1.05);
+}
+
+/* -------------------------------------
+   Lists (Documents, History, Feedback)
+------------------------------------- */
+.activity-details ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.activity-details li {
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+/* -------------------------------------
+   Animation
+------------------------------------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* -------------------------------------
+   Responsive Adjustments
+------------------------------------- */
+@media (max-width: 1024px) {
+  .activities-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .submissions-container.cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .activities-cards,
+  .submissions-container.cards {
+    grid-template-columns: 1fr;
+  }
+}
+.submissions-container {
+  overflow-y: scroll;
+}/* -------------------------------------
+   Status Badges (Table Cells)
+------------------------------------- */
+.submissions-table .status {
+  display: inline-block;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.85rem;
+  text-align: center;
+  min-width: 90px;
+}
+
+.submissions-table .status.approved {
+  background-color: #2ecc71;
+}
+
+.submissions-table .status.pending {
+  background-color: #f5a623;
+}
+
+.submissions-table .status.rejected {
+  background-color: #d9534f;
 }
