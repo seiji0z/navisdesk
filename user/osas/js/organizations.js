@@ -246,8 +246,8 @@ function loadOrganizationDetails() {
       <div class="organization-detail-layout">
         
         <div class="detail-main-column">
-          <button class="back-btn" onclick="loadOrganizations()">
-            <img src="../../../assets/images/arrow-left-circle.png" alt="Back" />
+          <button class="back-button" onclick="loadOrganizations()">
+            Back to Organizations
           </button>
           
           <div class="detail-inner-layout">

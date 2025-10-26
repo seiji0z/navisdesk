@@ -299,6 +299,7 @@
 .detail-inner-layout {
   display: flex;
   gap: 1.5rem;
+  margin-top: 20px;
 }
 
 .detail-content {
@@ -313,30 +314,25 @@
   overflow-y: auto;
 }
 
-.back-btn {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
+.back-button {
+  display: inline;
   align-items: center;
-  justify-content: center;
+  background-color: #073066;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
-  margin-bottom: 1.5rem;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
+  width: 200px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-bottom: 20px;
 }
 
-.back-btn:hover {
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.back-btn img {
-  width: 20px;
-  height: 20px;
-  opacity: 0.7;
+.back-button:hover {
+  background-color: #0a418c;
+  transform: translateY(-1px);
 }
 
 .detail-header {
@@ -426,7 +422,7 @@
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
   border: 1px solid #f0f0f0;
-  margin-top: calc(40px + 1.5rem); 
+  margin-top: 70px; 
 }
 
 .history-sidebar-card h3 {
