@@ -34,7 +34,7 @@ body, html {
 ------------------------------------- */
 .activities-cards {
   display: grid;
-  grid-template-columns: repeat(4, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
   gap: 20px;
   padding: 10px;
   margin-bottom: 25px;
@@ -51,29 +51,21 @@ body, html {
   color: #073066;
 }
 
-.activities-cards .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
+
 
 /* --- Individual Card Themes --- */
 .activities-cards .card:nth-child(1) {
-  background-color: #eafaf1; /* Light green tint */
   border-left: 6px solid #27ae60;
 }
 
 .activities-cards .card:nth-child(2) {
-  background-color: #fff4e5; /* Light orange tint */
   border-left: 6px solid #e67e22;
 }
 
 .activities-cards .card:nth-child(3) {
-  background-color: #fdecea; /* Light red tint */
-  border-left: 6px solid #c0392b;
 }
 
 .activities-cards .card:nth-child(4) {
-  background-color: #fffbea; /* Light yellow tint */
   border-left: 6px solid #f1c40f;
 }
 

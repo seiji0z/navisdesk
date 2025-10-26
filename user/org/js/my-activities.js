@@ -1,10 +1,3 @@
-/* =========================================================
-   MyActivities.js — Unified File (Controller + Model + View)
-   ========================================================= */
-
-/* ================================
-   COMPONENTS
-================================ */
 class ActivitiesSummaryComponent {
   render(activities) {
     const container = document.createElement("div");
@@ -42,7 +35,6 @@ class SubmissionsComponent {
         )
         .join("");
     } else {
-      // table view
       const table = document.createElement("table");
       table.classList.add("submissions-table");
       table.innerHTML = `
@@ -98,35 +90,19 @@ class ActivityDetailsComponent {
       <p><strong>Venue:</strong> ${submission.venue}</p>
       <p><strong>Participants:</strong> ${submission.participants}</p>
       <p><strong>SDG:</strong> ${submission.sdg}</p>
-
       <h3>Documents</h3>
       <ul>${submission.documents.map((d) => `<li>${d}</li>`).join("")}</ul>
-
       <h3>Evidence</h3>
       <div class="evidence">
-        ${submission.evidence
-          .map((e) => `<img src="../../../uploads/${e}" alt="${e}" />`)
-          .join("")}
+        ${submission.evidence.map((e) => `<img src="../../../uploads/${e}" alt="${e}" />`).join("")}
       </div>
-
       <h3>History</h3>
       <ul>
-        ${submission.history
-          .map(
-            (h) => `
-          <li><strong>${h.date}:</strong> ${h.status} - ${h.remarks}</li>`
-          )
-          .join("")}
+        ${submission.history.map((h) => `<li><strong>${h.date}:</strong> ${h.status} - ${h.remarks}</li>`).join("")}
       </ul>
-
       <h3>Feedback</h3>
       <ul>
-        ${submission.feedback
-          .map(
-            (f) => `
-          <li><strong>${f.reviewer}</strong> (${f.date}): ${f.comment}</li>`
-          )
-          .join("")}
+        ${submission.feedback.map((f) => `<li><strong>${f.reviewer}</strong> (${f.date}): ${f.comment}</li>`).join("")}
       </ul>
     `;
 
@@ -139,9 +115,6 @@ class ActivityDetailsComponent {
   }
 }
 
-/* ================================
-   MODEL
-================================ */
 class MyActivitiesModel {
   constructor() {
     this.activities = [];
@@ -151,8 +124,7 @@ class MyActivitiesModel {
   async loadActivities() {
     this.activities = [
       { title: "Approved", count: 0, description: "Approved activities" },
-      { title: "Needs Attention", count: 0, description: "Requires review" },
-      { title: "Rejected", count: 0, description: "Rejected submissions" },
+      { title: "Revise", count: 0, description: "Requires review" },
       { title: "Pending", count: 0, description: "Awaiting approval" },
     ];
   }
@@ -200,21 +172,7 @@ class MyActivitiesModel {
         history: [{ date: "2025-10-10", status: "Draft", remarks: "Initial submission" }],
         feedback: [],
       },
-      {
-        id: 3,
-        activity: "Annual Tech Symposium",
-        status: "Needs Attention",
-        description: "A week-long event focused on emerging technologies, featuring guest speakers.",
-        submittedDate: "2025-10-12",
-        date: "2025-10-05",
-        venue: "University Auditorium",
-        participants: "120",
-        sdg: "Industry, Innovation and Infrastructure",
-        documents: ["symposium-plan.pdf", "invitation.docx"],
-        evidence: ["poster.png"],
-        history: [{ date: "2025-10-07", status: "Needs Attention", remarks: "Missing speaker list" }],
-        feedback: [{ reviewer: "Admin B", date: "2025-10-09", comment: "Please include final guest list before re-submission." }],
-      },
+
       {
         id: 4,
         activity: "Mental Health Awareness Workshop",
@@ -233,24 +191,8 @@ class MyActivitiesModel {
         ],
         feedback: [],
       },
-      {
-        id: 5,
-        activity: "Fundraising Concert for a Cause",
-        status: "Rejected",
-        description: "A benefit concert to raise funds for local charities.",
-        submittedDate: "2025-10-09",
-        date: "2025-10-01",
-        venue: "City Amphitheater",
-        participants: "250",
-        sdg: "No Poverty",
-        documents: ["proposal.pdf", "performers-list.xlsx"],
-        evidence: ["concert.jpg"],
-        history: [
-          { date: "2025-10-05", status: "Pending", remarks: "Under review" },
-          { date: "2025-10-07", status: "Rejected", remarks: "Venue booking conflict" },
-        ],
-        feedback: [{ reviewer: "Coordinator C", date: "2025-10-08", comment: "Reschedule and resubmit next term." }],
-      },
+      
+
       {
         id: 6,
         activity: "Coastal Cleanup Initiative",
@@ -268,7 +210,6 @@ class MyActivitiesModel {
       },
     ];
 
-    // Compute summary counts
     const summaryMap = {};
     this.submissions.forEach((s) => {
       summaryMap[s.status] = (summaryMap[s.status] || 0) + 1;
@@ -276,8 +217,7 @@ class MyActivitiesModel {
 
     this.activities = [
       { title: "Approved", count: summaryMap["Approved"] || 0, description: "Approved activities" },
-      { title: "Needs Attention", count: summaryMap["Needs Attention"] || 0, description: "Requires review" },
-      { title: "Rejected", count: summaryMap["Rejected"] || 0, description: "Rejected submissions" },
+      { title: "Revise", count: summaryMap["Revise"] || 0, description: "Requires review" },
       { title: "Pending", count: summaryMap["Pending"] || 0, description: "Awaiting approval" },
     ];
   }
@@ -295,17 +235,12 @@ class MyActivitiesModel {
   }
 }
 
-/* ================================
-   VIEW
-================================ */
 class MyActivitiesView {
   constructor() {
     this.folderBody = document.getElementById("folder-body");
-
     this.summaryComponent = new ActivitiesSummaryComponent();
     this.submissionsComponent = new SubmissionsComponent();
     this.detailsComponent = new ActivityDetailsComponent();
-
     this.activitiesData = [];
     this.submissionsData = [];
     this.currentViewMode = "cards";
@@ -314,20 +249,17 @@ class MyActivitiesView {
   render(activities, submissions) {
     this.activitiesData = activities;
     this.submissionsData = submissions;
-
     this.folderBody.innerHTML = "";
 
     const whiteSection = document.createElement("div");
     whiteSection.classList.add("white-section");
 
-    // Section title
     const statusTitle = document.createElement("h2");
     statusTitle.textContent = "Submission Status";
     statusTitle.classList.add("section-title");
     whiteSection.appendChild(statusTitle);
     whiteSection.appendChild(this.summaryComponent.render(activities));
 
-    // Submissions header
     const submissionsHeader = document.createElement("div");
     submissionsHeader.classList.add("submissions-header");
     const submissionsTitle = document.createElement("h2");
@@ -349,32 +281,26 @@ class MyActivitiesView {
     submissionsHeader.appendChild(toggleContainer);
     whiteSection.appendChild(submissionsHeader);
 
-    // Submissions section
     this.submissionContainer = this.submissionsComponent.render(submissions, this.currentViewMode);
     whiteSection.appendChild(this.submissionContainer);
     this.folderBody.appendChild(whiteSection);
 
-    // Toggle behavior
     toggleContainer.querySelectorAll(".table-toggle-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         const selectedView = btn.dataset.view;
         if (selectedView === this.currentViewMode) return;
-
         toggleContainer.querySelectorAll(".table-toggle-btn").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
-
         this.currentViewMode = selectedView;
         const newView = this.submissionsComponent.render(this.submissionsData, this.currentViewMode);
         this.submissionContainer.replaceWith(newView);
         this.submissionContainer = newView;
-
         this.submissionsComponent.bindSubmissionClick((submissionId) => {
           this.showActivityDetails(submissionId);
         });
       });
     });
 
-    // Click → Details
     this.submissionsComponent.bindSubmissionClick((submissionId) => {
       this.showActivityDetails(submissionId);
     });
@@ -383,11 +309,9 @@ class MyActivitiesView {
   showActivityDetails(submissionId) {
     const submission = this.submissionsData.find((s) => s.id === submissionId);
     if (!submission) return;
-
     this.folderBody.innerHTML = "";
     const detailsView = this.detailsComponent.render(submission);
     this.folderBody.appendChild(detailsView);
-
     this.detailsComponent.bindBackButton(() => {
       this.render(this.activitiesData, this.submissionsData);
     });
@@ -407,9 +331,6 @@ class MyActivitiesView {
   }
 }
 
-/* ================================
-   CONTROLLER
-================================ */
 class MyActivitiesController {
   constructor() {
     this.model = new MyActivitiesModel();
@@ -428,8 +349,5 @@ class MyActivitiesController {
   }
 }
 
-/* ================================
-   INITIALIZATION
-================================ */
 const controller = new MyActivitiesController();
 controller.init();
