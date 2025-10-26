@@ -28,7 +28,7 @@ class SubmissionsComponent {
         .map(
           (s) => `
           <div class="submission-card" data-id="${s.id}">
-            <h3>${s.activity}</h3>
+            <h3>${s.title}</h3>
             <p>Status: <span class="status ${s.status.toLowerCase()}">${s.status}</span></p>
             <p>${s.description}</p>
           </div>`
@@ -52,9 +52,9 @@ class SubmissionsComponent {
             .map(
               (s) => `
             <tr data-id="${s.id}">
-              <td>${s.activity}</td>
+              <td>${s.title}</td>
               <td><span class="status ${s.status.toLowerCase()}">${s.status}</span></td>
-              <td>${s.submittedDate}</td>
+              <td>${s.submitted_at}</td>
               <td>${s.venue}</td>
               <td>${s.participants}</td>
             </tr>`
@@ -84,26 +84,92 @@ class ActivityDetailsComponent {
 
     container.innerHTML = `
       <button class="back-btn"><i class="fas fa-arrow-left"></i> Back</button>
-      <h2>${submission.activity}</h2>
-      <p><strong>Status:</strong> <span class="status ${submission.status.toLowerCase()}">${submission.status}</span></p>
-      <p><strong>Description:</strong> ${submission.description}</p>
-      <p><strong>Venue:</strong> ${submission.venue}</p>
-      <p><strong>Participants:</strong> ${submission.participants}</p>
-      <p><strong>SDG:</strong> ${submission.sdg}</p>
-      <h3>Documents</h3>
-      <ul>${submission.documents.map((d) => `<li>${d}</li>`).join("")}</ul>
-      <h3>Evidence</h3>
-      <div class="evidence">
-        ${submission.evidence.map((e) => `<img src="../../../uploads/${e}" alt="${e}" />`).join("")}
-      </div>
-      <h3>History</h3>
-      <ul>
-        ${submission.history.map((h) => `<li><strong>${h.date}:</strong> ${h.status} - ${h.remarks}</li>`).join("")}
-      </ul>
-      <h3>Feedback</h3>
-      <ul>
-        ${submission.feedback.map((f) => `<li><strong>${f.reviewer}</strong> (${f.date}): ${f.comment}</li>`).join("")}
-      </ul>
+      <h2>${submission.title}</h2>
+
+      <!-- General Information -->
+      <section class="details-section">
+        <h3>General Information</h3>
+        <p><strong>Status:</strong> <span class="status ${submission.status.toLowerCase()}">${submission.status}</span></p>
+        <p><strong>Description:</strong> ${submission.description}</p>
+        <p><strong>Objectives:</strong> ${submission.objectives}</p>
+        <p><strong>Academic Year:</strong> ${submission.acad_year}</p>
+        <p><strong>Term:</strong> ${submission.term}</p>
+        <p><strong>Organization ID:</strong> ${submission.org_id}</p>
+        <p><strong>Submitted By:</strong> ${submission.submitted_by}</p>
+        <p><strong>Submitted At:</strong> ${submission.submitted_at}</p>
+        <p><strong>Reviewed By:</strong> ${submission.reviewed_by ? submission.reviewed_by : "N/A"}</p>
+        <p><strong>Reviewed At:</strong> ${submission.reviewed_at ? submission.reviewed_at : "N/A"}</p>
+        <p><strong>Created At:</strong> ${submission.created_at}</p>
+      </section>
+
+      <!-- Event Details -->
+      <section class="details-section">
+        <h3>Event Details</h3>
+        <p><strong>Venue:</strong> ${submission.venue}</p>
+        <p><strong>Date Start:</strong> ${submission.date_start}</p>
+        <p><strong>Date End:</strong> ${submission.date_end}</p>
+        <p><strong>Participants:</strong> ${submission.participants}</p>
+        <p><strong>SDGs:</strong> ${submission.sdgs && submission.sdgs.length ? submission.sdgs.join(", ") : "None"}</p>
+      </section>
+
+      <!-- Supporting Documents -->
+      <section class="details-section">
+        <h3>Supporting Documents</h3>
+        ${
+          submission.supporting_docs && submission.supporting_docs.length
+            ? `<ul>
+                ${submission.supporting_docs
+                  .map(
+                    (d) => `
+                  <li>
+                    <a href="../../../uploads/${d.file_name}" target="_blank">${d.file_name}</a>
+                    <span class="file-type">(${d.file_type})</span> 
+                    <span class="upload-date">Uploaded: ${d.upload_date}</span>
+                  </li>`
+                  )
+                  .join("")}
+              </ul>`
+            : "<p>No supporting documents available.</p>"
+        }
+      </section>
+
+      <!-- Evidences -->
+      <section class="details-section">
+        <h3>Evidences</h3>
+        <div class="evidence">
+          ${
+            submission.evidences && submission.evidences.length
+              ? submission.evidences
+                  .map(
+                    (e) => `
+                <div class="evidence-item">
+                  <img src="../../../uploads/${e.file_name}" alt="${e.file_name}" />
+                  <p>${e.file_name}</p>
+                  <p><small>Uploaded: ${e.upload_date}</small></p>
+                </div>`
+                  )
+                  .join("")
+              : "<p>No evidences available.</p>"
+          }
+        </div>
+      </section>
+
+      <!-- Activity History -->
+      <section class="details-section">
+        <h3>History</h3>
+        ${
+          submission.history && submission.history.length
+            ? `<ul>
+                ${submission.history
+                  .map(
+                    (h) =>
+                      `<li><strong>${h.date}:</strong> ${h.status} - ${h.remarks}</li>`
+                  )
+                  .join("")}
+              </ul>`
+            : "<p>No history records found.</p>"
+        }
+      </section>
     `;
 
     return container;
@@ -115,6 +181,7 @@ class ActivityDetailsComponent {
   }
 }
 
+
 class MyActivitiesModel {
   constructor() {
     this.activities = [];
@@ -122,6 +189,7 @@ class MyActivitiesModel {
   }
 
   async loadActivities() {
+    // Default statuses (linked to `activities.status`)
     this.activities = [
       { title: "Approved", count: 0, description: "Approved activities" },
       { title: "Revise", count: 0, description: "Requires review" },
@@ -129,87 +197,96 @@ class MyActivitiesModel {
     ];
   }
 
-  updateActivityCount(title, newCount) {
-    const activity = this.activities.find((a) => a.title === title);
-    if (activity) activity.count = newCount;
-  }
-
   async loadSubmissions() {
+    // Mock dataset reflecting your MongoDB structure
     this.submissions = [
       {
         id: 1,
-        activity: "Community Clean-Up Drive",
-        status: "Approved",
-        description: "A community clean-up project around Burnham Park.",
-        submittedDate: "2025-10-18",
-        date: "2025-10-10",
+        org_id: "6741a9f2c1234567890abcde",
+        title: "Community Clean-Up Drive",
+        description: "A clean-up project around Burnham Park led by volunteers.",
+        acad_year: "2025-2026",
+        term: "1st Semester",
+        date_start: "2025-09-25",
+        date_end: "2025-09-26",
         venue: "Burnham Park",
-        participants: "25",
-        sdg: "Sustainable Cities and Communities",
-        documents: ["proposal.pdf", "attendance.xlsx"],
-        evidence: ["evidence1.jpg", "evidence2.jpg"],
-        history: [
-          { date: "2025-10-12", status: "Pending", remarks: "Waiting for approval" },
-          { date: "2025-10-15", status: "Approved", remarks: "All requirements met" },
+        objectives: "Promote environmental awareness and civic responsibility.",
+        sdgs: ["Sustainable Cities and Communities"],
+        evidences: [
+          { file_name: "cleanup1.jpg", file_type: "image/jpeg", upload_date: "2025-09-26" },
+          { file_name: "cleanup2.jpg", file_type: "image/jpeg", upload_date: "2025-09-26" },
         ],
-        feedback: [
-          { reviewer: "Admin A", date: "2025-10-16", comment: "Good initiative! Continue collaborating with local units." },
-          { reviewer: "Coordinator B", date: "2025-10-17", comment: "Ensure to submit the final attendance sheet next time." },
+        supporting_docs: [
+          { file_name: "proposal.pdf", file_type: "application/pdf", upload_date: "2025-09-20" },
+          { file_name: "attendance.xlsx", file_type: "application/vnd.ms-excel", upload_date: "2025-09-26" },
+        ],
+        submitted_by: "org_president_01",
+        submitted_at: "2025-09-26",
+        reviewed_by: "osas_admin_02",
+        reviewed_at: "2025-09-27",
+        participants: "25",
+        status: "Approved",
+        created_at: "2025-09-18",
+        history: [
+          { date: "2025-09-20", status: "Pending", remarks: "Under initial review" },
+          { date: "2025-09-27", status: "Approved", remarks: "All documents validated" },
         ],
       },
       {
         id: 2,
-        activity: "Tree Planting Initiative",
-        status: "Pending",
-        description: "Planting native trees around Camp John Hay.",
-        submittedDate: "2025-10-15",
-        date: "2025-10-08",
+        org_id: "6741a9f2c1234567890abcdf",
+        title: "Tree Planting Initiative",
+        description: "Planting native trees around Camp John Hay to promote biodiversity.",
+        acad_year: "2025-2026",
+        term: "1st Semester",
+        date_start: "2025-10-05",
+        date_end: "2025-10-05",
         venue: "Camp John Hay",
+        objectives: "Support environmental sustainability through reforestation.",
+        sdgs: ["Life on Land"],
+        evidences: [{ file_name: "treeplant1.jpg", file_type: "image/jpeg", upload_date: "2025-10-06" }],
+        supporting_docs: [{ file_name: "tree_plan.pdf", file_type: "application/pdf", upload_date: "2025-10-04" }],
+        submitted_by: "org_secretary_01",
+        submitted_at: "2025-10-06",
+        reviewed_by: null,
+        reviewed_at: null,
         participants: "30",
-        sdg: "Life on Land",
-        documents: ["plan.pdf", "list.xlsx"],
-        evidence: ["photo1.jpg", "photo2.jpg"],
-        history: [{ date: "2025-10-10", status: "Draft", remarks: "Initial submission" }],
-        feedback: [],
+        status: "Pending",
+        created_at: "2025-10-03",
+        history: [{ date: "2025-10-04", status: "Pending", remarks: "Waiting for admin review" }],
       },
-
       {
-        id: 4,
-        activity: "Mental Health Awareness Workshop",
-        status: "Approved",
-        description: "An interactive workshop on student mental health and resilience.",
-        submittedDate: "2025-10-11",
-        date: "2025-10-04",
-        venue: "Student Center",
-        participants: "80",
-        sdg: "Good Health and Well-being",
-        documents: ["agenda.pdf", "participants.xlsx"],
-        evidence: ["group-photo.jpg"],
-        history: [
-          { date: "2025-10-06", status: "Pending", remarks: "Under review" },
-          { date: "2025-10-09", status: "Approved", remarks: "Looks good to proceed" },
+        id: 3,
+        org_id: "6741a9f2c1234567890abce0",
+        title: "Mental Health Awareness Workshop",
+        description: "A seminar promoting mental well-being and emotional resilience.",
+        acad_year: "2025-2026",
+        term: "1st Semester",
+        date_start: "2025-09-15",
+        date_end: "2025-09-15",
+        venue: "SLU Student Center",
+        objectives: "Raise awareness on mental health and coping strategies.",
+        sdgs: ["Good Health and Well-being"],
+        evidences: [{ file_name: "workshop_photo.jpg", file_type: "image/jpeg", upload_date: "2025-09-15" }],
+        supporting_docs: [
+          { file_name: "agenda.pdf", file_type: "application/pdf", upload_date: "2025-09-12" },
+          { file_name: "participants.xlsx", file_type: "application/vnd.ms-excel", upload_date: "2025-09-15" },
         ],
-        feedback: [],
-      },
-      
-
-      {
-        id: 6,
-        activity: "Coastal Cleanup Initiative",
+        submitted_by: "org_president_02",
+        submitted_at: "2025-09-15",
+        reviewed_by: "osas_admin_01",
+        reviewed_at: "2025-09-17",
+        participants: "80",
         status: "Approved",
-        description: "Students collaborated with NGOs to clean up coastal areas.",
-        submittedDate: "2025-10-07",
-        date: "2025-09-30",
-        venue: "La Union Beach",
-        participants: "40",
-        sdg: "Life Below Water",
-        documents: ["coastal-plan.pdf"],
-        evidence: ["cleanup.jpg", "volunteers.jpg"],
-        history: [{ date: "2025-10-03", status: "Approved", remarks: "Great community engagement" }],
-        feedback: [],
+        created_at: "2025-09-10",
+        history: [
+          { date: "2025-09-13", status: "Pending", remarks: "Under review" },
+          { date: "2025-09-17", status: "Approved", remarks: "Validated and approved" },
+        ],
       },
     ];
 
+    // Summarize activity counts
     const summaryMap = {};
     this.submissions.forEach((s) => {
       summaryMap[s.status] = (summaryMap[s.status] || 0) + 1;
