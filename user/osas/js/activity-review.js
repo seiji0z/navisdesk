@@ -34,8 +34,8 @@ const cardIcons = {
   "OSAS Review": "review-icon.svg",
 };
 
-// create section card
-function createSection(title, innerHTML) {
+// create section cards
+function createSection(title, innerHTML, prependHTML = "") {
   const section = document.createElement("div");
   section.classList.add("activity-section");
   const iconFile = cardIcons[title];
@@ -43,7 +43,9 @@ function createSection(title, innerHTML) {
   const iconHTML = iconFile
     ? `<img src='${iconPath}' alt='' class='card-title-icon' style='width:28px;height:28px;margin-right:12px;vertical-align:middle;' />`
     : "";
+
   section.innerHTML = `
+    ${prependHTML}
     <h3 style="display:flex;align-items:center;gap:10px;">
       ${iconHTML}<span>${title}</span>
     </h3>
@@ -129,6 +131,13 @@ export function showActivityReview(activity) {
 
 // generate the review display
 function generateReview(activity) {
+
+  const backButtonHTML = `
+  <div class="back-button-container" style="margin-bottom: 15px;">
+    <button class="back-button" id="back-to-table-btn">Back to Activities</button>
+  </div>
+  `;
+
   // activity details
   const detailsHTML = `
     <div class="review-row"><div class="review-label">Title</div><div class="review-value">${activity.title}</div></div>
@@ -137,7 +146,7 @@ function generateReview(activity) {
     <div class="review-row"><div class="review-label">Academic Year</div><div class="review-value">${activity.acad_year}</div></div>
     <div class="review-row"><div class="review-label">Term</div><div class="review-value">${activity.term}</div></div>
   `;
-  const detailsSection = createSection("Activity Details", detailsHTML).outerHTML;
+  const detailsSection = createSection("Activity Details", detailsHTML, backButtonHTML).outerHTML;
 
   // date and time
   const dateTimeHTML = `
@@ -218,26 +227,15 @@ function generateReview(activity) {
     <label for="osas-remarks">Remarks</label>
     <textarea id="osas-remarks" placeholder="Provide feedback here (required if returning the activity)..."></textarea>
     <div class="osas-button-container"></div>
+    <div class="button-container">
+      <button class="remove-btn" id="return-activity-btn">Return Activity</button>
+      <button class="accept-btn" id="accept-activity-btn">Accept Activity</button>
+    </div>
   `;
   const osasSection = createSection("OSAS Review", osasActionHTML).outerHTML;
 
-  // decision buttons
-  const decisionButtons = `
-    <div class="button-container" style="padding: 0 40px 20px 40px;">
-      <button class="accept-btn" id="accept-activity-btn">Accept Activity</button>
-      <button class="remove-btn" id="return-activity-btn">Return Activity</button>
-    </div>
-  `;
-  
-  const backButtonHTML = `
-   <button class="back-btn" id="back-to-table-btn">
-      <img src="../../../assets/images/arrow-left-circle.png" alt="Back" />
-    </button>
-  `;
-
   // combine all sections
   return `
-    ${backButtonHTML}
     ${detailsSection}
     ${dateTimeSection}
     ${venueSection}
@@ -245,7 +243,6 @@ function generateReview(activity) {
     ${supportingDocsSection}
     ${evidenceSection}
     ${osasSection}
-    ${decisionButtons}
   `;
 }
 
