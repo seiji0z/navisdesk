@@ -4,7 +4,8 @@
    Font: Poppins | Color: #073066 (primary)
 ========================================================= */
 
-body, html {
+body,
+html {
   overflow-x: hidden;
 }
 
@@ -81,6 +82,7 @@ body, html {
 /* -------------------------------------
    Submission Overview
 ------------------------------------- */
+
 .submission-overview h3 {
   margin-bottom: 1rem;
   color: #073066;
@@ -99,6 +101,7 @@ body, html {
 
 .status-title {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 6px; /* space between icon and text */
   font-weight: 600;
@@ -392,4 +395,126 @@ body, html {
   filter: brightness(1.1);
 }
 
+/* ---------- LARGE TABLETS (≤ 1200px) ---------- */
+@media (max-width: 1300px) {
+  .top-section,
+  .bottom-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
+  .medium {
+    grid-column: span 3;
+  }
+
+  .main {
+    margin-left: 14rem;
+    padding: 1.5rem;
+  }
+
+  .quick-actions.card {
+    max-width: 100%; /* or 350px, etc. */
+    width: 35%; /* relative width */
+  }
+  .card {
+    flex: 1 1 calc(33.333% - 1.5rem);
+    min-width: 320px;
+  }
+}
+
+/* ---------- TABLETS (≤ 992px) ---------- */
+@media (max-width: 992px) {
+  .reminders.card {
+    order: -1; /* moves it to the top */
+  }
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .medium {
+    grid-column: span 2;
+  }
+
+  .main {
+    margin-left: 12rem;
+    padding: 1rem;
+  }
+
+  .grid-item.small {
+    height: 180px;
+  }
+
+  .grid-item.medium canvas {
+    height: 320px !important;
+  }
+}
+
+/* ---------- LARGE PHONES (≤ 768px) ---------- */
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0;
+    align-items: stretch;
+    height: auto;
+  }
+
+  .grid-container {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .grid-item {
+    width: 100%;
+  }
+
+  .small,
+  .medium {
+    grid-column: span 1;
+    height: auto;
+  }
+
+  .grid-item.medium canvas {
+    height: 250px !important;
+  }
+
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .header .welcome h1 {
+    font-size: 1.5rem;
+  }
+
+  .date-info p {
+    font-size: 0.9rem;
+  }
+}
+
+/* ---------- SMALL PHONES (≤ 576px) ---------- */
+@media (max-width: 576px) {
+  .main {
+    padding: 0.5rem;
+  }
+
+  .grid-container {
+    gap: 0.5rem;
+  }
+
+  .left-details .number {
+    font-size: 28px;
+  }
+
+  .grid-item.small .card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .folder-title {
+    font-size: 1.2rem;
+  }
+}
