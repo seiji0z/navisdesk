@@ -56,7 +56,7 @@ function loadOsasDashboard() {
       <div class="grid-item medium">
         <div class="card chart">
           <h3>Activities by Term</h3>
-          <img src="../../../assets/images/placeholder-graph.png" alt="SDG graph" />
+          
         </div>
       </div>
 
@@ -64,7 +64,6 @@ function loadOsasDashboard() {
       <div class="grid-item medium">
         <div class="card chart">
           <h3>Top SDGs</h3>
-          <img src="../../../assets/images/placeholder-graph-2.png" alt="SDG graph" />
         </div>
       </div>
 
