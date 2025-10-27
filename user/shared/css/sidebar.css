@@ -202,3 +202,70 @@
   cursor: default;
   pointer-events: none; 
 }
+/* ===============================
+   MOBILE SIDEBAR (slide-over style)
+   =============================== */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -16rem; /* hidden by default */
+    height: 100vh;
+    transform: none;
+    width: 16rem;
+    border-radius: 0;
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+
+  /* Sidebar when shown */
+  .sidebar.show {
+    left: 0;
+  }
+
+  /* Keep main content static */
+  .main {
+    margin-left: 0 !important;
+  }
+
+  /* Overlay to darken content when sidebar open */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    z-index: 999;
+  }
+
+  .sidebar-overlay.show {
+    display: block;
+  }
+
+  /* Adjust toggle button to always be visible on mobile */
+  .toggle-btn {
+    position: fixed;
+    left: 0.75rem;
+    top: 1rem;
+    z-index: 1100;
+    transform: none;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 1.8rem;
+    height: 1.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+
+  /* Hide the toggle inside the sidebar when open */
+  .sidebar.show .toggle-btn {
+    display: none;
+  }
+}
+
