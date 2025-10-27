@@ -265,7 +265,6 @@ html {
 ------------------------------------- */
 .dashboard-folder {
   background-color: #ffb901;
-  padding: 2rem;
   border-radius: 20px;
   color: #000;
 }
@@ -396,12 +395,24 @@ html {
     font-size: 15px;
   }
 
-  h1 { font-size: 1.9em; }
-  h2 { font-size: 1.45em; }
-  h3 { font-size: 1.1em; }
-  h4 { font-size: 1em; }
-  h5 { font-size: 0.8em; }
-  h6 { font-size: 0.7em; }
+  h1 {
+    font-size: 1.9em;
+  }
+  h2 {
+    font-size: 1.45em;
+  }
+  h3 {
+    font-size: 1.1em;
+  }
+  h4 {
+    font-size: 1em;
+  }
+  h5 {
+    font-size: 0.8em;
+  }
+  h6 {
+    font-size: 0.7em;
+  }
 
   body,
   p,
@@ -425,12 +436,24 @@ html {
     font-size: 14px;
   }
 
-  h1 { font-size: 1.7em; }
-  h2 { font-size: 1.35em; }
-  h3 { font-size: 1.05em; }
-  h4 { font-size: 0.95em; }
-  h5 { font-size: 0.78em; }
-  h6 { font-size: 0.7em; }
+  h1 {
+    font-size: 1.7em;
+  }
+  h2 {
+    font-size: 1.35em;
+  }
+  h3 {
+    font-size: 1.05em;
+  }
+  h4 {
+    font-size: 0.95em;
+  }
+  h5 {
+    font-size: 0.78em;
+  }
+  h6 {
+    font-size: 0.7em;
+  }
 
   body,
   p,
@@ -458,12 +481,24 @@ html {
     font-size: 13.5px;
   }
 
-  h1 { font-size: 1.6em; }
-  h2 { font-size: 1.3em; }
-  h3 { font-size: 1em; }
-  h4 { font-size: 0.9em; }
-  h5 { font-size: 0.75em; }
-  h6 { font-size: 0.7em; }
+  h1 {
+    font-size: 1.6em;
+  }
+  h2 {
+    font-size: 1.3em;
+  }
+  h3 {
+    font-size: 1em;
+  }
+  h4 {
+    font-size: 0.9em;
+  }
+  h5 {
+    font-size: 0.75em;
+  }
+  h6 {
+    font-size: 0.7em;
+  }
 
   body,
   p,
@@ -482,6 +517,22 @@ html {
   .upload-row {
     grid-template-columns: 1fr;
   }
+
+  .status-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .quick-actions.card {
+    min-width: 100%;
+  }
+  .top-section {
+    display: flex;
+    flex-direction: column;
+  }
+  .bottom-section {
+    display: block;
+  }
 }
 
 /* ========== 568px (medium phones) ========== */
@@ -490,12 +541,24 @@ html {
     font-size: 13px;
   }
 
-  h1 { font-size: 1.5em; }
-  h2 { font-size: 1.25em; }
-  h3 { font-size: 1em; }
-  h4 { font-size: 0.9em; }
-  h5 { font-size: 0.75em; }
-  h6 { font-size: 0.7em; }
+  h1 {
+    font-size: 1.5em;
+  }
+  h2 {
+    font-size: 1.25em;
+  }
+  h3 {
+    font-size: 1em;
+  }
+  h4 {
+    font-size: 0.9em;
+  }
+  h5 {
+    font-size: 0.75em;
+  }
+  h6 {
+    font-size: 0.7em;
+  }
 
   body,
   p,
@@ -523,12 +586,24 @@ html {
     font-size: 12px;
   }
 
-  h1 { font-size: 1.4em; }
-  h2 { font-size: 1.2em; }
-  h3 { font-size: 0.95em; }
-  h4 { font-size: 0.85em; }
-  h5 { font-size: 0.7em; }
-  h6 { font-size: 0.65em; }
+  h1 {
+    font-size: 1.4em;
+  }
+  h2 {
+    font-size: 1.2em;
+  }
+  h3 {
+    font-size: 0.95em;
+  }
+  h4 {
+    font-size: 0.85em;
+  }
+  h5 {
+    font-size: 0.7em;
+  }
+  h6 {
+    font-size: 0.65em;
+  }
 
   body,
   p,
@@ -548,7 +623,3 @@ html {
     padding: 20px;
   }
 }
-
-
-
-
