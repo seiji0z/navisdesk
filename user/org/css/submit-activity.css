@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   height: 100%;
   overflow: hidden;
 }
@@ -75,7 +76,7 @@ html, body {
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  color: #fff !important; 
+  color: #fff !important;
   font-weight: 700;
   flex: 0 0 36px;
   margin-left: 6px;
@@ -155,24 +156,57 @@ html, body {
 }
 
 /* Color the border ONLY when the checkbox is checked */
-.sdg-checkbox.sdg-1:has(input:checked) { border-color: var(--sdg-1); }
-.sdg-checkbox.sdg-2:has(input:checked) { border-color: var(--sdg-2); }
-.sdg-checkbox.sdg-3:has(input:checked) { border-color: var(--sdg-3); }
-.sdg-checkbox.sdg-4:has(input:checked) { border-color: var(--sdg-4); }
-.sdg-checkbox.sdg-5:has(input:checked) { border-color: var(--sdg-5); }
-.sdg-checkbox.sdg-6:has(input:checked) { border-color: var(--sdg-6); }
-.sdg-checkbox.sdg-7:has(input:checked) { border-color: var(--sdg-7); }
-.sdg-checkbox.sdg-8:has(input:checked) { border-color: var(--sdg-8); }
-.sdg-checkbox.sdg-9:has(input:checked) { border-color: var(--sdg-9); }
-.sdg-checkbox.sdg-10:has(input:checked) { border-color: var(--sdg-10); }
-.sdg-checkbox.sdg-11:has(input:checked) { border-color: var(--sdg-11); }
-.sdg-checkbox.sdg-12:has(input:checked) { border-color: var(--sdg-12); }
-.sdg-checkbox.sdg-13:has(input:checked) { border-color: var(--sdg-13); }
-.sdg-checkbox.sdg-14:has(input:checked) { border-color: var(--sdg-14); }
-.sdg-checkbox.sdg-15:has(input:checked) { border-color: var(--sdg-15); }
-.sdg-checkbox.sdg-16:has(input:checked) { border-color: var(--sdg-16); }
-.sdg-checkbox.sdg-17:has(input:checked) { border-color: var(--sdg-17); }
-
+.sdg-checkbox.sdg-1:has(input:checked) {
+  border-color: var(--sdg-1);
+}
+.sdg-checkbox.sdg-2:has(input:checked) {
+  border-color: var(--sdg-2);
+}
+.sdg-checkbox.sdg-3:has(input:checked) {
+  border-color: var(--sdg-3);
+}
+.sdg-checkbox.sdg-4:has(input:checked) {
+  border-color: var(--sdg-4);
+}
+.sdg-checkbox.sdg-5:has(input:checked) {
+  border-color: var(--sdg-5);
+}
+.sdg-checkbox.sdg-6:has(input:checked) {
+  border-color: var(--sdg-6);
+}
+.sdg-checkbox.sdg-7:has(input:checked) {
+  border-color: var(--sdg-7);
+}
+.sdg-checkbox.sdg-8:has(input:checked) {
+  border-color: var(--sdg-8);
+}
+.sdg-checkbox.sdg-9:has(input:checked) {
+  border-color: var(--sdg-9);
+}
+.sdg-checkbox.sdg-10:has(input:checked) {
+  border-color: var(--sdg-10);
+}
+.sdg-checkbox.sdg-11:has(input:checked) {
+  border-color: var(--sdg-11);
+}
+.sdg-checkbox.sdg-12:has(input:checked) {
+  border-color: var(--sdg-12);
+}
+.sdg-checkbox.sdg-13:has(input:checked) {
+  border-color: var(--sdg-13);
+}
+.sdg-checkbox.sdg-14:has(input:checked) {
+  border-color: var(--sdg-14);
+}
+.sdg-checkbox.sdg-15:has(input:checked) {
+  border-color: var(--sdg-15);
+}
+.sdg-checkbox.sdg-16:has(input:checked) {
+  border-color: var(--sdg-16);
+}
+.sdg-checkbox.sdg-17:has(input:checked) {
+  border-color: var(--sdg-17);
+}
 
 /* File Inputs */
 .file-input {
@@ -214,6 +248,7 @@ html, body {
   gap: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
+  bottom: 0;
 }
 
 /* Upload box styles */
@@ -290,8 +325,14 @@ html, body {
   font-weight: 600;
 }
 
-.add-more-btn { background: #2563eb; color: #fff; }
-.remove-btn { background: #ef4444; color: #fff; }
+.add-more-btn {
+  background: #2563eb;
+  color: #fff;
+}
+.remove-btn {
+  background: #ef4444;
+  color: #fff;
+}
 
 /* Controls row that sits at the top of each upload section */
 .section-controls {
@@ -318,7 +359,7 @@ html, body {
   border: none;
   background: #fff;
   color: #374151;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   border: 1px solid #d1d5db;
 }
 
@@ -432,4 +473,58 @@ html, body {
 
 .cancel-btn:hover {
   background-color: #d1d5db;
+}
+
+/* ========== 1024px (laptops) ========== */
+@media (max-width: 1024px) {
+  .activity-section {
+    padding: 30px;
+  }
+}
+
+/* ========== 768px (tablets) ========== */
+@media (max-width: 768px) {
+  .folder-body {
+    padding: 30px 20px;
+  }
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* ========== 666px (small tablets) ========== */
+@media (max-width: 666px) {
+  .sdg-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .upload-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== 568px (medium phones) ========== */
+@media (max-width: 568px) {
+  .date-time-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .review-label {
+    min-width: 120px;
+  }
+}
+
+/* ========== 360px (small phones) ========== */
+@media (max-width: 360px) {
+  .folder-body {
+    padding: 20px;
+  }
+  .activity-section {
+    padding: 20px;
+  }
+  input,
+  textarea,
+  select {
+    font-size: 0.85rem;
+  }
 }
