@@ -170,11 +170,13 @@
 
 .organization-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  grid-template-columns: repeat(3, minmax(290px, 1fr));
   gap: 1.5rem;
   flex-grow: 1;
   overflow-y: auto;
   padding-right: 1rem;
+  align-items: stretch;
+  grid-auto-rows: 200px;
 }
 
 .organization-card {
@@ -187,6 +189,8 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   border: 2px solid #f3c751;
   position: relative;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .organization-card .card-link-icon {
@@ -236,6 +240,7 @@
 
 .organization-details {
   flex-grow: 1;
+  overflow: hidden;
 }
 
 .organization-details h3 {
@@ -249,6 +254,13 @@
   margin: 0 0 0.25rem 0;
 }
 
+.organization-details h3,
+.organization-details p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+
 .organization-details .status-tag {
   display: inline-block;
   padding: 0.2rem 0.6rem;
@@ -258,20 +270,20 @@
 }
 
 .status-tag.active { 
-    background-color: #d4edda; 
-    color: #155724; 
-    border: 1px solid #c3e6cb; 
+  background-color: #d4edda; 
+  color: #155724; 
+  border: 1px solid #c3e6cb; 
 }
 
 .status-tag.pending { 
-    background-color: #fff3cd; 
-    color: #856404; 
-    border: 1px solid #ffeeba; 
+  background-color: #fff3cd; 
+  color: #856404; 
+  border: 1px solid #ffeeba; 
 }
 
 .search-btn img { 
-    height: 18px; 
-    filter: brightness(0) saturate(100%) invert(20%) sepia(85%) saturate(3062%) hue-rotate(200deg) brightness(97%) contrast(97%); 
+  height: 18px; 
+  filter: invert(1);
 }
 
 .organization-detail-layout {
