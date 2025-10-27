@@ -84,6 +84,11 @@ html {
   font-family: "Poppins", sans-serif;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   color: #073066;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /* --- Individual Card Themes --- */
@@ -104,10 +109,23 @@ html {
 }
 
 /* Titles inside cards */
-.activities-cards .card h3 {
+.activities-cards .card .card-title {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 8px;
+}
+
+.activities-cards .card .card-count {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #073066;
+  margin: 10px 0;
+}
+
+.activities-cards .card .card-description {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
 }
 
 /* Color titles */
@@ -124,7 +142,7 @@ html {
   color: #f1c40f;
 }
 
-.activities-cards .card h3::after {
+.activities-cards .card .card-title::after {
   content: "";
   display: block;
   width: 45px;
@@ -200,11 +218,18 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  cursor: pointer;
+}
+
+.submission-card-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .submission-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Status-based card highlights */
@@ -229,24 +254,51 @@ html {
 }
 
 .submission-card h3 {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #073066;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .submission-card p {
   font-size: 0.9rem;
   color: #374151;
   margin: 4px 0;
+  line-height: 1.4;
+}
+
+.submission-card .description {
+  font-size: 0.9rem;
+  color: #374151;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.submission-card p strong {
+  color: #073066;
+  font-weight: 600;
 }
 
 /* Status text inside cards */
 .submission-card .status {
   font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 8px;
+  padding: 6px 12px;
+  border-radius: 20px;
   color: #fff;
+  font-size: 0.8rem;
+  display: inline-block;
+  text-align: center;
+  min-width: 80px;
 }
 
 .status.approved {
@@ -260,6 +312,31 @@ html {
 }
 .status.revise {
   background-color: #e67e22;
+}
+.submission-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.status-info {
+  flex: 1;
+}
+
+.submission-details {
+  text-align: right;
+  flex: 1;
+}
+
+.submission-date,
+.submission-venue {
+  font-size: 0.8rem;
+  color: #6b7280;
+  display: block;
+  line-height: 1.3;
 }
 
 /* -------------------------------------
@@ -628,107 +705,240 @@ html {
 /* -------------------------------------
    Responsive Improvements
 ------------------------------------- */
-@media (max-width: 768px) {
-  .details-section p {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .details-section p strong,
-  .details-section p span {
-    text-align: left;
-    width: 100%;
-  }
-}
-
-/* --- 1024px --- */
 @media (max-width: 1024px) {
   .activities-cards {
-    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    grid-template-columns: 1fr; /* Single column */
+    gap: 12px;
+    padding: 8px;
   }
-  .submissions-container.cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
-/* --- 768px and below: stack all cards vertically --- */
-@media (max-width: 768px) {
-  .activities-cards,
-  .submissions-container.cards {
+  .activities-cards .card {
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    flex-direction: row;
+    text-align: left;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    min-height: 80px;
+    border-left: 4px solid;
   }
 
-  .activities-cards .card,
-  .submission-card {
+  /* Make the LAST card take 2 columns */
+  .activities-cards .card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .activities-cards .card .card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
-    text-align: left;
-    padding: 1.2rem;
+    gap: 8px;
+  }
+
+  .activities-cards .card .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .activities-cards .card .card-count {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #073066;
+    flex: 0 0 auto;
+    min-width: 30px;
+    text-align: center;
+    order: -1;
+  }
+
+  .activities-cards .card .card-description {
+    font-size: 0.8rem;
+    color: #666;
+    text-align: right;
+    white-space: nowrap;
+    flex: 1;
+  }
+
+  .submissions-container.cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .submission-card {
+    padding: 1.3rem;
+    min-height: 170px;
+  }
+
+  .submission-card h3 {
+    font-size: 1.05rem;
   }
 }
 
-/* --- 666px --- */
-@media (max-width: 666px) {
-  .activities-cards,
+/* --- Mobile Layout: Horizontal Activities Cards & Single Column Submissions --- */
+@media (max-width: 768px) {
+  /* Submissions Cards - Single Column */
   .submissions-container.cards {
-    gap: 14px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 8px;
   }
-  .activities-cards .card h3,
+
+  .submission-card {
+    padding: 1.2rem;
+    min-height: 160px;
+    border-left: 4px solid;
+  }
+
   .submission-card h3 {
     font-size: 1rem;
+    margin-bottom: 10px;
   }
-}
 
-/* --- 568px --- */
-@media (max-width: 568px) {
-  .activities-cards .card,
-  .submission-card {
-    padding: 1rem;
-    font-size: 0.9rem;
+  .submission-card .description {
+    margin-bottom: 10px;
   }
-}
 
-/* --- 360px --- */
-@media (max-width: 360px) {
-  .activities-cards .card,
-  .submission-card {
-    padding: 0.9rem;
+  .submission-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .submission-details {
+    text-align: left;
+    width: 100%;
+  }
+
+  .submission-date,
+  .submission-venue {
     font-size: 0.85rem;
   }
 }
-/* --- Tablet Layout (2 columns) --- */
-@media (max-width: 1024px) {
+
+/* --- Small Mobile Optimization --- */
+@media (max-width: 480px) {
+  /* Activities Cards */
   .activities-cards {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
+    gap: 10px;
+    padding: 5px;
   }
 
+  .activities-cards .card {
+    padding: 0.8rem;
+    min-height: 70px;
+  }
+
+  .activities-cards .card h3 {
+    font-size: 0.9rem;
+    margin-right: 6px;
+    min-width: 55px;
+  }
+
+  .activities-cards .card h1 {
+    font-size: 1.4rem;
+    margin: 0 6px;
+    min-width: 25px;
+  }
+
+  .activities-cards .card p {
+    font-size: 0.75rem;
+  }
+
+  /* Submissions Cards */
   .submissions-container.cards {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
+    gap: 14px;
+    padding: 5px;
+  }
+
+  .submission-card {
+    padding: 1rem;
+    min-height: 150px;
+  }
+
+  .submission-card h3 {
+    font-size: 0.95rem;
+  }
+
+  .submission-card .description {
+    font-size: 0.85rem;
+  }
+
+  .submission-card .status {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    min-width: 70px;
   }
 }
 
-/* Alternative: Flexbox for single column */
-@media (max-width: 768px) {
+/* --- Extra Small Screens --- */
+@media (max-width: 360px) {
+  /* Activities Cards */
   .activities-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 8px;
+    gap: 8px;
   }
 
-  .submissions-container.cards {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 8px;
+  .activities-cards .card {
+    padding: 0.7rem;
+    min-height: 65px;
+  }
+  .activities-cards .card h3 {
+    font-size: 0.9rem;
+    min-width: 65px;
   }
 
-  .activities-cards .card,
+  .activities-cards .card h1 {
+    font-size: 1.4rem;
+    min-width: 30px;
+  }
+
+  .activities-cards .card p {
+    font-size: 0.75rem;
+  }
+
+  /* Submissions Cards */
   .submission-card {
-    width: 100%;
-    flex-shrink: 0; /* Prevent cards from shrinking */
+    padding: 0.9rem;
+    min-height: 140px;
   }
+
+  .submission-card h3 {
+    font-size: 0.9rem;
+  }
+
+  .submission-card .description {
+    font-size: 0.8rem;
+  }
+
+  .submission-card .status {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    min-width: 65px;
+  }
+}
+
+/* Custom scrollbar for submissions */
+.submissions-container.cards {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.submissions-container.cards::-webkit-scrollbar {
+  width: 6px;
+}
+
+.submissions-container.cards::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.submissions-container.cards::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.submissions-container.cards::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }

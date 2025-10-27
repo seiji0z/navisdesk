@@ -7,9 +7,11 @@ class ActivitiesSummaryComponent {
       const card = document.createElement("div");
       card.classList.add("card");
       card.innerHTML = `
-        <div class="card-header"><h3>${activity.title}</h3></div>
-        <h1>${activity.count}</h1>
-        <p>${activity.description}</p>
+        <div class="card-content">
+          <div class="card-title">${activity.title}</div>
+          <div class="card-count">${activity.count}</div>
+          <div class="card-description">${activity.description}</div>
+        </div>
       `;
       container.appendChild(card);
     });
@@ -30,12 +32,23 @@ class SubmissionsComponent {
           <div class="submission-card ${s.status.toLowerCase()}" data-id="${
             s.id
           }">
-            <h3>${s.title}</h3>
-            <p>Status: <span class="status ${s.status.toLowerCase()}">${
+            <div class="submission-card-content">
+              <h3>${s.title}</h3>
+              <p class="description">${s.description}</p>
+              <div class="submission-meta">
+                <div class="status-info">
+                  <span class="status ${s.status.toLowerCase()}">${
             s.status
-          }</span></p>
-            <p>${s.description}</p>
-            <p><strong>Date:</strong> ${s.date_start} to ${s.date_end}</p>
+          }</span>
+                </div>
+                <div class="submission-details">
+                  <span class="submission-date">${s.date_start} to ${
+            s.date_end
+          }</span>
+                  <span class="submission-venue">${s.venue}</span>
+                </div>
+              </div>
+            </div>
           </div>`
         )
         .join("");
