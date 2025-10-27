@@ -1,18 +1,13 @@
 .main {
   height: 100vh;
   overflow: hidden;
-  padding-left: 280px; 
+  padding-left: 280px;
   box-sizing: border-box;
 }
-.dashboard-folder {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
+
 .folder-body {
   flex-grow: 1;
   overflow: hidden;
-  padding: 0 2rem 2rem 2rem;
 }
 
 .folder-content-card {
@@ -39,7 +34,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  width: 150px; 
+  width: 150px;
   flex-shrink: 0;
 }
 
@@ -75,8 +70,8 @@
 }
 
 .summary-card-info {
-    margin-top: 0;
-    text-align: center;
+  margin-top: 0;
+  text-align: center;
 }
 
 .summary-card-info h3 {
@@ -92,10 +87,15 @@
   margin: 0;
 }
 
-.summary-card.total h3 { color: #4A90E2; }
-.summary-card.active h3 { color: #7ED321; }
-.summary-card.pending h3 { color: #F5A623; }
-
+.summary-card.total h3 {
+  color: #4a90e2;
+}
+.summary-card.active h3 {
+  color: #7ed321;
+}
+.summary-card.pending h3 {
+  color: #f5a623;
+}
 
 .content-column {
   flex-grow: 1;
@@ -107,7 +107,7 @@
 }
 
 .filter-search-organizations {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .filters-row {
@@ -121,13 +121,17 @@
 .select-group {
   flex: 1;
 }
-.search-box { min-width: 200px; }
-.select-group { min-width: 130px; }
+.search-box {
+  min-width: 200px;
+}
+.select-group {
+  min-width: 130px;
+}
 
 .input-icon {
-    position: relative;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .input-icon input,
@@ -200,7 +204,8 @@
   width: 20px;
   height: 20px;
   cursor: pointer;
-  filter: brightness(0) saturate(100%) invert(20%) sepia(85%) saturate(3062%) hue-rotate(200deg) brightness(97%) contrast(97%);
+  filter: brightness(0) saturate(100%) invert(20%) sepia(85%) saturate(3062%)
+    hue-rotate(200deg) brightness(97%) contrast(97%);
 }
 
 .organization-identifier {
@@ -258,7 +263,7 @@
 .organization-details p {
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 
 .organization-details .status-tag {
@@ -269,20 +274,20 @@
   border-radius: 4px;
 }
 
-.status-tag.active { 
-  background-color: #d4edda; 
-  color: #155724; 
-  border: 1px solid #c3e6cb; 
+.status-tag.active {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
 }
 
-.status-tag.pending { 
-  background-color: #fff3cd; 
-  color: #856404; 
-  border: 1px solid #ffeeba; 
+.status-tag.pending {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
 }
 
-.search-btn img { 
-  height: 18px; 
+.search-btn img {
+  height: 18px;
   filter: invert(1);
 }
 
@@ -315,7 +320,7 @@
 }
 
 .detail-content {
-  flex-grow: 1; 
+  flex-grow: 1;
   min-width: 0;
 }
 
@@ -349,7 +354,7 @@
 
 .detail-header {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: center;
   gap: 1rem;
   width: 200px;
@@ -397,7 +402,7 @@
 
 .detail-title .status-tag:hover {
   opacity: 0.8;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .detail-content .description {
@@ -411,7 +416,7 @@
 
 .detail-info-list p {
   display: grid;
-  grid-template-columns: 220px 1fr; 
+  grid-template-columns: 220px 1fr;
   gap: 0.5rem;
   font-size: 0.9rem;
   margin: 0 0 0.75rem 0;
@@ -425,16 +430,16 @@
 }
 
 .detail-info-list p span {
-    word-break: break-word;
+  word-break: break-word;
 }
 
 .history-sidebar-card {
   background-color: #ffffff;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
   border: 1px solid #f0f0f0;
-  margin-top: 70px; 
+  margin-top: 70px;
 }
 
 .history-sidebar-card h3 {
@@ -548,7 +553,7 @@
 }
 
 .modal-btn-confirm.inactive {
-  background-color: #f3c751; 
+  background-color: #f3c751;
   color: #073066;
   border: 1px solid #e0b641;
 }
@@ -557,10 +562,10 @@
 }
 
 .modal-btn-confirm.active {
-   background-color: #7ED321; 
-   color: #fff;
-   border: 1px solid #6cbf1c;
+  background-color: #7ed321;
+  color: #fff;
+  border: 1px solid #6cbf1c;
 }
 .modal-btn-confirm.active:hover {
-   background-color: #6cbf1c;
+  background-color: #6cbf1c;
 }
