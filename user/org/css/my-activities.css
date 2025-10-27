@@ -4,29 +4,64 @@
    Update: Color-coded cards + matching table highlights
 ========================================================= */
 
-body, html {
+body,
+html {
   overflow-x: hidden;
 }
 
+:root {
+  --folder-yellow: #ffb901;
+}
 /* -------------------------------------
    Folder Section
 ------------------------------------- */
 .folder-body {
-  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+  padding: 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(85vh - 40px);
+  overflow: auto;
+}
+
+/* Scrollbar styling for the folder body to match folder yellow */
+.folder-body {
+  scrollbar-width: thin;
+  scrollbar-color: #fff var(--folder-yellow);
+}
+.folder-body::-webkit-scrollbar {
+  width: 12px;
+}
+.folder-body::-webkit-scrollbar-track {
+  background: var(--folder-yellow);
+}
+.folder-body::-webkit-scrollbar-thumb {
+  background: #fff;
+  border-radius: 8px;
+  border: 3px solid var(--folder-yellow);
 }
 
 .white-section {
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-bottom: 20px;
-  height: 100%;
-  max-height: 100%;
-  overflow: hidden;
-  box-sizing: border-box;
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px 40px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.white-section:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #073066;
+  margin-bottom: 1rem;
+  letter-spacing: 0.3px;
 }
 
 /* -------------------------------------
@@ -51,8 +86,6 @@ body, html {
   color: #073066;
 }
 
-
-
 /* --- Individual Card Themes --- */
 .activities-cards .card:nth-child(1) {
   border-left: 6px solid #27ae60;
@@ -63,6 +96,7 @@ body, html {
 }
 
 .activities-cards .card:nth-child(3) {
+  border-left: 6px solid #e64922;
 }
 
 .activities-cards .card:nth-child(4) {
@@ -77,10 +111,18 @@ body, html {
 }
 
 /* Color titles */
-.activities-cards .card:nth-child(1) h3 { color: #27ae60; }
-.activities-cards .card:nth-child(2) h3 { color: #e67e22; }
-.activities-cards .card:nth-child(3) h3 { color: #c0392b; }
-.activities-cards .card:nth-child(4) h3 { color: #f1c40f; }
+.activities-cards .card:nth-child(1) h3 {
+  color: #27ae60;
+}
+.activities-cards .card:nth-child(2) h3 {
+  color: #e67e22;
+}
+.activities-cards .card:nth-child(3) h3 {
+  color: #c0392b;
+}
+.activities-cards .card:nth-child(4) h3 {
+  color: #f1c40f;
+}
 
 .activities-cards .card h3::after {
   content: "";
@@ -138,7 +180,7 @@ body, html {
 ------------------------------------- */
 .submissions-container.cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   padding: 10px;
   box-sizing: border-box;
@@ -148,11 +190,16 @@ body, html {
 
 .submission-card {
   background: #fff;
-  border-radius: 15px;
-  padding: 1.2rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-family: "Poppins", sans-serif;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border-left: 5px solid #073066;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .submission-card:hover {
@@ -163,22 +210,22 @@ body, html {
 /* Status-based card highlights */
 .submission-card.approved {
   background-color: #eafaf1;
-  border-left: 5px solid #27ae60;
+  background: linear-gradient(135deg, #f3fdf6 0%, #ffffff 100%);
 }
 
 .submission-card.pending {
-  background-color: #fffbea;
   border-left: 5px solid #f1c40f;
+  background: linear-gradient(135deg, #fffdf2 0%, #ffffff 100%);
 }
 
 .submission-card.rejected {
-  background-color: #fdecea;
   border-left: 5px solid #c0392b;
+  background: linear-gradient(135deg, #fdecea 0%, #ffffff 100%);
 }
 
-.submission-card.attention {
-  background-color: #fff4e5;
+.submission-card.revise {
   border-left: 5px solid #e67e22;
+  background: linear-gradient(135deg, #fff8f1 0%, #ffffff 100%);
 }
 
 .submission-card h3 {
@@ -202,10 +249,18 @@ body, html {
   color: #fff;
 }
 
-.status.approved { background-color: #27ae60; }
-.status.pending { background-color: #f1c40f; }
-.status.rejected { background-color: #c0392b; }
-.status.attention { background-color: #e67e22; }
+.status.approved {
+  background-color: #27ae60;
+}
+.status.pending {
+  background-color: #f1c40f;
+}
+.status.rejected {
+  background-color: #c0392b;
+}
+.status.revise {
+  background-color: #e67e22;
+}
 
 /* -------------------------------------
    Table View Styles
@@ -237,10 +292,18 @@ body, html {
 }
 
 /* Colored rows based on status */
-.submissions-table tr.approved { background-color: #f3fdf6; }
-.submissions-table tr.pending { background-color: #fffdf2; }
-.submissions-table tr.rejected { background-color: #fff2f0; }
-.submissions-table tr.attention { background-color: #fff8f1; }
+.submissions-table tr.approved {
+  background-color: #f3fdf6;
+}
+.submissions-table tr.pending {
+  background-color: #fffdf2;
+}
+.submissions-table tr.rejected {
+  background-color: #fff2f0;
+}
+.submissions-table tr.attention {
+  background-color: #fff8f1;
+}
 
 /* Table badges */
 .submissions-table .status {
@@ -254,10 +317,18 @@ body, html {
   min-width: 90px;
 }
 
-.submissions-table .status.approved { background-color: #27ae60; }
-.submissions-table .status.pending { background-color: #f1c40f; }
-.submissions-table .status.rejected { background-color: #c0392b; }
-.submissions-table .status.attention { background-color: #e67e22; }
+.submissions-table .status.approved {
+  background-color: #27ae60;
+}
+.submissions-table .status.pending {
+  background-color: #f1c40f;
+}
+.submissions-table .status.rejected {
+  background-color: #c0392b;
+}
+.submissions-table .status.attention {
+  background-color: #e67e22;
+}
 
 /* -------------------------------------
    Activity Details View (Final)
@@ -378,24 +449,6 @@ body, html {
     transform: translateY(0);
   }
 }
-
-/* -------------------------------------
-   Responsive Adjustments
-------------------------------------- */
-@media (max-width: 1024px) {
-  .activities-cards { grid-template-columns: repeat(2, 1fr); }
-  .submissions-container.cards { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 640px) {
-  .activities-cards,
-  .submissions-container.cards { grid-template-columns: 1fr; }
-}
-
-.submissions-container {
-  overflow-y: scroll;
-}
-
 
 /* =======================================================
    ACTIVITY DETAILS (Enhanced Design)
@@ -585,5 +638,97 @@ body, html {
   .details-section p span {
     text-align: left;
     width: 100%;
+  }
+}
+
+/* --- 1024px --- */
+@media (max-width: 1024px) {
+  .activities-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .submissions-container.cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* --- 768px and below: stack all cards vertically --- */
+@media (max-width: 768px) {
+  .activities-cards,
+  .submissions-container.cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .activities-cards .card,
+  .submission-card {
+    width: 100%;
+    text-align: left;
+    padding: 1.2rem;
+  }
+}
+
+/* --- 666px --- */
+@media (max-width: 666px) {
+  .activities-cards,
+  .submissions-container.cards {
+    gap: 14px;
+  }
+  .activities-cards .card h3,
+  .submission-card h3 {
+    font-size: 1rem;
+  }
+}
+
+/* --- 568px --- */
+@media (max-width: 568px) {
+  .activities-cards .card,
+  .submission-card {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* --- 360px --- */
+@media (max-width: 360px) {
+  .activities-cards .card,
+  .submission-card {
+    padding: 0.9rem;
+    font-size: 0.85rem;
+  }
+}
+/* --- Tablet Layout (2 columns) --- */
+@media (max-width: 1024px) {
+  .activities-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .submissions-container.cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+/* Alternative: Flexbox for single column */
+@media (max-width: 768px) {
+  .activities-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px;
+  }
+
+  .submissions-container.cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px;
+  }
+
+  .activities-cards .card,
+  .submission-card {
+    width: 100%;
+    flex-shrink: 0; /* Prevent cards from shrinking */
   }
 }
