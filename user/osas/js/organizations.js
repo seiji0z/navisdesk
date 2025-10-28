@@ -1,13 +1,16 @@
 let allOrganizationsData = [];
 
-const getProp = (obj, path) => path.split('.').reduce((acc, part) => acc && acc[part], obj);
+const getProp = (obj, path) =>
+  path.split(".").reduce((acc, part) => acc && acc[part], obj);
 
 function createOrganizationCardHTML(org) {
-  const statusClass = org.status.toLowerCase() === 'active' ? 'active' : 'pending';
-  const statusText = org.status.charAt(0).toUpperCase() + org.status.slice(1).toLowerCase();
-  const adviserName = (org.adviser && org.adviser.name) || 'Not Specified';
-  const logoSrc = org.profile_pic || '../../../assets/images/schema-logo.png';
-  const pendingReviewClass = org.has_pending_update ? 'pending-review' : '';
+  const statusClass =
+    org.status.toLowerCase() === "active" ? "active" : "pending";
+  const statusText =
+    org.status.charAt(0).toUpperCase() + org.status.slice(1).toLowerCase();
+  const adviserName = (org.adviser && org.adviser.name) || "Not Specified";
+  const logoSrc = org.profile_pic || "../../../assets/images/schema-logo.png";
+  const pendingReviewClass = org.has_pending_update ? "pending-review" : "";
 
   return `
     <div class="organization-card ${pendingReviewClass}" onclick="loadOrganizationDetails('${org._id.$oid}')">
@@ -32,9 +35,13 @@ function createOrganizationCardHTML(org) {
 function loadOrganizations(organizations) {
   // calculate stats
   const totalOrgs = organizations.length;
-  const activeOrgs = organizations.filter(org => org.status === 'Active').length;
+  const activeOrgs = organizations.filter(
+    (org) => org.status === "Active"
+  ).length;
   const inactiveOrgs = totalOrgs - activeOrgs;
-  const pendingReviewOrgs = organizations.filter(org => org.has_pending_update).length;
+  const pendingReviewOrgs = organizations.filter(
+    (org) => org.has_pending_update
+  ).length;
 
   document.querySelector("#folder-body").innerHTML = `
     <div class="folder-content-card">
@@ -120,9 +127,11 @@ function loadOrganizations(organizations) {
 
 // populate filter dropdowns
 function populateOrganizationFilters(organizations) {
-  const departments = [...new Set(organizations.map(org => org.department))].sort();
-  const types = [...new Set(organizations.map(org => org.type))].sort();
-  const statuses = [...new Set(organizations.map(org => org.status))].sort();
+  const departments = [
+    ...new Set(organizations.map((org) => org.department)),
+  ].sort();
+  const types = [...new Set(organizations.map((org) => org.type))].sort();
+  const statuses = [...new Set(organizations.map((org) => org.status))].sort();
 
   populateSelect("departmentFilter", departments);
   populateSelect("typeFilter", types);
@@ -148,11 +157,14 @@ function renderOrganizationCards(organizations) {
   if (!grid) return;
 
   if (organizations.length === 0) {
-    grid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No organizations match the current filters.</p>';
+    grid.innerHTML =
+      '<p style="text-align: center; grid-column: 1 / -1;">No organizations match the current filters.</p>';
     return;
   }
 
-  const organizationCardsHTML = organizations.map(createOrganizationCardHTML).join('');
+  const organizationCardsHTML = organizations
+    .map(createOrganizationCardHTML)
+    .join("");
   grid.innerHTML = organizationCardsHTML;
 }
 
@@ -164,20 +176,22 @@ async function fetchOrganizations() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    
+
     if (data.length > 0) {
       data[0].has_pending_update = true;
-      data[0].pending_update_description = "The organization has requested to update several details."; 
-      
+      data[0].pending_update_description =
+        "The organization has requested to update several details.";
+
       // data changes
       data[0].pending_data = {
         name: data[0].name,
         abbreviation: "LIGHT-NEW",
-        description: "An updated description for LIGHT, focusing on new 2025 initiatives and community outreach programs.",
+        description:
+          "An updated description for LIGHT, focusing on new 2025 initiatives and community outreach programs.",
         email: "light.new@slu.edu.ph",
-        adviser: { 
-          name: "Prof. Jane Doe"
-        }
+        adviser: {
+          name: "Prof. Jane Doe",
+        },
       };
     }
     return data;
@@ -217,22 +231,26 @@ function addOrganizationFilterListeners() {
 function filterAndRenderOrganizations() {
   if (!allOrganizationsData) return;
 
-  const searchTerm = document.getElementById("searchOrganization")?.value.toLowerCase().trim() || "";
-  const departmentFilter = document.getElementById("departmentFilter")?.value || "";
+  const searchTerm =
+    document.getElementById("searchOrganization")?.value.toLowerCase().trim() ||
+    "";
+  const departmentFilter =
+    document.getElementById("departmentFilter")?.value || "";
   const typeFilter = document.getElementById("typeFilter")?.value || "";
   const statusFilter = document.getElementById("statusFilter")?.value || "";
 
   const filteredOrganizations = allOrganizationsData.filter((org) => {
     const adviserName = (org.adviser && org.adviser.name) || "";
-    
+
     const matchesSearch =
       !searchTerm ||
       org.name.toLowerCase().includes(searchTerm) ||
       org.abbreviation.toLowerCase().includes(searchTerm) ||
-      org.department.toLowerCase().includes(searchTerm) || 
-      adviserName.toLowerCase().includes(searchTerm); 
+      org.department.toLowerCase().includes(searchTerm) ||
+      adviserName.toLowerCase().includes(searchTerm);
 
-    const matchesDepartment = !departmentFilter || org.department === departmentFilter;
+    const matchesDepartment =
+      !departmentFilter || org.department === departmentFilter;
     const matchesType = !typeFilter || org.type === typeFilter;
     const matchesStatus = !statusFilter || org.status === statusFilter;
 
@@ -242,43 +260,63 @@ function filterAndRenderOrganizations() {
   renderOrganizationCards(filteredOrganizations);
 }
 
-
 // render the details page
 function loadOrganizationDetails(orgId) {
   console.log("Loading details for organization ID:", orgId);
-  
-  const organization = allOrganizationsData.find(org => org._id.$oid === orgId);
+
+  const organization = allOrganizationsData.find(
+    (org) => org._id.$oid === orgId
+  );
 
   if (!organization) {
     console.error("Organization not found!");
-    document.querySelector("#folder-body").innerHTML = `<div class="folder-content-card"><p>Error: Organization not found.</p></div>`;
+    document.querySelector(
+      "#folder-body"
+    ).innerHTML = `<div class="folder-content-card"><p>Error: Organization not found.</p></div>`;
     return;
   }
-  
-  const statusClass = organization.status.toLowerCase() === 'active' ? 'active' : 'pending';
-  const statusText = organization.status.charAt(0).toUpperCase() + organization.status.slice(1).toLowerCase();
-  const logoSrc = organization.profile_pic || '../../../assets/images/schema-logo.png';
-  const description = organization.description || 'No description provided for this organization.';
-  const adviserName = (organization.adviser && organization.adviser.name) || 'Not Specified';
-  
-  const createdDate = new Date(organization.created_at).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-  
-  const profileUpdateReviewHTML = organization.has_pending_update ? `
-    <div class="profile-update-review-section" onclick="showUpdateReviewModal('${organization._id.$oid}')">
+
+  const statusClass =
+    organization.status.toLowerCase() === "active" ? "active" : "pending";
+  const statusText =
+    organization.status.charAt(0).toUpperCase() +
+    organization.status.slice(1).toLowerCase();
+  const logoSrc =
+    organization.profile_pic || "../../../assets/images/schema-logo.png";
+  const description =
+    organization.description ||
+    "No description provided for this organization.";
+  const adviserName =
+    (organization.adviser && organization.adviser.name) || "Not Specified";
+
+  const createdDate = new Date(organization.created_at).toLocaleDateString(
+    "en-US",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }
+  );
+
+  const profileUpdateReviewHTML = organization.has_pending_update
+    ? `
+    <div class="profile-update-review-section" onclick="showUpdateReviewModal('${
+      organization._id.$oid
+    }')">
       <div class="profile-update-review-header">
         <img src="../../../assets/images/account-alert.png" alt="Profile Update Icon" class="profile-update-icon" />
         <span class="profile-update-title">Profile Update Review</span>
       </div>
       <p class="profile-update-description">
-        ${organization.pending_update_description || "This organization has submitted an update to its profile details. Click to review."}
+        ${
+          organization.pending_update_description ||
+          "This organization has submitted an update to its profile details. Click to review."
+        }
       </p>
     </div>
-  ` : '';
-  
+  `
+    : "";
+
   document.querySelector("#folder-body").innerHTML = `
     <div class="folder-content-card">
       <button class="back-button" onclick="initOrganizations()">
@@ -342,27 +380,29 @@ function loadOrganizationDetails(orgId) {
 
 function generateDiffTableHTML(current, pending) {
   const fields = [
-    { key: 'name', label: 'Name of Organization' },
-    { key: 'abbreviation', label: 'Acronym / Short Name' },
-    { key: 'description', label: 'Organization Description' },
-    { key: 'email', label: 'Official SLU Institution Email' },
-    { key: 'type', label: 'Type of Organization' },
-    { key: 'adviser.name', label: 'Adviser Name' }
+    { key: "name", label: "Name of Organization" },
+    { key: "abbreviation", label: "Acronym / Short Name" },
+    { key: "description", label: "Organization Description" },
+    { key: "email", label: "Official SLU Institution Email" },
+    { key: "type", label: "Type of Organization" },
+    { key: "adviser.name", label: "Adviser Name" },
   ];
 
-  let html = '';
-  const noValue = '<em>Not Specified</em>';
+  let html = "";
+  const noValue = "<em>Not Specified</em>";
 
-  fields.forEach(field => {
+  fields.forEach((field) => {
     const currentValue = getProp(current, field.key) || noValue;
     const requestedValue = getProp(pending, field.key);
-    
-    const isUpdated = requestedValue !== undefined && requestedValue !== currentValue;
-    
-    const displayValue = requestedValue !== undefined ? requestedValue : currentValue;
-    
-    const updateClass = isUpdated ? 'highlight-update' : '';
-    
+
+    const isUpdated =
+      requestedValue !== undefined && requestedValue !== currentValue;
+
+    const displayValue =
+      requestedValue !== undefined ? requestedValue : currentValue;
+
+    const updateClass = isUpdated ? "highlight-update" : "";
+
     html += `
       <tr>
         <td><strong>${field.label}</strong></td>
@@ -371,20 +411,25 @@ function generateDiffTableHTML(current, pending) {
       </tr>
     `;
   });
-  
+
   return html;
 }
 
 function showUpdateReviewModal(orgId) {
-  closeReviewModal(); 
-  
-  const organization = allOrganizationsData.find(org => org._id.$oid === orgId);
+  closeReviewModal();
+
+  const organization = allOrganizationsData.find(
+    (org) => org._id.$oid === orgId
+  );
   if (!organization || !organization.pending_data) {
     console.error("No pending data found for this organization.");
     return;
   }
 
-  const tableRowsHTML = generateDiffTableHTML(organization, organization.pending_data);
+  const tableRowsHTML = generateDiffTableHTML(
+    organization,
+    organization.pending_data
+  );
 
   const modalHTML = `
     <div class="review-modal-overlay" id="reviewModal">
@@ -414,8 +459,8 @@ function showUpdateReviewModal(orgId) {
       </div>
     </div>
   `;
-  
-  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
 }
 
 function closeReviewModal() {
@@ -426,15 +471,15 @@ function closeReviewModal() {
 }
 
 function acceptUpdates(orgId) {
-  const org = allOrganizationsData.find(o => o._id.$oid === orgId);
+  const org = allOrganizationsData.find((o) => o._id.$oid === orgId);
   if (!org || !org.pending_data) return;
 
   const pending = org.pending_data;
 
   for (const key in pending) {
     if (Object.hasOwnProperty.call(pending, key)) {
-      if (key === 'adviser' && typeof pending.adviser === 'object') {
-        if (!org.adviser) org.adviser = {}; 
+      if (key === "adviser" && typeof pending.adviser === "object") {
+        if (!org.adviser) org.adviser = {};
         Object.assign(org.adviser, pending.adviser);
       } else {
         org[key] = pending[key];
@@ -452,7 +497,7 @@ function acceptUpdates(orgId) {
 }
 
 function rejectUpdates(orgId) {
-  const org = allOrganizationsData.find(o => o._id.$oid === orgId);
+  const org = allOrganizationsData.find((o) => o._id.$oid === orgId);
   if (!org) return;
 
   org.has_pending_update = false;
@@ -487,12 +532,12 @@ function showConfirmationModal(message, confirmText, confirmClass, onConfirm) {
   modalOverlay.appendChild(modalContent);
   document.body.appendChild(modalOverlay);
 
-  document.getElementById("modalConfirmButton").onclick = function() {
+  document.getElementById("modalConfirmButton").onclick = function () {
     onConfirm();
     closeConfirmationModal();
   };
 
-  modalOverlay.onclick = function(e) {
+  modalOverlay.onclick = function (e) {
     if (e.target === modalOverlay) {
       closeConfirmationModal();
     }
@@ -509,10 +554,12 @@ function closeConfirmationModal() {
 
 // toggle org status
 function promptToggleStatus(orgId) {
-  const organization = allOrganizationsData.find(org => org._id.$oid === orgId);
+  const organization = allOrganizationsData.find(
+    (org) => org._id.$oid === orgId
+  );
   if (!organization) {
-      console.error("Cannot toggle status: organization not found.");
-      return;
+    console.error("Cannot toggle status: organization not found.");
+    return;
   }
 
   const isCurrentlyActive = organization.status === "Active";
@@ -536,27 +583,33 @@ function promptToggleStatus(orgId) {
 
 // update org status to inactive
 function updateStatusToInactive(orgId) {
-  const organization = allOrganizationsData.find(org => org._id.$oid === orgId);
+  const organization = allOrganizationsData.find(
+    (org) => org._id.$oid === orgId
+  );
   if (!organization) return;
 
-  organization.status = "Inactive"; 
+  organization.status = "Inactive";
   console.log(`Updated ${organization.abbreviation} status to Inactive.`);
 
   const statusTag = document.getElementById("organizationStatusTag");
   if (statusTag) {
     statusTag.textContent = "Inactive";
     statusTag.classList.remove("active");
-    statusTag.classList.add("pending"); 
+    statusTag.classList.add("pending");
   }
 }
 
 // update org status to active
 function updateStatusToActive(orgId) {
-  const organization = allOrganizationsData.find(org => org._id.$oid === orgId);
+  const organization = allOrganizationsData.find(
+    (org) => org._id.$oid === orgId
+  );
   if (!organization) return;
-  
+
   organization.status = "Active";
-  console.log(`Updated ${organization.abbreviation} status to Active in data store.`);
+  console.log(
+    `Updated ${organization.abbreviation} status to Active in data store.`
+  );
 
   const statusTag = document.getElementById("organizationStatusTag");
   if (statusTag) {
@@ -571,16 +624,17 @@ async function initOrganizations() {
   if (allOrganizationsData.length === 0) {
     const orgData = await fetchOrganizations();
     if (orgData) {
-      allOrganizationsData = orgData; 
+      allOrganizationsData = orgData;
     } else {
-      document.querySelector("#folder-body").innerHTML = 
-        `<div class="folder-content-card"><p style="color: red; text-align: center;">
+      document.querySelector(
+        "#folder-body"
+      ).innerHTML = `<div class="folder-content-card"><p style="color: red; text-align: center;">
           Could not load organization data. Please try again later.
         </p></div>`;
-      return; 
+      return;
     }
   }
-  
+
   loadOrganizations(allOrganizationsData);
   populateOrganizationFilters(allOrganizationsData);
   renderOrganizationCards(allOrganizationsData);
