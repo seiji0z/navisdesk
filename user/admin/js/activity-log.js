@@ -69,7 +69,7 @@ function loadActivityModules() {
               <div class="input-icon">
                 <input type="text" id="search-activity" placeholder="Type user name or action..." />
                 <button class="search-btn">
-                  <img src="../../../assets/images/search-icon.png" alt="Search" />
+                  <img src="../../../assets/images/review-icon.png" alt="Search" />
                 </button>
               </div>
             </div>

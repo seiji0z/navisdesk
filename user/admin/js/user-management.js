@@ -6,7 +6,7 @@ async function loadUsersFromJSON() {
   try {
     const [adminRes, orgRes] = await Promise.all([
       fetch("../../../data/admin_osas.json"),
-      fetch("../../../data/student_organizations.json")
+      fetch("../../../data/student_organizations.json"),
     ]);
 
     if (!adminRes.ok || !orgRes.ok) {
@@ -16,22 +16,22 @@ async function loadUsersFromJSON() {
     const adminData = await adminRes.json();
     const orgData = await orgRes.json();
 
-    const adminUsers = adminData.map(u => ({
+    const adminUsers = adminData.map((u) => ({
       name: u.name,
       email: u.email,
       role: u.role,
       status: u.status || "Active",
       dateRegistered: formatDate(u.created_at),
-      lastLogin: formatDate(u.last_log)
+      lastLogin: formatDate(u.last_log),
     }));
 
-    const orgUsers = orgData.map(u => ({
+    const orgUsers = orgData.map((u) => ({
       name: u.name,
       email: u.email,
       role: "Student Org",
       status: u.status || "Active",
       dateRegistered: formatDate(u.created_at),
-      lastLogin: formatDate(u.last_log)
+      lastLogin: formatDate(u.last_log),
     }));
 
     users = [...adminUsers, ...orgUsers];
@@ -39,8 +39,9 @@ async function loadUsersFromJSON() {
     setupFilters(users);
   } catch (error) {
     console.error(error);
-    document.getElementById("users-table-body").innerHTML =
-      `<tr><td colspan="7" style="text-align:center;color:red;">
+    document.getElementById(
+      "users-table-body"
+    ).innerHTML = `<tr><td colspan="7" style="text-align:center;color:red;">
         Failed to load user data. Check your JSON files or path.
       </td></tr>`;
   }
@@ -67,7 +68,7 @@ function loadUserModules() {
               <div class="input-icon">
                 <input type="text" id="search-user" placeholder="Type user name..." />
                 <button class="search-btn">
-                  <img src="../../../assets/images/search-icon.png" alt="Search" />
+                  <img src="../../../assets/images/review-icon.png" alt="Search" />
                 </button>
               </div>
             </div>
@@ -141,14 +142,15 @@ function renderTable(userList) {
       <td>${user.dateRegistered}</td>
       <td>${user.lastLogin}</td>
       <td>
-        <button class="edit-btn" onclick="showEditModal(${index})">Edit</button>
-        <button class="deactivate-btn" onclick="showDeactivateModal(${index})">Deactivate</button>
-      </td>
+  <div class="action-buttons">
+    <button class="edit-btn" onclick="showEditModal(${index})">Edit</button>
+    <button class="deactivate-btn" onclick="showDeactivateModal(${index})">Deactivate</button>
+      </div>
+    </td>
     `;
     tbody.appendChild(row);
   });
 }
-
 
 // ======== ADD USER MODAL ========
 function showAddUserModal() {
@@ -170,14 +172,16 @@ function showAddUserModal() {
         <label>Department</label>
         <select id="add-dept">
           <option value="">Select Department</option>
-          ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
+          ${departments
+            .map((d) => `<option value="${d}">${d}</option>`)
+            .join("")}
         </select>
         <label>Description</label>
         <textarea id="add-desc" rows="3" placeholder="Enter organization description"></textarea>
         <label>Type of Organization</label>
         <select id="add-org-type">
           <option value="">Select Type</option>
-          ${orgTypes.map(t => `<option value="${t}">${t}</option>`).join("")}
+          ${orgTypes.map((t) => `<option value="${t}">${t}</option>`).join("")}
         </select>
         <label>Adviser Name</label>
         <input type="text" id="add-adv-name" placeholder="Enter adviser name" />
@@ -199,7 +203,9 @@ function showAddUserModal() {
         <label>Department</label>
         <select id="add-dept">
           <option value="">Select Department</option>
-          ${[...departments, "UNIV WIDE"].map(d => `<option value="${d}">${d}</option>`).join("")}
+          ${[...departments, "UNIV WIDE"]
+            .map((d) => `<option value="${d}">${d}</option>`)
+            .join("")}
         </select>
       `;
     }
@@ -232,8 +238,10 @@ function showAddUserModal() {
     roleFields.innerHTML = renderRoleFields(roleSelect.value);
   });
 
-  document.getElementById("close-add").onclick = () => (modal.style.display = "none");
-  document.getElementById("cancel-add").onclick = () => (modal.style.display = "none");
+  document.getElementById("close-add").onclick = () =>
+    (modal.style.display = "none");
+  document.getElementById("cancel-add").onclick = () =>
+    (modal.style.display = "none");
 
   document.getElementById("save-add").onclick = () => {
     const role = roleSelect.value;
@@ -250,11 +258,15 @@ function showAddUserModal() {
     };
 
     if (role === "Organization") {
-      newUser.abbreviation = document.getElementById("add-abbr")?.value.trim() || "";
-      newUser.description = document.getElementById("add-desc")?.value.trim() || "";
+      newUser.abbreviation =
+        document.getElementById("add-abbr")?.value.trim() || "";
+      newUser.description =
+        document.getElementById("add-desc")?.value.trim() || "";
       newUser.orgType = document.getElementById("add-org-type")?.value || "";
-      newUser.adviserName = document.getElementById("add-adv-name")?.value.trim() || "";
-      newUser.adviserEmail = document.getElementById("add-adv-email")?.value.trim() || "";
+      newUser.adviserName =
+        document.getElementById("add-adv-name")?.value.trim() || "";
+      newUser.adviserEmail =
+        document.getElementById("add-adv-email")?.value.trim() || "";
       newUser.fb = document.getElementById("add-fb")?.value.trim() || "";
       newUser.ig = document.getElementById("add-ig")?.value.trim() || "";
       newUser.website = document.getElementById("add-web")?.value.trim() || "";
@@ -293,18 +305,36 @@ function showEditModal(index) {
         <input type="email" id="edit-email" value="${user.email || ""}" />
         <label>Department</label>
         <select id="edit-dept">
-          ${departments.map(d => `<option value="${d}" ${user.department === d ? "selected" : ""}>${d}</option>`).join("")}
+          ${departments
+            .map(
+              (d) =>
+                `<option value="${d}" ${
+                  user.department === d ? "selected" : ""
+                }>${d}</option>`
+            )
+            .join("")}
         </select>
         <label>Description</label>
         <textarea id="edit-desc">${user.description || ""}</textarea>
         <label>Type of Organization</label>
         <select id="edit-org-type">
-          ${orgTypes.map(t => `<option value="${t}" ${user.orgType === t ? "selected" : ""}>${t}</option>`).join("")}
+          ${orgTypes
+            .map(
+              (t) =>
+                `<option value="${t}" ${
+                  user.orgType === t ? "selected" : ""
+                }>${t}</option>`
+            )
+            .join("")}
         </select>
         <label>Adviser Name</label>
-        <input type="text" id="edit-adv-name" value="${user.adviserName || ""}" />
+        <input type="text" id="edit-adv-name" value="${
+          user.adviserName || ""
+        }" />
         <label>Adviser Email</label>
-        <input type="email" id="edit-adv-email" value="${user.adviserEmail || ""}" />
+        <input type="email" id="edit-adv-email" value="${
+          user.adviserEmail || ""
+        }" />
         <label>Facebook Link</label>
         <input type="url" id="edit-fb" value="${user.fb || ""}" />
         <label>Instagram Link (Optional)</label>
@@ -314,8 +344,12 @@ function showEditModal(index) {
         <label>Status</label>
         <select id="edit-status">
           <option ${user.status === "Active" ? "selected" : ""}>Active</option>
-          <option ${user.status === "Inactive" ? "selected" : ""}>Inactive</option>
-          <option ${user.status === "Suspended" ? "selected" : ""}>Suspended</option>
+          <option ${
+            user.status === "Inactive" ? "selected" : ""
+          }>Inactive</option>
+          <option ${
+            user.status === "Suspended" ? "selected" : ""
+          }>Suspended</option>
         </select>
       `;
     } else {
@@ -326,13 +360,24 @@ function showEditModal(index) {
         <input type="email" id="edit-email" value="${user.email || ""}" />
         <label>Department</label>
         <select id="edit-dept">
-          ${[...departments, "UNIV WIDE"].map(d => `<option value="${d}" ${user.department === d ? "selected" : ""}>${d}</option>`).join("")}
+          ${[...departments, "UNIV WIDE"]
+            .map(
+              (d) =>
+                `<option value="${d}" ${
+                  user.department === d ? "selected" : ""
+                }>${d}</option>`
+            )
+            .join("")}
         </select>
         <label>Status</label>
         <select id="edit-status">
           <option ${user.status === "Active" ? "selected" : ""}>Active</option>
-          <option ${user.status === "Inactive" ? "selected" : ""}>Inactive</option>
-          <option ${user.status === "Suspended" ? "selected" : ""}>Suspended</option>
+          <option ${
+            user.status === "Inactive" ? "selected" : ""
+          }>Inactive</option>
+          <option ${
+            user.status === "Suspended" ? "selected" : ""
+          }>Suspended</option>
         </select>
       `;
     }
@@ -343,9 +388,15 @@ function showEditModal(index) {
     <h3>Edit User</h3>
     <label>Role</label>
     <select id="edit-role">
-      <option value="Organization" ${user.role === "Organization" ? "selected" : ""}>Organization</option>
-      <option value="OSAS" ${user.role === "OSAS" ? "selected" : ""}>OSAS</option>
-      <option value="Admin" ${user.role === "Admin" ? "selected" : ""}>Admin</option>
+      <option value="Organization" ${
+        user.role === "Organization" ? "selected" : ""
+      }>Organization</option>
+      <option value="OSAS" ${
+        user.role === "OSAS" ? "selected" : ""
+      }>OSAS</option>
+      <option value="Admin" ${
+        user.role === "Admin" ? "selected" : ""
+      }>Admin</option>
     </select>
     <div id="edit-fields">${renderEditFields(user.role)}</div>
     <div class="modal-actions">
@@ -363,8 +414,10 @@ function showEditModal(index) {
     fieldsContainer.innerHTML = renderEditFields(roleSelect.value);
   });
 
-  document.getElementById("close-edit").onclick = () => (modal.style.display = "none");
-  document.getElementById("cancel-edit").onclick = () => (modal.style.display = "none");
+  document.getElementById("close-edit").onclick = () =>
+    (modal.style.display = "none");
+  document.getElementById("cancel-edit").onclick = () =>
+    (modal.style.display = "none");
 
   document.getElementById("save-edit").onclick = () => {
     const updatedUser = {
@@ -377,11 +430,19 @@ function showEditModal(index) {
     };
 
     if (updatedUser.role === "Organization") {
-      updatedUser.abbreviation = document.getElementById("edit-abbr").value.trim();
-      updatedUser.description = document.getElementById("edit-desc").value.trim();
+      updatedUser.abbreviation = document
+        .getElementById("edit-abbr")
+        .value.trim();
+      updatedUser.description = document
+        .getElementById("edit-desc")
+        .value.trim();
       updatedUser.orgType = document.getElementById("edit-org-type").value;
-      updatedUser.adviserName = document.getElementById("edit-adv-name").value.trim();
-      updatedUser.adviserEmail = document.getElementById("edit-adv-email").value.trim();
+      updatedUser.adviserName = document
+        .getElementById("edit-adv-name")
+        .value.trim();
+      updatedUser.adviserEmail = document
+        .getElementById("edit-adv-email")
+        .value.trim();
       updatedUser.fb = document.getElementById("edit-fb").value.trim();
       updatedUser.ig = document.getElementById("edit-ig").value.trim();
       updatedUser.website = document.getElementById("edit-web").value.trim();
@@ -409,7 +470,10 @@ function showPreviewModal(data, onConfirm) {
   `;
 
   const detailsHTML = Object.entries(data)
-    .map(([key, value]) => `<tr><td><strong>${key}</strong></td><td>${value || "—"}</td></tr>`)
+    .map(
+      ([key, value]) =>
+        `<tr><td><strong>${key}</strong></td><td>${value || "—"}</td></tr>`
+    )
     .join("");
 
   previewModal.innerHTML = `
@@ -433,9 +497,9 @@ function showPreviewModal(data, onConfirm) {
     previewModal.remove();
   };
 
-  previewModal.querySelector("#cancel-preview").onclick = () => previewModal.remove();
+  previewModal.querySelector("#cancel-preview").onclick = () =>
+    previewModal.remove();
 }
-
 
 // ======== DEACTIVATE MODAL ========
 function showDeactivateModal(index) {
@@ -454,8 +518,10 @@ function showDeactivateModal(index) {
   `;
 
   modal.style.display = "flex";
-  document.getElementById("close-deactivate").onclick = () => (modal.style.display = "none");
-  document.getElementById("cancel-deactivate").onclick = () => (modal.style.display = "none");
+  document.getElementById("close-deactivate").onclick = () =>
+    (modal.style.display = "none");
+  document.getElementById("cancel-deactivate").onclick = () =>
+    (modal.style.display = "none");
   document.getElementById("confirm-deactivate").onclick = () => {
     users[index].status = "Inactive";
     renderTable(users);
@@ -463,13 +529,12 @@ function showDeactivateModal(index) {
   };
 }
 
-
 // ======== FILTER FUNCTIONS ========
 function setupFilters() {
   const searchInput = document.getElementById("search-user");
   const roleFilter = document.getElementById("filter-role");
   const statusFilter = document.getElementById("filter-status");
-  [searchInput, roleFilter, statusFilter].forEach(el => {
+  [searchInput, roleFilter, statusFilter].forEach((el) => {
     el.addEventListener("input", filterTable);
     el.addEventListener("change", filterTable);
   });
@@ -479,15 +544,17 @@ function filterTable() {
   const search = document.getElementById("search-user").value.toLowerCase();
   const role = document.getElementById("filter-role").value;
   const status = document.getElementById("filter-status").value;
-  const filtered = users.filter(user => {
-    const matchSearch = user.name.toLowerCase().includes(search) || user.email.toLowerCase().includes(search) || user.role.toLowerCase().includes(search);
+  const filtered = users.filter((user) => {
+    const matchSearch =
+      user.name.toLowerCase().includes(search) ||
+      user.email.toLowerCase().includes(search) ||
+      user.role.toLowerCase().includes(search);
     const matchRole = role === "" || user.role === role;
     const matchStatus = status === "" || user.status === status;
     return matchSearch && matchRole && matchStatus;
   });
   renderTable(filtered);
 }
-
 
 // ======== INIT ========
 function initUserManagement() {

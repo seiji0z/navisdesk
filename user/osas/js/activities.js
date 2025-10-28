@@ -7,7 +7,7 @@ export async function loadActivities() {
   const folderBody = document.querySelector("#folder-body");
 
   folderBody.innerHTML = `
-    <div class="folder-content-card">
+        <div class="folder-content-card">
         <div class="activities-container">
             <div class="filter-search">
                 <h2>Filter & Search</h2>
@@ -47,13 +47,16 @@ export async function loadActivities() {
                     </div>
                 </div>
             </div>
+            
+            <!-- Desktop Table -->
             <div class="activities-table">
                 <table>
                     <thead>
                         <tr>
                             <th>Activity Name</th>
                             <th>Organization</th>
-                            <th>Department</th> <th>SDGs</th>
+                            <th>Department</th>
+                            <th>SDGs</th>
                             <th>Term</th>
                             <th>Status</th>
                             <th>Submission Date</th>
@@ -63,6 +66,10 @@ export async function loadActivities() {
                     <tbody id="activities-table-body">
                     </tbody>
                 </table>
+            </div>
+            
+            <!-- Mobile Cards -->
+            <div class="activities-cards" id="activities-cards-container">
             </div>
         </div>
     </div>
@@ -142,7 +149,7 @@ function populateSelect(selectId, optionsSet) {
   // sort options to make it look better
   if (select) {
     select.length = 1;
-    
+
     const sortedOptions = Array.from(optionsSet).sort((a, b) => {
       return a.localeCompare(b, "en", { numeric: true });
     });
@@ -159,87 +166,129 @@ function populateSelect(selectId, optionsSet) {
 // renders the table rows, orgMap param still temporary
 function renderActivitiesTable(activities, orgMap) {
   const tableBody = document.getElementById("activities-table-body");
-  if (!tableBody) return;
+  const cardsContainer = document.getElementById("activities-cards-container");
+
+  if (!tableBody || !cardsContainer) return;
 
   if (activities.length === 0) {
     tableBody.innerHTML =
       '<tr><td colspan="8" style="text-align: center;">No activities match the current filters.</td></tr>';
+    cardsContainer.innerHTML =
+      '<div class="no-activities" style="text-align: center; padding: 2rem; color: #666;">No activities match the current filters.</div>';
     return;
   }
 
+  // Clear existing content
   tableBody.innerHTML = "";
+  cardsContainer.innerHTML = "";
 
-  const rowsHTML = activities
-    .map((activity) => {
-      // temp lookup
-      const orgInfo = orgMap[activity.org_id["$oid"]] || {
-        name: "Unknown Organization",
-        dept: "Unknown Department",
-      };
+  activities.forEach((activity) => {
+    // temp lookup
+    const orgInfo = orgMap[activity.org_id["$oid"]] || {
+      name: "Unknown Organization",
+      dept: "Unknown Department",
+    };
 
-      const submitDate = activity.submitted_at
-        ? new Date(activity.submitted_at)
-        : new Date(); // fallback only temp
-      const formattedDate = submitDate
-        .toLocaleString("en-US", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        })
-        .replace(",", "");
+    const submitDate = activity.submitted_at
+      ? new Date(activity.submitted_at)
+      : new Date();
+    const formattedDate = submitDate
+      .toLocaleString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(",", "");
 
-      const activitySdgs = Array.isArray(activity.sdgs) ? activity.sdgs : [];
+    const activitySdgs = Array.isArray(activity.sdgs) ? activity.sdgs : [];
 
-      const sdgTooltip =
-        activitySdgs.length > 0
-          ? `<div class="sdg-tooltip">
-                  <span class="sdg-count">${activitySdgs.length} SDGs</span>
-                  <div class="sdg-tooltip-content">
-                      ${activitySdgs
-                        .map((sdg) => {
-                          const sdgNumberMatch = sdg.match(/\d+/);
-                          const sdgNumber = sdgNumberMatch
-                            ? sdgNumberMatch[0]
-                            : "";
-                          const sdgClass = `sdg sdg-${sdgNumber}`;
-                          return `<span class="${sdgClass}">${sdg}</span>`;
-                        })
-                        .join(" ")}
-                  </div>
-              </div>`
-          : "N/A";
+    const sdgTooltip =
+      activitySdgs.length > 0
+        ? `<div class="sdg-tooltip">
+            <span class="sdg-count">${activitySdgs.length} SDGs</span>
+            <div class="sdg-tooltip-content">
+                ${activitySdgs
+                  .map((sdg) => {
+                    const sdgNumberMatch = sdg.match(/\d+/);
+                    const sdgNumber = sdgNumberMatch ? sdgNumberMatch[0] : "";
+                    const sdgClass = `sdg sdg-${sdgNumber}`;
+                    return `<span class="${sdgClass}">${sdg}</span>`;
+                  })
+                  .join(" ")}
+            </div>
+        </div>`
+        : "N/A";
 
-      const statusClass = activity.status
-        ? activity.status.toLowerCase().replace(" ", "-")
-        : "unknown";
+    const statusClass = activity.status
+      ? activity.status.toLowerCase().replace(" ", "-")
+      : "unknown";
 
-      return `
-            <tr>
-                <td>
-                    <p class="activity-name">${activity.title}</p>
-                    <p class="activity-desc">${
-                      activity.description
-                    }</p>
-                </td>
-                <td>${orgInfo.name}</td>
-                <td>${orgInfo.dept}</td> <td>${sdgTooltip}</td>
-                <td>${activity.term}</td>
-                <td><span class="status ${statusClass}">${
-        activity.status
-      }</span></td>
-                <td>${formattedDate}</td>
-                <td><button class="review-btn" data-activity-id="${
-                  activity._id["$oid"]
-                }">Review</button></td>
-            </tr>
-        `;
-    })
-    .join("");
+    // Table row
+    const tableRow = `
+      <tr>
+        <td>
+          <p class="activity-name">${activity.title}</p>
+          <p class="activity-desc">${activity.description}</p>
+        </td>
+        <td>${orgInfo.name}</td>
+        <td>${orgInfo.dept}</td>
+        <td>${sdgTooltip}</td>
+        <td>${activity.term}</td>
+        <td><span class="status ${statusClass}">${activity.status}</span></td>
+        <td>${formattedDate}</td>
+        <td><button class="review-btn" data-activity-id="${activity._id["$oid"]}">Review</button></td>
+      </tr>
+    `;
+    tableBody.innerHTML += tableRow;
 
-  tableBody.innerHTML = rowsHTML;
+    // Card layout
+    const activityCard = `
+      <div class="activity-card">
+        <div class="activity-card-header">
+          <div class="activity-card-title">
+            <p class="activity-name">${activity.title}</p>
+            <p class="activity-desc">${activity.description}</p>
+          </div>
+          <div class="activity-card-status">
+            <span class="status ${statusClass}">${activity.status}</span>
+          </div>
+        </div>
+        <div class="activity-card-details">
+          <div class="activity-card-detail">
+            <span class="detail-label">Organization</span>
+            <span class="detail-value">${orgInfo.name}</span>
+          </div>
+          <div class="activity-card-detail">
+            <span class="detail-label">Department</span>
+            <span class="detail-value">${orgInfo.dept}</span>
+          </div>
+          <div class="activity-card-detail">
+            <span class="detail-label">SDGs</span>
+            <span class="detail-value">${
+              activitySdgs.length > 0 ? `${activitySdgs.length} SDGs` : "N/A"
+            }</span>
+          </div>
+          <div class="activity-card-detail">
+            <span class="detail-label">Term</span>
+            <span class="detail-value">${activity.term}</span>
+          </div>
+          <div class="activity-card-detail">
+            <span class="detail-label">Submission Date</span>
+            <span class="detail-value">${formattedDate}</span>
+          </div>
+        </div>
+        <div class="activity-card-actions">
+          <button class="review-btn" data-activity-id="${
+            activity._id["$oid"]
+          }">Review</button>
+        </div>
+      </div>
+    `;
+    cardsContainer.innerHTML += activityCard;
+  });
 }
 
 // filter and search event listeners
@@ -329,7 +378,7 @@ function filterAndRenderActivities() {
 // listener for review button
 function addReviewButtonListener() {
   const folderBody = document.getElementById("folder-body");
-  
+
   // flag to avoid adding multiple listeners
   if (folderBody.dataset.listenerAttached) return;
 
@@ -341,7 +390,7 @@ function addReviewButtonListener() {
         (act) => act._id["$oid"] === activityId
       );
       if (activity) {
-        showActivityReview(activity); 
+        showActivityReview(activity);
       } else {
         console.error("Activity not found:", activityId);
       }
