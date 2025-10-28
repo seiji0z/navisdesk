@@ -3,7 +3,7 @@ function loadOsasDashboard() {
   document.querySelector("#folder-body").innerHTML = `
     <div class="grid-container">
 
-      <!-- Summary Cards -->
+      <!-- Summary Cards - First Row -->
       <div class="grid-item small">
         <div class="card">
           <div class="left-details">
@@ -52,18 +52,22 @@ function loadOsasDashboard() {
         </div>
       </div>
 
-      <!-- Activities by Term -->
+      <!-- Medium Cards - Second Row -->
       <div class="grid-item medium">
         <div class="card chart">
           <h3>Activities by Term</h3>
-          
+          <div class="chart-placeholder">
+            Chart: Activities by Term
+          </div>
         </div>
       </div>
 
-      <!-- Top 5 SDGs -->
       <div class="grid-item medium">
         <div class="card chart">
           <h3>Top SDGs</h3>
+          <div class="chart-placeholder">
+            Chart: Top SDGs
+          </div>
         </div>
       </div>
 
@@ -74,6 +78,25 @@ function loadOsasDashboard() {
 // ---- INITIALIZER ----
 function initDashboard() {
   loadOsasDashboard();
+  setCurrentDate();
 }
 
-initDashboard();
+// Set current date in header
+function setCurrentDate() {
+  const dateElement = document.querySelector(".current-date");
+  if (dateElement) {
+    const options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    const currentDate = new Date().toLocaleDateString("en-US", options);
+    dateElement.textContent = currentDate;
+  }
+}
+
+// Initialize dashboard when DOM is loaded
+document.addEventListener("DOMContentLoaded", function () {
+  initDashboard();
+});
