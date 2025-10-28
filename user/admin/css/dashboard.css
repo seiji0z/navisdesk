@@ -92,3 +92,162 @@
 }
 
 
+
+/* ========== 1024px (laptops) ========== */
+@media (max-width: 1024px) {
+  html {
+    font-size: 15px;
+  }
+
+  h1 { font-size: 1.9em; }
+  h2 { font-size: 1.45em; }
+  h3 { font-size: 1.1em; }
+  h4 { font-size: 1em; }
+  h5 { font-size: 0.8em; }
+  h6 { font-size: 0.7em; }
+
+  body,
+  p,
+  label,
+  input,
+  textarea,
+  button,
+  select,
+  span {
+    font-size: 0.95rem;
+  }
+
+  .activity-section {
+    padding: 30px;
+  }
+}
+
+/* ========== 768px (tablets) ========== */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  h1 { font-size: 1.7em; }
+  h2 { font-size: 1.35em; }
+  h3 { font-size: 1.05em; }
+  h4 { font-size: 0.95em; }
+  h5 { font-size: 0.78em; }
+  h6 { font-size: 0.7em; }
+
+  body,
+  p,
+  label,
+  input,
+  textarea,
+  button,
+  select,
+  span {
+    font-size: 0.9rem;
+  }
+
+  .folder-body {
+    padding: 30px 20px;
+  }
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* ========== 666px (small tablets) ========== */
+@media (max-width: 666px) {
+  html {
+    font-size: 13.5px;
+  }
+
+  h1 { font-size: 1.6em; }
+  h2 { font-size: 1.3em; }
+  h3 { font-size: 1em; }
+  h4 { font-size: 0.9em; }
+  h5 { font-size: 0.75em; }
+  h6 { font-size: 0.7em; }
+
+  body,
+  p,
+  label,
+  input,
+  textarea,
+  button,
+  select,
+  span {
+    font-size: 0.88rem;
+  }
+
+  .sdg-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .upload-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== 568px (medium phones) ========== */
+@media (max-width: 568px) {
+  html {
+    font-size: 13px;
+  }
+
+  h1 { font-size: 1.5em; }
+  h2 { font-size: 1.25em; }
+  h3 { font-size: 1em; }
+  h4 { font-size: 0.9em; }
+  h5 { font-size: 0.75em; }
+  h6 { font-size: 0.7em; }
+
+  body,
+  p,
+  label,
+  input,
+  textarea,
+  button,
+  select,
+  span {
+    font-size: 0.85rem;
+  }
+
+  .date-time-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .review-label {
+    min-width: 120px;
+  }
+}
+
+/* ========== 360px (small phones) ========== */
+@media (max-width: 360px) {
+  html {
+    font-size: 12px;
+  }
+
+  h1 { font-size: 1.4em; }
+  h2 { font-size: 1.2em; }
+  h3 { font-size: 0.95em; }
+  h4 { font-size: 0.85em; }
+  h5 { font-size: 0.7em; }
+  h6 { font-size: 0.65em; }
+
+  body,
+  p,
+  label,
+  input,
+  textarea,
+  button,
+  select,
+  span {
+    font-size: 0.8rem;
+  }
+
+  .folder-body {
+    padding: 20px;
+  }
+  .activity-section {
+    padding: 20px;
+  }
+}
