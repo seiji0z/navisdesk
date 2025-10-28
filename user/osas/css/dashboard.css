@@ -176,6 +176,7 @@ html {
   .grid-container {
     grid-template-columns: (2, 1fr);
     grid-template-rows: repeat(3, auto);
+    gap: 15px;
   }
 
   .number {
@@ -193,6 +194,7 @@ html {
   .grid-container {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(6, auto);
+    gap: 10px;
   }
 
   .grid-item.small {
@@ -208,10 +210,6 @@ html {
 
 /* ========== 768px (tablets) ========== */
 @media (max-width: 768px) {
-  .grid-container {
-    gap: 16px;
-  }
-
   .card {
     padding: 1.2rem;
   }
