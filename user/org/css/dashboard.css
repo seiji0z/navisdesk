@@ -531,7 +531,9 @@ html {
     flex-direction: column;
   }
   .bottom-section {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 }
 
