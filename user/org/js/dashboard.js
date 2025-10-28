@@ -2,10 +2,28 @@
 // ORGANIZATION DASHBOARD
 // ===============================
 
+const ICON_ORG_ID = "6716001a9b8c2001abcd0001";
+let activitiesData = [];
+
+// Fetch activities data
+async function fetchActivities() {
+  try {
+    const response = await fetch("../../../data/activities.json");
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    activitiesData = await response.json();
+    return activitiesData;
+  } catch (error) {
+    console.error("Could not fetch activities data:", error);
+    return [];
+  }
+}
+
 // --- MAIN RENDER FUNCTION ---
-function renderOrgDashboard() {
+async function renderOrgDashboard() {
   const folderBody = document.querySelector("#folder-body");
   if (!folderBody) return;
+
+  await fetchActivities();
 
   folderBody.innerHTML = `
     <div class="org-dashboard">
@@ -42,10 +60,26 @@ function createQuickActions() {
 }
 
 function createSubmissionOverview() {
+  // Filter activities for ICON org
+  const iconActivities = activitiesData.filter(
+    (a) => a.org_id.$oid === ICON_ORG_ID
+  );
+
+  // Count activities by status
+  const approvedCount = iconActivities.filter(
+    (a) => a.status === "Approved"
+  ).length;
+  const pendingCount = iconActivities.filter(
+    (a) => a.status === "Pending"
+  ).length;
+  const reviseCount = iconActivities.filter(
+    (a) => a.status === "Revise"
+  ).length;
+
   const statuses = [
-    { title: "Approved", count: 3, class: "approved" },
-    { title: "Under Review", count: 2, class: "review" },
-    { title: "Needs Attention", count: 4, class: "attention" },
+    { title: "Approved", count: approvedCount, class: "approved" },
+    { title: "Pending", count: pendingCount, class: "review" },
+    { title: "Revise", count: reviseCount, class: "attention" },
   ];
 
   const statusItems = statuses
@@ -68,35 +102,22 @@ function createSubmissionOverview() {
 }
 
 function createRecentActivities() {
-  const activities = [
-    {
-      title: "Annual Report Submission",
-      desc: "A short description of what is being done",
-      status: "approved",
-    },
-    {
-      title: "Project Proposal",
-      desc: "Awaiting evaluation",
-      status: "review",
-    },
-    {
-      title: "Community Service",
-      desc: "Pending revisions",
-      status: "attention",
-    },
-  ];
+  // Filter activities for ICON org and limit to 3
+  const iconActivities = activitiesData
+    .filter((a) => a.org_id.$oid === ICON_ORG_ID)
+    .slice(0, 3);
 
-  const activityItems = activities
+  const activityItems = iconActivities
     .map(
       (a) => `
         <div class="activity-item">
           <div class="activity-details">
             <p class="activity-title">${a.title}</p>
-            <p class="activity-desc">${a.desc}</p>
+            <p class="activity-desc">${a.description}</p>
           </div>
-          <span class="status-badge ${a.status}">${formatStatus(
+          <span class="status-badge ${formatStatusClass(
         a.status
-      )}</span>
+      )}">${formatStatus(a.status)}</span>
         </div>`
     )
     .join("");
@@ -113,28 +134,24 @@ function createRecentActivities() {
 }
 
 function createReminders() {
-  const reminders = [
-    {
-      title: "Annual Report Submission",
-      date: "Oct 31, 2025",
-      color: "orange",
-    },
-    { title: "Midyear Evaluation", date: "Nov 15, 2025", color: "blue" },
-  ];
+  // Filter activities for ICON org with status "Revise"
+  const reviseActivities = activitiesData.filter(
+    (a) => a.org_id.$oid === ICON_ORG_ID && a.status === "Revise"
+  );
 
-  const reminderItems = reminders
+  const reminderItems = reviseActivities
     .map(
       (r) => `
         <div class="reminder-item">
           <p class="reminder-title">${r.title}</p>
-          <p class="reminder-date ${r.color}">Due: ${r.date}</p>
+          <p class="reminder-date">Remarks: ${r.remarks || "None"}</p>
         </div>`
     )
     .join("");
 
   return `
     <div class="reminders card">
-      <h3>Reminders & Deadlines</h3>
+      <h3>To Be Revised</h3>
       ${reminderItems}
     </div>
   `;
@@ -146,14 +163,27 @@ function createReminders() {
 
 function formatStatus(status) {
   switch (status) {
-    case "approved":
+    case "Approved":
       return "Approved";
-    case "review":
-      return "Under Review";
-    case "attention":
-      return "Needs Attention";
+    case "Pending":
+      return "Pending";
+    case "Revise":
+      return "Revise";
     default:
       return status;
+  }
+}
+
+function formatStatusClass(status) {
+  switch (status) {
+    case "Approved":
+      return "approved";
+    case "Pending":
+      return "review";
+    case "Revise":
+      return "attention";
+    default:
+      return status.toLowerCase();
   }
 }
 

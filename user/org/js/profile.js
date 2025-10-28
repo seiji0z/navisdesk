@@ -40,16 +40,6 @@ function renderProfileContent() {
               <label for="org-description">Organization Description</label>
               <textarea id="org-description" rows="3" placeholder="Enter a short description about your organization..."></textarea>
 
-              <label for="department">Department</label>
-              <select id="department" required>
-                <option value="SAMCIS">School of Accountancy, Management, Computing and Information Studies | SAMCIS</option>
-                <option value="SEA">School of Engineering and Architecture | SEA</option>
-                <option value="SOL">School of Law | SOL</option>
-                <option value="SOM">School of Medicine | SOM</option>
-                <option value="SONAHBS">School of Nursing, Allied Health, and Biological Sciences Natural Sciences | SONAHBS</option>
-                <option value="STELA">School of Teacher Education and Liberal Arts | STELA</option>
-              </select>
-
               <label for="slu-email">Official SLU Institution Email</label>
               <input id="slu-email" type="email" required />
 
@@ -170,7 +160,6 @@ async function wireProfileBehaviors() {
     document.getElementById('official-name').value = org.name || '';
     document.getElementById('acronym').value = org.abbreviation || '';
     document.getElementById('org-description').value = org.description || '';
-    document.getElementById('department').value = org.department || '';
     document.getElementById('slu-email').value = org.email || '';
     document.getElementById('org-type').value = org.type || '';
     document.getElementById('adviser-name').value = org.adviser?.name || '';
