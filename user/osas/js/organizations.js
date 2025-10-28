@@ -7,7 +7,7 @@ function createOrganizationCardHTML(org) {
   const logoSrc = org.profile_pic || '../../../assets/images/schema-logo.png'; 
 
   return `
-    <div class="organization-card">
+    <div class="organization-card" onclick="loadOrganizationDetails('${org._id.$oid}')">
       <div class="organization-identifier">
         <div class="organization-logo">
           <img src="${logoSrc}" alt="${org.abbreviation} logo" />
@@ -20,9 +20,6 @@ function createOrganizationCardHTML(org) {
         <p>Type: <strong>${org.type}</strong></p>
         <p>Adviser: <strong>${adviserName}</strong></p>
         <span class="status-tag ${statusClass}">${statusText}</span>
-        
-        <img src="../../../assets/images/arrow-up-right.png" alt="View" class="card-link-icon" 
-             onclick="loadOrganizationDetails('${org._id.$oid}')" />
       </div>
     </div>
   `;
