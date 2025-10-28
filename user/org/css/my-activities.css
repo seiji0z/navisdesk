@@ -588,7 +588,7 @@ html {
   color: #fff;
   font-size: 0.85rem;
   text-align: center;
-  min-width: 90px;
+  max-width: 200px;
 }
 
 .info-item .status.approved {
