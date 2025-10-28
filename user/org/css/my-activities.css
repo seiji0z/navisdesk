@@ -901,6 +901,7 @@ html {
   .submission-venue {
     font-size: 0.85rem;
   }
+  
 }
 
 /* --- Small Mobile Optimization --- */
@@ -1093,6 +1094,11 @@ html {
 }
 .submissions-header{
   display:inline;
+}
+.recent-activities, .reminders {
+  min-width: 100%;
+  flex: 1 1 100%;
+    max-width: 100%;
 }
 }
 

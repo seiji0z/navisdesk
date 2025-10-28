@@ -474,6 +474,11 @@ html {
     flex-direction: column;
     align-items: stretch;
   }
+
+    
+  .recent-activities, .reminders{
+    max-width: 100%;
+  }
 }
 
 /* ========== 666px (small tablets) ========== */
