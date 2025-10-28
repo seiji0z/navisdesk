@@ -5,28 +5,11 @@
   box-sizing: border-box;
 }
 
-.folder-body {
-  flex-grow: 1;
-  overflow: hidden;
-}
-
-.folder-content-card {
-  background-color: transparent;
-  box-shadow: none;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-}
-
 .organizations-layout {
   display: flex;
   gap: 1.5rem;
   width: 100%;
   height: 100%;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
 }
 
@@ -169,7 +152,7 @@
   margin-bottom: 0.25rem;
   display: block;
   color: #073066;
-  font-family: "PoppinsMedium", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .organization-cards-grid {
@@ -305,9 +288,7 @@
   width: 100%;
   height: 100%;
   padding: 2rem;
-  background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
 }
 
