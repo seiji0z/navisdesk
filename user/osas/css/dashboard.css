@@ -71,6 +71,23 @@ html {
   color: #073066;
 }
 
+.number#first,
+.number#total-submissions {
+  color: #208bff;
+}
+.number#second,
+.number#approved-count {
+  color: #34c759;
+}
+.number#third,
+.number#pending-count {
+  color: #ffa325;
+}
+.number#fourth,
+.number#returned-count {
+  color: #ff5039;
+}
+
 .desc {
   font-size: 0.9rem;
   margin: 0.5rem 0 0 0;
