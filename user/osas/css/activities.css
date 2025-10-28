@@ -8,35 +8,6 @@ html {
   overflow-x: hidden;
 }
 
-.dashboard-folder {
-  background-color: #ffb901;
-  border-radius: 20px;
-}
-
-.folder-body {
-  font-family: "Poppins", sans-serif;
-  padding: 30px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  border-radius: 20px;
-  max-height: calc(85vh - 40px);
-  overflow-y: auto;
-}
-
-.folder-body::-webkit-scrollbar {
-  width: 8px;
-}
-.folder-body::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-}
-.folder-body::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.35);
-}
-
 .folder-content-card {
   background-color: #ffffff;
   border-radius: 12px;
