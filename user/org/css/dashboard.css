@@ -157,8 +157,8 @@ html {
    Recent Activities
 ------------------------------------- */
 .recent-activities {
-  flex: 2;
-  min-height: 52vh;
+  flex: 1.5;
+  max-width: 70%;
 }
 
 .section-header {
@@ -232,6 +232,7 @@ html {
 ------------------------------------- */
 .reminders {
   flex: 1;
+  max-width: 30%;
 }
 
 .reminder-item {

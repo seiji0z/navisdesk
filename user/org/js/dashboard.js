@@ -72,14 +72,14 @@ function createSubmissionOverview() {
   const pendingCount = iconActivities.filter(
     (a) => a.status === "Pending"
   ).length;
-  const reviseCount = iconActivities.filter(
-    (a) => a.status === "Revise"
+  const returnedCount = iconActivities.filter(
+    (a) => a.status === "Returned"
   ).length;
 
   const statuses = [
     { title: "Approved", count: approvedCount, class: "approved" },
     { title: "Pending", count: pendingCount, class: "review" },
-    { title: "Revise", count: reviseCount, class: "attention" },
+    { title: "Returned", count: returnedCount, class: "attention" },
   ];
 
   const statusItems = statuses
@@ -134,9 +134,9 @@ function createRecentActivities() {
 }
 
 function createReminders() {
-  // Filter activities for ICON org with status "Revise"
+  // Filter activities for ICON org with status "Returned"
   const reviseActivities = activitiesData.filter(
-    (a) => a.org_id.$oid === ICON_ORG_ID && a.status === "Revise"
+    (a) => a.org_id.$oid === ICON_ORG_ID && a.status === "Returned"
   );
 
   const reminderItems = reviseActivities
@@ -167,8 +167,8 @@ function formatStatus(status) {
       return "Approved";
     case "Pending":
       return "Pending";
-    case "Revise":
-      return "Revise";
+    case "Returned":
+      return "Returned";
     default:
       return status;
   }
@@ -180,7 +180,7 @@ function formatStatusClass(status) {
       return "approved";
     case "Pending":
       return "review";
-    case "Revise":
+    case "Returned":
       return "attention";
     default:
       return status.toLowerCase();
