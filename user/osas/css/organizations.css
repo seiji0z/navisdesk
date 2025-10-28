@@ -577,3 +577,249 @@
 .modal-btn-confirm.active:hover {
   background-color: #6cbf1c;
 }
+
+
+/* ========== 1024px (laptops) ========== */
+@media (max-width: 1024px) {
+  html {
+    font-size: 15px;
+  }
+
+  h1 { font-size: 1.9em; }
+  h2 { font-size: 1.45em; }
+  h3 { font-size: 1.1em; }
+  h4 { font-size: 1em; }
+  h5 { font-size: 0.8em; }
+  h6 { font-size: 0.7em; }
+
+  body,
+  p,
+  label,
+  input,
+  textarea,
+  button,
+  select,
+  span {
+    font-size: 0.95rem;
+  }
+
+  .activity-section {
+    padding: 30px;
+  }
+}
+
+/* ========== 768px (tablets) ========== */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  h1 { font-size: 1.7em; }
+  h2 { font-size: 1.35em; }
+  h3 { font-size: 1.05em; }
+  h4 { font-size: 0.95em; }
+  h5 { font-size: 0.78em; }
+  h6 { font-size: 0.7em; }
+
+  body,
+  p,
+  label,
+  input,
+  textarea,
+  button,
+  select,
+  span {
+    font-size: 0.9rem;
+  }
+
+  .folder-body {
+    padding: 30px 20px;
+  }
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .organizations-layout{
+    display: flex;
+    flex-direction: column;
+  }
+  .folder-content-card{
+    overflow: scroll;
+  }
+  .organizations-layout{
+    height: auto;
+  }
+  .organization-cards-grid{
+    grid-template-columns: repeat(1, minmax(220px, 1fr));
+    grid-auto-rows: auto;
+  }
+
+  .organization-card {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding: 0.8rem 1rem;
+    height: auto;
+    min-height: 100px;
+    margin: 0.5rem 0;
+    overflow: visible;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .organization-identifier {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    width: 50%;
+  }
+
+  .organization-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .organization-acronym {
+    font-size: 0.85rem;
+  }
+
+  .organization-details {
+    width: 100%;
+    margin-top: 0.5rem;
+    overflow: visible;
+  }
+
+  .organization-details h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .organization-details p {
+    font-size: 0.75rem;
+    line-height: 1.2;
+    margin-bottom: 0.2rem;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .organization-details .status-tag {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+  }
+
+  .organization-card .card-link-icon {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 16px;
+    height: 16px;
+  }
+  .summary-column{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 0;
+
+    
+  }
+
+}
+
+/* ========== 666px (small tablets) ========== */
+@media (max-width: 666px) {
+  html {
+    font-size: 13.5px;
+  }
+
+  h1 { font-size: 1.6em; }
+  h2 { font-size: 1.3em; }
+  h3 { font-size: 1em; }
+  h4 { font-size: 0.9em; }
+  h5 { font-size: 0.75em; }
+  h6 { font-size: 0.7em; }
+
+  body,
+  p,
+  label,
+  input,
+  textarea,
+  button,
+  select,
+  span {
+    font-size: 0.88rem;
+  }
+
+  .sdg-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .upload-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== 568px (medium phones) ========== */
+@media (max-width: 568px) {
+  html {
+    font-size: 13px;
+  }
+
+  h1 { font-size: 1.5em; }
+  h2 { font-size: 1.25em; }
+  h3 { font-size: 1em; }
+  h4 { font-size: 0.9em; }
+  h5 { font-size: 0.75em; }
+  h6 { font-size: 0.7em; }
+
+  body,
+  p,
+  label,
+  input,
+  textarea,
+  button,
+  select,
+  span {
+    font-size: 0.85rem;
+  }
+
+  .date-time-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .review-label {
+    min-width: 120px;
+  }
+}
+
+/* ========== 360px (small phones) ========== */
+@media (max-width: 360px) {
+  html {
+    font-size: 12px;
+  }
+
+  h1 { font-size: 1.4em; }
+  h2 { font-size: 1.2em; }
+  h3 { font-size: 0.95em; }
+  h4 { font-size: 0.85em; }
+  h5 { font-size: 0.7em; }
+  h6 { font-size: 0.65em; }
+
+  body,
+  p,
+  label,
+  input,
+  textarea,
+  button,
+  select,
+  span {
+    font-size: 0.8rem;
+  }
+
+  .folder-body {
+    padding: 20px;
+  }
+  .activity-section {
+    padding: 20px;
+  }
+}
