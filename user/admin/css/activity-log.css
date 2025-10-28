@@ -16,6 +16,9 @@
   height: 100%;
   overflow: hidden;
   padding: 10px;
+  font-family: "Poppins", sans-serif;
+  color: #073066;
+  min-height: 0;
 }
 
 .filter-search {

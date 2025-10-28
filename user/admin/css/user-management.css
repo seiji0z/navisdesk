@@ -16,6 +16,9 @@
   height: 100%;
   overflow: hidden;
   padding: 10px;
+  font-family: "Poppins", sans-serif;
+  color: #073066;
+  min-height: 0;
 }
 
 .filter-search {
@@ -143,7 +146,9 @@
 /* === ACTION BUTTONS === */
 .action-buttons {
   display: flex;
-  gap: 0.4rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .deactivate-btn,
