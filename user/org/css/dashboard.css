@@ -625,3 +625,8 @@ html {
     padding: 20px;
   }
 }
+.recent-activities.card {
+  height: fit-content;      
+  flex: 0 0 auto;            
+  align-self: flex-start;    
+}
