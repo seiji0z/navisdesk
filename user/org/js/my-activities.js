@@ -1,3 +1,30 @@
+// Helper function to format dates as "Month Day, Year"
+function formatDate(dateString) {
+  if (!dateString) return "";
+
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
+
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  } catch (error) {
+    return "";
+  }
+}
+
+// Helper function to format date range
+function formatDateRange(startDate, endDate) {
+  const start = formatDate(startDate);
+  const end = formatDate(endDate);
+
+  if (!start && !end) return "";
+  if (start === end) return start;
+  if (!start) return end;
+  if (!end) return start;
+  return `${start} to ${end}`;
+}
+
 class ActivitiesSummaryComponent {
   render(activities) {
     const container = document.createElement("div");
@@ -29,22 +56,16 @@ class SubmissionsComponent {
       container.innerHTML = submissions
         .map(
           (s) => `
-          <div class="submission-card ${s.status.toLowerCase()}" data-id="${
-            s.id
-          }">
+          <div class="submission-card ${s.status.toLowerCase()}" data-id="${s.id}">
             <div class="submission-card-content">
               <h3>${s.title}</h3>
               <p class="description">${s.description}</p>
               <div class="submission-meta">
                 <div class="status-info">
-                  <span class="status ${s.status.toLowerCase()}">${
-            s.status
-          }</span>
+                  <span class="status ${s.status.toLowerCase()}">${s.status}</span>
                 </div>
                 <div class="submission-details">
-                  <span class="submission-date">${s.date_start} to ${
-            s.date_end
-          }</span>
+                  <span class="submission-date">${formatDate(s.submitted_at)}</span>
                   <span class="submission-venue">${s.venue}</span>
                 </div>
               </div>
@@ -65,7 +86,6 @@ class SubmissionsComponent {
             <th>Status</th>
             <th>Submitted Date</th>
             <th>Venue</th>
-            <th>Participants</th>
           </tr>
         </thead>
         <tbody>
@@ -74,12 +94,9 @@ class SubmissionsComponent {
               (s) => `
             <tr class="${s.status.toLowerCase()}" data-id="${s.id}">
               <td>${s.title}</td>
-              <td><span class="status ${s.status.toLowerCase()}">${
-                s.status
-              }</span></td>
-              <td>${s.submitted_at}</td>
+              <td><span class="status ${s.status.toLowerCase()}">${s.status}</span></td>
+              <td>${formatDate(s.submitted_at)}</td>
               <td>${s.venue}</td>
-              <td>${s.participants}</td>
             </tr>`
             )
             .join("")}
@@ -94,7 +111,7 @@ class SubmissionsComponent {
   bindSubmissionClick(handler) {
     document.querySelectorAll("[data-id]").forEach((el) => {
       el.addEventListener("click", () => {
-        const id = parseInt(el.dataset.id);
+        const id = el.dataset.id; // Keep as string to match _id from JSON
         handler(id);
       });
     });
@@ -115,54 +132,48 @@ class ActivityDetailsComponent {
         <h3>General Information</h3>
         <div class="info-grid">
           <div class="info-item">
-            <strong>Status:</strong> 
-            <span class="status ${submission.status.toLowerCase()}">${
-      submission.status
-    }</span>
+            <strong>Status:</strong>
+            <span class="status ${submission.status.toLowerCase()}">${submission.status}</span>
           </div>
           <div class="info-item">
-            <strong>Description:</strong> 
+            <strong>Description:</strong>
             <span>${submission.description}</span>
           </div>
           <div class="info-item">
-            <strong>Objectives:</strong> 
+            <strong>Objectives:</strong>
             <span>${submission.objectives}</span>
           </div>
           <div class="info-item">
-            <strong>Academic Year:</strong> 
+            <strong>Academic Year:</strong>
             <span>${submission.acad_year}</span>
           </div>
           <div class="info-item">
-            <strong>Term:</strong> 
+            <strong>Term:</strong>
             <span>${submission.term}</span>
           </div>
           <div class="info-item">
-            <strong>Organization ID:</strong> 
+            <strong>Organization ID:</strong>
             <span>${submission.org_id}</span>
           </div>
           <div class="info-item">
-            <strong>Submitted By:</strong> 
+            <strong>Submitted By:</strong>
             <span>${submission.submitted_by}</span>
           </div>
           <div class="info-item">
-            <strong>Submitted At:</strong> 
-            <span>${submission.submitted_at}</span>
+            <strong>Submitted At:</strong>
+            <span>${formatDate(submission.submitted_at)}</span>
           </div>
           <div class="info-item">
-            <strong>Reviewed By:</strong> 
-            <span>${
-              submission.reviewed_by ? submission.reviewed_by : "N/A"
-            }</span>
+            <strong>Reviewed By:</strong>
+            <span>${submission.reviewed_by || ""}</span>
           </div>
           <div class="info-item">
-            <strong>Reviewed At:</strong> 
-            <span>${
-              submission.reviewed_at ? submission.reviewed_at : "N/A"
-            }</span>
+            <strong>Reviewed At:</strong>
+            <span>${formatDate(submission.reviewed_at)}</span>
           </div>
           <div class="info-item">
-            <strong>Created At:</strong> 
-            <span>${submission.created_at}</span>
+            <strong>Created At:</strong>
+            <span>${formatDate(submission.created_at)}</span>
           </div>
         </div>
       </section>
@@ -172,28 +183,20 @@ class ActivityDetailsComponent {
         <h3>Event Details</h3>
         <div class="info-grid">
           <div class="info-item">
-            <strong>Venue:</strong> 
+            <strong>Venue:</strong>
             <span>${submission.venue}</span>
           </div>
           <div class="info-item">
-            <strong>Date Start:</strong> 
-            <span>${submission.date_start}</span>
+            <strong>Date Start:</strong>
+            <span>${formatDate(submission.date_start)}</span>
           </div>
           <div class="info-item">
-            <strong>Date End:</strong> 
-            <span>${submission.date_end}</span>
-          </div>
-          <div class="info-item">
-            <strong>Participants:</strong> 
-            <span>${submission.participants}</span>
+            <strong>Date End:</strong>
+            <span>${formatDate(submission.date_end)}</span>
           </div>
           <div class="info-item full-width">
-            <strong>SDGs:</strong> 
-            <span>${
-              submission.sdgs && submission.sdgs.length
-                ? submission.sdgs.join(", ")
-                : "None"
-            }</span>
+            <strong>SDGs:</strong>
+            <span>${submission.sdgs && submission.sdgs.length ? submission.sdgs.join(", ") : "None"}</span>
           </div>
         </div>
       </section>
@@ -201,27 +204,26 @@ class ActivityDetailsComponent {
       <!-- Supporting Documents -->
       <section class="details-section">
         <h3>Supporting Documents</h3>
-        ${
-          submission.supporting_docs && submission.supporting_docs.length
-            ? `<div class="documents-list">
-                ${submission.supporting_docs
+        <div class="evidence-grid">
+          ${
+            submission.supporting_docs && submission.supporting_docs.length
+              ? submission.supporting_docs
                   .map(
                     (d) => `
-                  <div class="document-item">
-                    <a href="../../../uploads/${d.file_name}" target="_blank" class="doc-link">
-                      <i class="fas fa-file"></i>
-                      ${d.file_name}
-                    </a>
-                    <div class="doc-meta">
-                      <span class="file-type">${d.file_type}</span>
-                      <span class="upload-date">Uploaded: ${d.upload_date}</span>
-                    </div>
-                  </div>`
+                <div class="evidence-item">
+                  <div class="document-preview">
+                    <i class="fas fa-file-alt fa-3x"></i>
+                  </div>
+                  <div class="evidence-info">
+                    <p class="evidence-name">${d.file_name || d}</p>
+                    <p class="evidence-date"><small>Uploaded: ${d.upload_date ? formatDate(d.upload_date) : formatDate(submission.submitted_at)}</small></p>
+                  </div>
+                </div>`
                   )
-                  .join("")}
-              </div>`
-            : "<p>No supporting documents available.</p>"
-        }
+                  .join("")
+              : "<p>No supporting documents available.</p>"
+          }
+        </div>
       </section>
 
       <!-- Evidences -->
@@ -234,10 +236,10 @@ class ActivityDetailsComponent {
                   .map(
                     (e) => `
                 <div class="evidence-item">
-                  <img src="../../../uploads/${e.file_name}" alt="${e.file_name}" loading="lazy" />
+                  <img src="../../../uploads/${e.file_name || e}" alt="${e.file_name || e}" loading="lazy" />
                   <div class="evidence-info">
-                    <p class="evidence-name">${e.file_name}</p>
-                    <p class="evidence-date"><small>Uploaded: ${e.upload_date}</small></p>
+                    <p class="evidence-name">${e.file_name || e}</p>
+                    <p class="evidence-date"><small>Uploaded: ${e.upload_date ? formatDate(e.upload_date) : formatDate(submission.submitted_at)}</small></p>
                   </div>
                 </div>`
                   )
@@ -250,28 +252,53 @@ class ActivityDetailsComponent {
       <!-- Activity History -->
       <section class="details-section">
         <h3>History</h3>
-        ${
-          submission.history && submission.history.length
-            ? `<div class="history-timeline">
-                ${submission.history
-                  .map(
-                    (h) => `
-                  <div class="timeline-item">
-                    <div class="timeline-date">${h.date}</div>
-                    <div class="timeline-content">
-                      <strong>${h.status}</strong>
-                      <p>${h.remarks}</p>
-                    </div>
-                  </div>`
-                  )
-                  .join("")}
-              </div>`
-            : "<p>No history records found.</p>"
-        }
+        <div class="info-grid">
+          ${this.generateHistory(submission)}
+        </div>
       </section>
     `;
 
     return container;
+  }
+
+  generateHistory(submission) {
+    const historyItems = [];
+
+    // Add submission event if submitted_at exists
+    if (submission.submitted_at) {
+      historyItems.push({
+        date: submission.submitted_at,
+        status: submission.status,
+        remarks: submission.remarks || "No Remarks"
+      });
+    }
+
+    // If no history items exist, create one with current status
+    if (historyItems.length === 0) {
+      historyItems.push({
+        date: submission.created_at || new Date().toISOString(),
+        status: submission.status,
+        remarks: submission.remarks || "No Remarks"
+      });
+    }
+
+    return historyItems
+      .map(
+        (h) => `
+      <div class="info-item">
+        <strong>Date:</strong>
+        <span>${formatDate(h.date)}</span>
+      </div>
+      <div class="info-item">
+        <strong>Status:</strong>
+        <span class="status ${h.status.toLowerCase()}">${h.status}</span>
+      </div>
+      <div class="info-item full-width">
+        <strong>Remarks:</strong>
+        <span>${h.remarks}</span>
+      </div>`
+      )
+      .join("");
   }
 
   bindBackButton(handler) {
@@ -284,218 +311,65 @@ class MyActivitiesModel {
   constructor() {
     this.activities = [];
     this.submissions = [];
+    this.ICON_ORG_ID = "6716001a9b8c2001abcd0001"; // ICON organization ID
   }
 
   async loadActivities() {
     // Default statuses will be updated after loading submissions
     this.activities = [
       { title: "Approved", count: 0, description: "Approved activities" },
-      { title: "Revise", count: 0, description: "Requires review" },
+      { title: "Returned", count: 0, description: "Requires revision" },
       { title: "Pending", count: 0, description: "Awaiting approval" },
     ];
   }
 
   async loadSubmissions() {
-    // Fixed dataset - removed duplicates and added unique IDs
-    this.submissions = [
-      {
-        id: 1,
-        org_id: "6741a9f2c1234567890abcde",
-        title: "Community Clean-Up Drive",
-        description:
-          "A clean-up project around Burnham Park led by volunteers.",
-        acad_year: "2025-2026",
-        term: "1st Semester",
-        date_start: "2025-09-25",
-        date_end: "2025-09-26",
-        venue: "Burnham Park",
-        objectives: "Promote environmental awareness and civic responsibility.",
-        sdgs: ["Sustainable Cities and Communities"],
-        evidences: [
-          {
-            file_name: "cleanup1.jpg",
-            file_type: "image/jpeg",
-            upload_date: "2025-09-26",
-          },
-          {
-            file_name: "cleanup2.jpg",
-            file_type: "image/jpeg",
-            upload_date: "2025-09-26",
-          },
-        ],
-        supporting_docs: [
-          {
-            file_name: "proposal.pdf",
-            file_type: "application/pdf",
-            upload_date: "2025-09-20",
-          },
-          {
-            file_name: "attendance.xlsx",
-            file_type: "application/vnd.ms-excel",
-            upload_date: "2025-09-26",
-          },
-        ],
-        submitted_by: "org_president_01",
-        submitted_at: "2025-09-26",
-        reviewed_by: "osas_admin_02",
-        reviewed_at: "2025-09-27",
-        participants: "25",
-        status: "Approved",
-        created_at: "2025-09-18",
-        history: [
-          {
-            date: "2025-09-20",
-            status: "Pending",
-            remarks: "Under initial review",
-          },
-          {
-            date: "2025-09-27",
-            status: "Approved",
-            remarks: "All documents validated",
-          },
-        ],
-      },
-      {
-        id: 2,
-        org_id: "6741a9f2c1234567890abcdf",
-        title: "Tree Planting Initiative",
-        description:
-          "Planting native trees around Camp John Hay to promote biodiversity.",
-        acad_year: "2025-2026",
-        term: "1st Semester",
-        date_start: "2025-10-05",
-        date_end: "2025-10-05",
-        venue: "Camp John Hay",
-        objectives:
-          "Support environmental sustainability through reforestation.",
-        sdgs: ["Life on Land"],
-        evidences: [
-          {
-            file_name: "treeplant1.jpg",
-            file_type: "image/jpeg",
-            upload_date: "2025-10-06",
-          },
-        ],
-        supporting_docs: [
-          {
-            file_name: "tree_plan.pdf",
-            file_type: "application/pdf",
-            upload_date: "2025-10-04",
-          },
-        ],
-        submitted_by: "org_secretary_01",
-        submitted_at: "2025-10-06",
-        reviewed_by: null,
-        reviewed_at: null,
-        participants: "30",
-        status: "Pending",
-        created_at: "2025-10-03",
-        history: [
-          {
-            date: "2025-10-04",
-            status: "Pending",
-            remarks: "Waiting for admin review",
-          },
-        ],
-      },
-      {
-        id: 3,
-        org_id: "6741a9f2c1234567890abce0",
-        title: "Mental Health Awareness Workshop",
-        description:
-          "A seminar promoting mental well-being and emotional resilience.",
-        acad_year: "2025-2026",
-        term: "1st Semester",
-        date_start: "2025-09-15",
-        date_end: "2025-09-15",
-        venue: "SLU Student Center",
-        objectives: "Raise awareness on mental health and coping strategies.",
-        sdgs: ["Good Health and Well-being"],
-        evidences: [
-          {
-            file_name: "workshop_photo.jpg",
-            file_type: "image/jpeg",
-            upload_date: "2025-09-15",
-          },
-        ],
-        supporting_docs: [
-          {
-            file_name: "agenda.pdf",
-            file_type: "application/pdf",
-            upload_date: "2025-09-12",
-          },
-          {
-            file_name: "participants.xlsx",
-            file_type: "application/vnd.ms-excel",
-            upload_date: "2025-09-15",
-          },
-        ],
-        submitted_by: "org_president_02",
-        submitted_at: "2025-09-15",
-        reviewed_by: "osas_admin_01",
-        reviewed_at: "2025-09-17",
-        participants: "80",
-        status: "Approved",
-        created_at: "2025-09-10",
-        history: [
-          { date: "2025-09-13", status: "Pending", remarks: "Under review" },
-          {
-            date: "2025-09-17",
-            status: "Approved",
-            remarks: "Validated and approved",
-          },
-        ],
-      },
-      {
-        id: 4,
-        org_id: "6741a9f2c1234567890abce1",
-        title: "Blood Donation Camp",
-        description:
-          "Annual blood donation drive in collaboration with Red Cross.",
-        acad_year: "2025-2026",
-        term: "1st Semester",
-        date_start: "2025-11-10",
-        date_end: "2025-11-10",
-        venue: "University Gymnasium",
-        objectives: "Promote voluntary blood donation and save lives.",
-        sdgs: ["Good Health and Well-being"],
-        evidences: [
-          {
-            file_name: "blood_donation1.jpg",
-            file_type: "image/jpeg",
-            upload_date: "2025-11-10",
-          },
-        ],
-        supporting_docs: [
-          {
-            file_name: "blood_camp_plan.pdf",
-            file_type: "application/pdf",
-            upload_date: "2025-11-05",
-          },
-        ],
-        submitted_by: "org_vice_president_01",
-        submitted_at: "2025-11-11",
-        reviewed_by: null,
-        reviewed_at: null,
-        participants: "45",
-        status: "Revise",
-        created_at: "2025-11-04",
-        history: [
-          {
-            date: "2025-11-06",
-            status: "Pending",
-            remarks: "Submitted for review",
-          },
-          {
-            date: "2025-11-12",
-            status: "Revise",
-            remarks: "Need more participant details",
-          },
-        ],
-      },
-    ];
+    try {
+      // Fetch data from activities.json
+      const response = await fetch('../../../data/activities.json');
+      if (!response.ok) {
+        throw new Error('Failed to load activities data');
+      }
+      const allActivities = await response.json();
 
-    // Summarize activity counts
+      // Filter activities for ICON organization only
+      const iconActivities = allActivities.filter(activity => {
+        const orgId = activity.org_id?.$oid || activity.org_id;
+        return orgId === this.ICON_ORG_ID;
+      });
+
+      // Map JSON data to application format
+      this.submissions = iconActivities.map((activity, index) => {
+        const activityId = activity._id?.$oid || activity._id || `activity_${index}`;
+        return {
+          id: activityId,
+          _id: activityId,
+          org_id: activity.org_id?.$oid || activity.org_id,
+          title: activity.title || "Untitled Activity",
+          description: activity.description || "No description provided",
+          acad_year: activity.acad_year || "N/A",
+          term: activity.term || "N/A",
+          date_start: activity.date_start || "",
+          date_end: activity.date_end || "",
+          venue: activity.venue || "TBA",
+          objectives: activity.objectives || "No objectives specified",
+          sdgs: activity.sdgs || [],
+          evidences: activity.evidences || [],
+          supporting_docs: activity.supporting_docs || [],
+          submitted_by: activity.submitted_by?.$oid || activity.submitted_by || "N/A",
+          submitted_at: activity.submitted_at || "",
+          reviewed_by: activity.reviewed_by?.$oid || activity.reviewed_by || null,
+          reviewed_at: activity.reviewed_at || null,
+          status: activity.status || "Pending",
+          created_at: activity.created_at || "",
+        };
+      });
+    } catch (error) {
+      console.error('Error loading activities:', error);
+      this.submissions = [];
+    }
+
+    // Summarize activity counts based on status
     const summaryMap = {};
     this.submissions.forEach((s) => {
       summaryMap[s.status] = (summaryMap[s.status] || 0) + 1;
@@ -508,9 +382,9 @@ class MyActivitiesModel {
         description: "Approved activities",
       },
       {
-        title: "Revise",
-        count: summaryMap["Revise"] || 0,
-        description: "Requires review",
+        title: "Returned",
+        count: summaryMap["Returned"] || 0,
+        description: "Requires revision",
       },
       {
         title: "Pending",
@@ -529,7 +403,8 @@ class MyActivitiesModel {
   }
 
   getSubmissionById(id) {
-    return this.submissions.find((s) => s.id === id);
+    // Support both string and numeric IDs
+    return this.submissions.find((s) => s.id === id || s._id === id);
   }
 }
 
@@ -642,8 +517,11 @@ class MyActivitiesView {
   }
 
   showActivityDetails(submissionId) {
-    const submission = this.submissionsData.find((s) => s.id === submissionId);
-    if (!submission) return;
+    const submission = this.submissionsData.find((s) => s.id === submissionId || s._id === submissionId);
+    if (!submission) {
+      console.error('Submission not found:', submissionId);
+      return;
+    }
 
     // Scroll to top when showing details
     this.folderBody.scrollTop = 0;

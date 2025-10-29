@@ -157,8 +157,8 @@ html {
    Recent Activities
 ------------------------------------- */
 .recent-activities {
-  flex: 2;
-  min-height: 52vh;
+  flex: 1.5;
+  max-width: 70%;
 }
 
 .section-header {
@@ -232,6 +232,7 @@ html {
 ------------------------------------- */
 .reminders {
   flex: 1;
+  max-width: 30%;
 }
 
 .reminder-item {
@@ -473,6 +474,10 @@ html {
     flex-direction: column;
     align-items: stretch;
   }
+    
+  .recent-activities, .reminders{
+    max-width: 100%;
+  }
 }
 
 /* ========== 666px (small tablets) ========== */
@@ -630,3 +635,22 @@ html {
   flex: 0 0 auto;            
   align-self: flex-start;    
 }
+
+/* Styles for when viewing activity details to override dashboard layout */
+.folder-body.details-view-active {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+  gap: 0; /* Reset gap */
+}
+
+.folder-body.details-view-active > .activity-details {
+  width: 100%; /* Take available width */
+  max-width: 1500px; /* But not more than this */
+  height: auto; /* Adjust height to content */
+  max-height: calc(100vh - 180px); /* Limit height and allow internal scroll */
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15); /* Keep shadow */
+  border-radius: 20px; /* Keep radius */
+}
+

@@ -392,6 +392,7 @@ html {
 
   .activities-cards {
     display: flex;
+    overflow-y: visible;
   }
 
   .filter-search h2 {
