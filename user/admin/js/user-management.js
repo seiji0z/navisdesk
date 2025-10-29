@@ -1,48 +1,55 @@
 // ======== GLOBAL USERS ARRAY ========
 let users = [];
 
-// ======== LOAD USERS FROM JSON ========
-async function loadUsersFromJSON() {
+// ======== LOAD USERS FROM DATABASE (MongoDB via API) ========
+async function loadUsersFromDB() {
   try {
-    const [adminRes, orgRes] = await Promise.all([
-      fetch("../../../data/admin_osas.json"),
-      fetch("../../../data/student_organizations.json"),
-    ]);
+    const res = await fetch("http://localhost:5000/api/users");
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
 
-    if (!adminRes.ok || !orgRes.ok) {
-      throw new Error("Failed to load JSON files. Check file paths.");
-    }
+    const data = await res.json();
 
-    const adminData = await adminRes.json();
-    const orgData = await orgRes.json();
+    // ---- MAP TO MATCH YOUR ORIGINAL STRUCTURE ----
+    const adminUsers = data
+      .filter(u => u.role === "Admin" || u.role === "OSAS Officer")
+      .map(u => ({
+        name: u.name,
+        email: u.email,
+        role: u.role,
+        status: u.status || "Active",
+        dateRegistered: u.dateRegistered,
+        lastLogin: u.lastLogin,
+      }));
 
-    const adminUsers = adminData.map((u) => ({
-      name: u.name,
-      email: u.email,
-      role: u.role,
-      status: u.status || "Active",
-      dateRegistered: formatDate(u.created_at),
-      lastLogin: formatDate(u.last_log),
-    }));
-
-    const orgUsers = orgData.map((u) => ({
-      name: u.name,
-      email: u.email,
-      role: "Student Org",
-      status: u.status || "Active",
-      dateRegistered: formatDate(u.created_at),
-      lastLogin: formatDate(u.last_log),
-    }));
+    const orgUsers = data
+      .filter(u => u.role === "Student Org")
+      .map(u => ({
+        name: u.name,
+        email: u.email,
+        role: "Student Org",
+        status: u.status || "Active",
+        dateRegistered: u.dateRegistered,
+        lastLogin: u.lastLogin,
+        // Preserve extra fields for edit modal
+        abbreviation: u.abbreviation || "",
+        department: u.department || "",
+        orgType: u.type || "",
+        adviserName: u.adviserName || "",
+        adviserEmail: u.adviserEmail || "",
+        description: u.description || "",
+        fb: u.fb || "",
+        ig: u.ig || "",
+        website: u.website || "",
+      }));
 
     users = [...adminUsers, ...orgUsers];
     renderTable(users);
     setupFilters(users);
   } catch (error) {
-    console.error(error);
-    document.getElementById(
-      "users-table-body"
-    ).innerHTML = `<tr><td colspan="7" style="text-align:center;color:red;">
-        Failed to load user data. Check your JSON files or path.
+    console.error("DB Load Error:", error);
+    document.getElementById("users-table-body").innerHTML = `
+      <tr><td colspan="7" style="text-align:center;color:red;">
+        Failed to load user data. Open Dev Tools (F12) → Console for details.
       </td></tr>`;
   }
 }
@@ -124,7 +131,7 @@ function loadUserModules() {
     </div>
   `;
 
-  loadUsersFromJSON();
+  loadUsersFromDB(); // Now uses /api/users
 }
 
 // ======== TABLE RENDER FUNCTION ========
@@ -142,11 +149,11 @@ function renderTable(userList) {
       <td>${user.dateRegistered}</td>
       <td>${user.lastLogin}</td>
       <td>
-  <div class="action-buttons">
-    <button class="edit-btn" onclick="showEditModal(${index})">Edit</button>
-    <button class="deactivate-btn" onclick="showDeactivateModal(${index})">Deactivate</button>
-      </div>
-    </td>
+        <div class="action-buttons">
+          <button class="edit-btn" onclick="showEditModal(${index})">Edit</button>
+          <button class="deactivate-btn" onclick="showDeactivateModal(${index})">Deactivate</button>
+        </div>
+      </td>
     `;
     tbody.appendChild(row);
   });
@@ -172,16 +179,14 @@ function showAddUserModal() {
         <label>Department</label>
         <select id="add-dept">
           <option value="">Select Department</option>
-          ${departments
-            .map((d) => `<option value="${d}">${d}</option>`)
-            .join("")}
+          ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
         </select>
         <label>Description</label>
         <textarea id="add-desc" rows="3" placeholder="Enter organization description"></textarea>
         <label>Type of Organization</label>
         <select id="add-org-type">
           <option value="">Select Type</option>
-          ${orgTypes.map((t) => `<option value="${t}">${t}</option>`).join("")}
+          ${orgTypes.map(t => `<option value="${t}">${t}</option>`).join("")}
         </select>
         <label>Adviser Name</label>
         <input type="text" id="add-adv-name" placeholder="Enter adviser name" />
@@ -203,9 +208,7 @@ function showAddUserModal() {
         <label>Department</label>
         <select id="add-dept">
           <option value="">Select Department</option>
-          ${[...departments, "UNIV WIDE"]
-            .map((d) => `<option value="${d}">${d}</option>`)
-            .join("")}
+          ${[...departments, "UNIV WIDE"].map(d => `<option value="${d}">${d}</option>`).join("")}
         </select>
       `;
     }
@@ -213,7 +216,7 @@ function showAddUserModal() {
   }
 
   content.innerHTML = `
-    <span class="close-btn" id="close-add">&times;</span>
+    <span class="close-btn" id="close-add">×</span>
     <h3>Add New User</h3>
     <label>Role</label>
     <select id="add-role">
@@ -238,10 +241,8 @@ function showAddUserModal() {
     roleFields.innerHTML = renderRoleFields(roleSelect.value);
   });
 
-  document.getElementById("close-add").onclick = () =>
-    (modal.style.display = "none");
-  document.getElementById("cancel-add").onclick = () =>
-    (modal.style.display = "none");
+  document.getElementById("close-add").onclick = () => (modal.style.display = "none");
+  document.getElementById("cancel-add").onclick = () => (modal.style.display = "none");
 
   document.getElementById("save-add").onclick = () => {
     const role = roleSelect.value;
@@ -258,15 +259,11 @@ function showAddUserModal() {
     };
 
     if (role === "Organization") {
-      newUser.abbreviation =
-        document.getElementById("add-abbr")?.value.trim() || "";
-      newUser.description =
-        document.getElementById("add-desc")?.value.trim() || "";
+      newUser.abbreviation = document.getElementById("add-abbr")?.value.trim() || "";
+      newUser.description = document.getElementById("add-desc")?.value.trim() || "";
       newUser.orgType = document.getElementById("add-org-type")?.value || "";
-      newUser.adviserName =
-        document.getElementById("add-adv-name")?.value.trim() || "";
-      newUser.adviserEmail =
-        document.getElementById("add-adv-email")?.value.trim() || "";
+      newUser.adviserName = document.getElementById("add-adv-name")?.value.trim() || "";
+      newUser.adviserEmail = document.getElementById("add-adv-email")?.value.trim() || "";
       newUser.fb = document.getElementById("add-fb")?.value.trim() || "";
       newUser.ig = document.getElementById("add-ig")?.value.trim() || "";
       newUser.website = document.getElementById("add-web")?.value.trim() || "";
@@ -275,7 +272,6 @@ function showAddUserModal() {
     if (!newUser.name || !newUser.email)
       return alert("Please fill in the required fields (Name, Email).");
 
-    //Show confirmation preview modal
     showPreviewModal(newUser, () => {
       users.push(newUser);
       renderTable(users);
@@ -305,36 +301,18 @@ function showEditModal(index) {
         <input type="email" id="edit-email" value="${user.email || ""}" />
         <label>Department</label>
         <select id="edit-dept">
-          ${departments
-            .map(
-              (d) =>
-                `<option value="${d}" ${
-                  user.department === d ? "selected" : ""
-                }>${d}</option>`
-            )
-            .join("")}
+          ${departments.map(d => `<option value="${d}" ${user.department === d ? "selected" : ""}>${d}</option>`).join("")}
         </select>
         <label>Description</label>
         <textarea id="edit-desc">${user.description || ""}</textarea>
         <label>Type of Organization</label>
         <select id="edit-org-type">
-          ${orgTypes
-            .map(
-              (t) =>
-                `<option value="${t}" ${
-                  user.orgType === t ? "selected" : ""
-                }>${t}</option>`
-            )
-            .join("")}
+          ${orgTypes.map(t => `<option value="${t}" ${user.orgType === t ? "selected" : ""}>${t}</option>`).join("")}
         </select>
         <label>Adviser Name</label>
-        <input type="text" id="edit-adv-name" value="${
-          user.adviserName || ""
-        }" />
+        <input type="text" id="edit-adv-name" value="${user.adviserName || ""}" />
         <label>Adviser Email</label>
-        <input type="email" id="edit-adv-email" value="${
-          user.adviserEmail || ""
-        }" />
+        <input type="email" id="edit-adv-email" value="${user.adviserEmail || ""}" />
         <label>Facebook Link</label>
         <input type="url" id="edit-fb" value="${user.fb || ""}" />
         <label>Instagram Link (Optional)</label>
@@ -344,12 +322,8 @@ function showEditModal(index) {
         <label>Status</label>
         <select id="edit-status">
           <option ${user.status === "Active" ? "selected" : ""}>Active</option>
-          <option ${
-            user.status === "Inactive" ? "selected" : ""
-          }>Inactive</option>
-          <option ${
-            user.status === "Suspended" ? "selected" : ""
-          }>Suspended</option>
+          <option ${user.status === "Inactive" ? "selected" : ""}>Inactive</option>
+          <option ${user.status === "Suspended" ? "selected" : ""}>Suspended</option>
         </select>
       `;
     } else {
@@ -360,43 +334,26 @@ function showEditModal(index) {
         <input type="email" id="edit-email" value="${user.email || ""}" />
         <label>Department</label>
         <select id="edit-dept">
-          ${[...departments, "UNIV WIDE"]
-            .map(
-              (d) =>
-                `<option value="${d}" ${
-                  user.department === d ? "selected" : ""
-                }>${d}</option>`
-            )
-            .join("")}
+          ${[...departments, "UNIV WIDE"].map(d => `<option value="${d}" ${user.department === d ? "selected" : ""}>${d}</option>`).join("")}
         </select>
         <label>Status</label>
         <select id="edit-status">
           <option ${user.status === "Active" ? "selected" : ""}>Active</option>
-          <option ${
-            user.status === "Inactive" ? "selected" : ""
-          }>Inactive</option>
-          <option ${
-            user.status === "Suspended" ? "selected" : ""
-          }>Suspended</option>
+          <option ${user.status === "Inactive" ? "selected" : ""}>Inactive</option>
+          <option ${user.status === "Suspended" ? "selected" : ""}>Suspended</option>
         </select>
       `;
     }
   }
 
   content.innerHTML = `
-    <span class="close-btn" id="close-edit">&times;</span>
+    <span class="close-btn" id="close-edit">×</span>
     <h3>Edit User</h3>
     <label>Role</label>
     <select id="edit-role">
-      <option value="Organization" ${
-        user.role === "Organization" ? "selected" : ""
-      }>Organization</option>
-      <option value="OSAS" ${
-        user.role === "OSAS" ? "selected" : ""
-      }>OSAS</option>
-      <option value="Admin" ${
-        user.role === "Admin" ? "selected" : ""
-      }>Admin</option>
+      <option value="Organization" ${user.role === "Organization" ? "selected" : ""}>Organization</option>
+      <option value="OSAS" ${user.role === "OSAS" ? "selected" : ""}>OSAS</option>
+      <option value="Admin" ${user.role === "Admin" ? "selected" : ""}>Admin</option>
     </select>
     <div id="edit-fields">${renderEditFields(user.role)}</div>
     <div class="modal-actions">
@@ -414,10 +371,8 @@ function showEditModal(index) {
     fieldsContainer.innerHTML = renderEditFields(roleSelect.value);
   });
 
-  document.getElementById("close-edit").onclick = () =>
-    (modal.style.display = "none");
-  document.getElementById("cancel-edit").onclick = () =>
-    (modal.style.display = "none");
+  document.getElementById("close-edit").onclick = () => (modal.style.display = "none");
+  document.getElementById("cancel-edit").onclick = () => (modal.style.display = "none");
 
   document.getElementById("save-edit").onclick = () => {
     const updatedUser = {
@@ -430,25 +385,16 @@ function showEditModal(index) {
     };
 
     if (updatedUser.role === "Organization") {
-      updatedUser.abbreviation = document
-        .getElementById("edit-abbr")
-        .value.trim();
-      updatedUser.description = document
-        .getElementById("edit-desc")
-        .value.trim();
+      updatedUser.abbreviation = document.getElementById("edit-abbr").value.trim();
+      updatedUser.description = document.getElementById("edit-desc").value.trim();
       updatedUser.orgType = document.getElementById("edit-org-type").value;
-      updatedUser.adviserName = document
-        .getElementById("edit-adv-name")
-        .value.trim();
-      updatedUser.adviserEmail = document
-        .getElementById("edit-adv-email")
-        .value.trim();
+      updatedUser.adviserName = document.getElementById("edit-adv-name").value.trim();
+      updatedUser.adviserEmail = document.getElementById("edit-adv-email").value.trim();
       updatedUser.fb = document.getElementById("edit-fb").value.trim();
       updatedUser.ig = document.getElementById("edit-ig").value.trim();
       updatedUser.website = document.getElementById("edit-web").value.trim();
     }
 
-    // 🔹 Show confirmation preview modal before saving
     showPreviewModal(updatedUser, () => {
       Object.assign(user, updatedUser);
       renderTable(users);
@@ -470,10 +416,7 @@ function showPreviewModal(data, onConfirm) {
   `;
 
   const detailsHTML = Object.entries(data)
-    .map(
-      ([key, value]) =>
-        `<tr><td><strong>${key}</strong></td><td>${value || "—"}</td></tr>`
-    )
+    .map(([key, value]) => `<tr><td><strong>${key}</strong></td><td>${value || "—"}</td></tr>`)
     .join("");
 
   previewModal.innerHTML = `
@@ -497,8 +440,7 @@ function showPreviewModal(data, onConfirm) {
     previewModal.remove();
   };
 
-  previewModal.querySelector("#cancel-preview").onclick = () =>
-    previewModal.remove();
+  previewModal.querySelector("#cancel-preview").onclick = () => previewModal.remove();
 }
 
 // ======== DEACTIVATE MODAL ========
@@ -508,7 +450,7 @@ function showDeactivateModal(index) {
   const content = document.getElementById("modal-content");
 
   content.innerHTML = `
-    <span class="close-btn" id="close-deactivate">&times;</span>
+    <span class="close-btn" id="close-deactivate">×</span>
     <h3>Deactivate User</h3>
     <p>Are you sure you want to deactivate <strong>${user.name}</strong>?</p>
     <div class="modal-actions">
@@ -518,10 +460,8 @@ function showDeactivateModal(index) {
   `;
 
   modal.style.display = "flex";
-  document.getElementById("close-deactivate").onclick = () =>
-    (modal.style.display = "none");
-  document.getElementById("cancel-deactivate").onclick = () =>
-    (modal.style.display = "none");
+  document.getElementById("close-deactivate").onclick = () => (modal.style.display = "none");
+  document.getElementById("cancel-deactivate").onclick = () => (modal.style.display = "none");
   document.getElementById("confirm-deactivate").onclick = () => {
     users[index].status = "Inactive";
     renderTable(users);
@@ -534,7 +474,7 @@ function setupFilters() {
   const searchInput = document.getElementById("search-user");
   const roleFilter = document.getElementById("filter-role");
   const statusFilter = document.getElementById("filter-status");
-  [searchInput, roleFilter, statusFilter].forEach((el) => {
+  [searchInput, roleFilter, statusFilter].forEach(el => {
     el.addEventListener("input", filterTable);
     el.addEventListener("change", filterTable);
   });
@@ -544,7 +484,7 @@ function filterTable() {
   const search = document.getElementById("search-user").value.toLowerCase();
   const role = document.getElementById("filter-role").value;
   const status = document.getElementById("filter-status").value;
-  const filtered = users.filter((user) => {
+  const filtered = users.filter(user => {
     const matchSearch =
       user.name.toLowerCase().includes(search) ||
       user.email.toLowerCase().includes(search) ||
