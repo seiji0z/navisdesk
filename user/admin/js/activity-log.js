@@ -1,7 +1,6 @@
 // ======== LOAD AND RENDER ACTIVITY LOG ========
 async function loadActivityLogData() {
   try {
-    // Use FULL URL like in user-management.js
     const API_BASE = "http://localhost:5000";
     const [logsRes, adminRes, orgRes] = await Promise.all([
       fetch(`${API_BASE}/api/activity-logs`),
@@ -9,14 +8,8 @@ async function loadActivityLogData() {
       fetch(`${API_BASE}/api/student-orgs`)
     ]);
 
-    // Check status
     if (!logsRes.ok || !adminRes.ok || !orgRes.ok) {
-      const errors = [
-        !logsRes.ok && `Logs: ${logsRes.status}`,
-        !adminRes.ok && `Admins: ${adminRes.status}`,
-        !orgRes.ok && `Orgs: ${orgRes.status}`
-      ].filter(Boolean).join(" | ");
-      throw new Error(`API Error: ${errors}`);
+      throw new Error("API failed");
     }
 
     const [logsData, adminData, orgData] = await Promise.all([
@@ -25,20 +18,9 @@ async function loadActivityLogData() {
       orgRes.json()
     ]);
 
-    // DEBUG: See what we got
-    console.log("Activity Logs:", logsData);
-    console.log("Admins:", adminData);
-    console.log("Orgs:", orgData);
+    const adminMap = new Map(adminData.map(a => [a._id.toString(), a.name]));
+    const orgMap = new Map(orgData.map(o => [o._id.toString(), o.name]));
 
-    // Convert _id to string for lookup
-    const adminMap = new Map(
-      adminData.map(a => [a._id.toString(), a.name])
-    );
-    const orgMap = new Map(
-      orgData.map(o => [o._id.toString(), o.name])
-    );
-
-    // Build activities
     const activities = logsData
       .filter(log => log.user_id && log.action && log.timestamp)
       .map(log => {
@@ -72,9 +54,7 @@ async function loadActivityLogData() {
     document.getElementById("activities-table-body").innerHTML = `
       <tr>
         <td colspan="4" style="text-align:center; color:red; padding:20px;">
-          <strong>Failed to load logs:</strong><br>
-          ${error.message}<br><br>
-          <small>Open Dev Tools (F12) → Console for details.</small>
+          Failed to load user data.
         </td>
       </tr>`;
   }

@@ -9,7 +9,6 @@ async function loadUsersFromDB() {
 
     const data = await res.json();
 
-    // ---- MAP TO MATCH YOUR ORIGINAL STRUCTURE ----
     const adminUsers = data
       .filter(u => u.role === "Admin" || u.role === "OSAS Officer")
       .map(u => ({
@@ -30,7 +29,6 @@ async function loadUsersFromDB() {
         status: u.status || "Active",
         dateRegistered: u.dateRegistered,
         lastLogin: u.lastLogin,
-        // Preserve extra fields for edit modal
         abbreviation: u.abbreviation || "",
         department: u.department || "",
         orgType: u.type || "",
@@ -48,8 +46,8 @@ async function loadUsersFromDB() {
   } catch (error) {
     console.error("DB Load Error:", error);
     document.getElementById("users-table-body").innerHTML = `
-      <tr><td colspan="7" style="text-align:center;color:red;">
-        Failed to load user data. Open Dev Tools (F12) → Console for details.
+      <tr><td colspan="7" style="text-align:center;color:red;padding:20px;">
+        Failed to load user data.
       </td></tr>`;
   }
 }
