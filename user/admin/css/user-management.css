@@ -414,6 +414,9 @@
     flex-direction: column;
     align-items: stretch;
   }
+  .input-icon {
+    width: fit-content;
+  }
 }
 
 /* ========== 666px (small tablets) ========== */

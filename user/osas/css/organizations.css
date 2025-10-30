@@ -796,8 +796,15 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    overflow-x: hidden;
+    overflow-x: visible;
+    overflow-y:visible  ;
     padding-right: 0;
+  }
+  .history-list li{
+    flex-direction: column;
+  }
+  .history-list li .date{
+    margin: 0;
   }
 
   .organization-card {

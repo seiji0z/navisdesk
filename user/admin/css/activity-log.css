@@ -187,6 +187,9 @@
   .edit-btn,.deactivate-btn{
     width: 100%;
   }
+  .input-icon{
+    width: fit-content;
+  }
 
 
 }
