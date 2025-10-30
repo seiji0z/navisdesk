@@ -1,16 +1,22 @@
 // ======== LOAD AND RENDER ACTIVITY LOG ========
-
 async function loadActivityLogData() {
   try {
-    // Load all JSON data at once
+    // Use FULL URL like in user-management.js
+    const API_BASE = "http://localhost:5000";
     const [logsRes, adminRes, orgRes] = await Promise.all([
-      fetch("../../../data/user_logs.json"),
-      fetch("../../../data/admin_osas.json"),
-      fetch("../../../data/student_organizations.json")
+      fetch(`${API_BASE}/api/activity-logs`),
+      fetch(`${API_BASE}/api/admins`),
+      fetch(`${API_BASE}/api/student-orgs`)
     ]);
 
+    // Check status
     if (!logsRes.ok || !adminRes.ok || !orgRes.ok) {
-      throw new Error("Failed to load one or more JSON files. Check file paths.");
+      const errors = [
+        !logsRes.ok && `Logs: ${logsRes.status}`,
+        !adminRes.ok && `Admins: ${adminRes.status}`,
+        !orgRes.ok && `Orgs: ${orgRes.status}`
+      ].filter(Boolean).join(" | ");
+      throw new Error(`API Error: ${errors}`);
     }
 
     const [logsData, adminData, orgData] = await Promise.all([
@@ -19,48 +25,66 @@ async function loadActivityLogData() {
       orgRes.json()
     ]);
 
-    // Create quick lookup maps for efficiency
-    const adminMap = new Map(adminData.map(a => [a._id.$oid, a.name]));
-    const orgMap = new Map(orgData.map(o => [o._id.$oid, o.name]));
+    // DEBUG: See what we got
+    console.log("Activity Logs:", logsData);
+    console.log("Admins:", adminData);
+    console.log("Orgs:", orgData);
 
-    // Combine all logs with user info
-    const activities = logsData.map(log => {
-      const userId = log.user_id.$oid;
-      const role = log.role || "Unknown";
-      const username =
-        adminMap.get(userId) ||
-        orgMap.get(userId) ||
-        "Unknown User";
+    // Convert _id to string for lookup
+    const adminMap = new Map(
+      adminData.map(a => [a._id.toString(), a.name])
+    );
+    const orgMap = new Map(
+      orgData.map(o => [o._id.toString(), o.name])
+    );
 
-      return {
-        _id: log._id.$oid,
-        user_id: userId,
-        userName: username,
-        role: role,
-        action: log.action,
-        timestamp: log.timestamp
-      };
-    });
+    // Build activities
+    const activities = logsData
+      .filter(log => log.user_id && log.action && log.timestamp)
+      .map(log => {
+        const userIdStr = log.user_id.toString();
+        const role = log.role || "Unknown";
+        const username = adminMap.get(userIdStr) || orgMap.get(userIdStr) || "Unknown User";
+
+        return {
+          _id: log._id.toString(),
+          user_id: userIdStr,
+          userName: username,
+          role,
+          action: log.action,
+          timestamp: log.timestamp
+        };
+      });
+
+    if (activities.length === 0) {
+      document.getElementById("activities-table-body").innerHTML = `
+        <tr><td colspan="4" style="text-align:center; color:#888; padding:20px;">
+          No activity logs found.
+        </td></tr>`;
+      return;
+    }
 
     renderActivityTable(activities);
     setupActivityFilters(activities);
 
   } catch (error) {
-    console.error(error);
+    console.error("Activity Log Load Failed:", error);
     document.getElementById("activities-table-body").innerHTML = `
-      <tr><td colspan="4" style="text-align:center;color:red;">
-        Failed to load activity log data. Check JSON paths or structure.
-      </td></tr>`;
+      <tr>
+        <td colspan="4" style="text-align:center; color:red; padding:20px;">
+          <strong>Failed to load logs:</strong><br>
+          ${error.message}<br><br>
+          <small>Open Dev Tools (F12) → Console for details.</small>
+        </td>
+      </tr>`;
   }
 }
 
-// ======== RENDER ACTIVITY LOG UI ========
-
+// ======== RENDER UI ========
 function loadActivityModules() {
   document.querySelector("#folder-body").innerHTML = `
     <div class="folder-content-card">
       <div class="activity-log-container">
-        <!-- Filter & Search -->
         <div class="filter-search">
           <h2>Filter & Search</h2>
           <div class="filters-row">
@@ -77,15 +101,14 @@ function loadActivityModules() {
               <label>Role</label>
               <select id="filter-role">
                 <option value="">All Roles</option>
-                <option>Admin</option>
-                <option>OSAS Officer</option>
-                <option>Student Org</option>
+                <option value="Admin">Admin</option>
+                <option value="OSAS Officer">OSAS Officer</option>
+                <option value="Student Org">Student Org</option>
               </select>
             </div>
           </div>
         </div>
 
-        <!-- Activities Table -->
         <div class="activities-table">
           <table>
             <thead>
@@ -103,69 +126,83 @@ function loadActivityModules() {
     </div>
   `;
 
-  // Load the JSON data after the table is ready
   loadActivityLogData();
 }
 
-// ======== TABLE RENDER FUNCTION ========
-
+// ======== RENDER TABLE ========
 function renderActivityTable(data) {
   const tbody = document.getElementById("activities-table-body");
   tbody.innerHTML = "";
 
-  // Sort by timestamp (newest first)
-  const sortedData = [...data].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  const sorted = [...data].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-  sortedData.forEach(activity => {
+  if (sorted.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#666;">No activities found.</td></tr>`;
+    return;
+  }
+
+  sorted.forEach(activity => {
     const row = document.createElement("tr");
-    const formattedDate = new Date(activity.timestamp).toLocaleString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
+    const date = new Date(activity.timestamp).toLocaleString("en-US", {
+      year: "numeric", month: "short", day: "numeric",
+      hour: "2-digit", minute: "2-digit", hour12: true
     });
 
     row.innerHTML = `
-      <td>${activity.userName}</td>
-      <td>${activity.role}</td>
-      <td>${activity.action}</td>
-      <td>${formattedDate}</td>
+      <td>${escapeHtml(activity.userName)}</td>
+      <td><span class="role-badge role-${activity.role.toLowerCase().replace(' ', '-')}">
+        ${formatRoleDisplay(activity.role)}
+      </span></td>
+      <td>${escapeHtml(activity.action)}</td>
+      <td>${date}</td>
     `;
     tbody.appendChild(row);
   });
 }
 
-// ======== FILTERS ========
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
 
+function formatRoleDisplay(role) {
+  return {
+    "Organization": "Student Org",
+    "OSAS Officer": "OSAS Officer",
+    "Admin": "Admin"
+  }[role] || role;
+}
+
+// ======== FILTERS ========
 function setupActivityFilters(activities) {
   const searchInput = document.getElementById("search-activity");
   const roleFilter = document.getElementById("filter-role");
 
-  function filterTable() {
-    const search = searchInput.value.toLowerCase();
+  function filter() {
+    const search = searchInput.value.toLowerCase().trim();
     const role = roleFilter.value;
 
     const filtered = activities.filter(a => {
-      const matchSearch =
+      const matchSearch = !search || (
         a.userName.toLowerCase().includes(search) ||
-        a.role.toLowerCase().includes(search) ||
-        a.action.toLowerCase().includes(search);
-      const matchRole = role === "" || a.role === role;
+        a.action.toLowerCase().includes(search)
+      );
+      const matchRole = !role || 
+        (role === "Student Org" && a.role === "Organization") ||
+        a.role === role;
       return matchSearch && matchRole;
     });
 
     renderActivityTable(filtered);
   }
 
-  [searchInput, roleFilter].forEach(el => {
-    el.addEventListener("input", filterTable);
-    el.addEventListener("change", filterTable);
-  });
+  searchInput.addEventListener("input", filter);
+  roleFilter.addEventListener("change", filter);
+  document.querySelector(".search-btn").addEventListener("click", filter);
 }
 
-// ======== INITIALIZATION ========
-
+// ======== INIT ========
 function initActivityLog() {
   loadActivityModules();
 }
