@@ -5,29 +5,49 @@
 const ICON_ORG_ID = "6716001a9b8c2001abcd0001";
 let activitiesData = [];
 
-// Helper function to normalize activity data
-function normalizeActivity(activity) {
-  return {
-    ...activity,
-    org_id: activity.org_id?.$oid || activity.org_id || "",
-    submitted_by: activity.submitted_by?.$oid || activity.submitted_by || "N/A",
-    reviewed_by: activity.reviewed_by?.$oid || activity.reviewed_by || null,
-    _id: activity._id?.$oid || activity._id || "",
-  };
-}
+async function fetchActivitiesFromDB() {
+  const orgId = localStorage.getItem("orgId") || ICON_ORG_ID;
 
-// Fetch activities data and normalize
-async function fetchActivities() {
-  try {
-    const response = await fetch("../../../data/activities.json");
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const rawData = await response.json();
-    activitiesData = rawData.map(normalizeActivity);
-    return activitiesData;
-  } catch (error) {
-    console.error("Could not fetch activities data:", error);
-    return [];
+  const response = await fetch("http://localhost:5000/api/activities/my", {
+    method: "GET",
+    headers: {
+      "x-org-id": orgId,
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.error || `Server error: ${response.status}`);
   }
+
+  const rawData = await response.json();
+
+  // Normalize MongoDB data
+  activitiesData = rawData.map(activity => ({
+    _id: activity._id || "",
+    org_id: activity.org_id || "",
+    title: activity.title || "Untitled Activity",
+    description: activity.description || "No description",
+    objectives: activity.objectives || "No objectives",
+    acad_year: activity.acad_year || "N/A",
+    term: activity.term || "N/A",
+    date_start: activity.date_start || "",
+    date_end: activity.date_end || "",
+    venue: activity.venue || "TBA",
+    sdgs: activity.sdgs || [],
+    supporting_docs: activity.supporting_docs || [],
+    evidences: activity.evidences || [],
+    submitted_by: activity.submitted_by || "N/A",
+    submitted_at: activity.submitted_at || "",
+    reviewed_by: activity.reviewed_by || null,
+    reviewed_at: activity.reviewed_at || null,
+    status: activity.status || "Pending",
+    created_at: activity.created_at || "",
+    remarks: activity.remarks || ""
+  }));
+
+  return activitiesData;
 }
 
 // --- MAIN RENDER FUNCTION ---
@@ -35,7 +55,7 @@ async function renderOrgDashboard() {
   const folderBody = document.querySelector("#folder-body");
   if (!folderBody) return;
 
-  await fetchActivities();
+  await fetchActivitiesFromDB();
 
   folderBody.innerHTML = `
     <div class="org-dashboard">

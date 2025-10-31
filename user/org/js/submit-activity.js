@@ -1,6 +1,29 @@
 // Select folder body container
 const folderBody = document.getElementById("folder-body");
 
+
+// Save activity to database
+window.DB = {
+  async saveActivity(formData) {
+    const orgId = localStorage.getItem("orgId") || "6716001a9b8c2001abcd0001";
+    
+    const response = await fetch("http://localhost:5000/api/activities", {
+      method: "POST",
+      headers: {
+        "x-org-id": orgId
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || "Submission failed");
+    }
+    return await response.json();
+  }
+};
+
+
 // Helper function: create form section card
 // Map card titles to icon filenames
 const cardIcons = {
@@ -372,49 +395,45 @@ const backBtn = document.querySelector(".back-btn");
 const submitBtn = document.querySelector(".submit-btn");
 
 function gatherFormData() {
-  const sections = folderBody.querySelectorAll(".activity-section");
-  const data = {};
-  // Activity Details (first section)
-  const details = sections[0].querySelectorAll("input, textarea");
-  data.title = details[0].value || "";
-  data.description = details[1].value || "";
-  data.objective = details[2].value || "";
-  data.type = details[3].value || "";
+  const data = new FormData();
 
-  // Dates/Times (second section)
-  const dates = sections[1].querySelectorAll("input");
-  data.startDate = dates[0].value || "";
-  data.endDate = dates[1].value || "";
-  data.startTime = dates[2].value || "";
-  data.endTime = dates[3].value || "";
+  // Activity Details
+  const details = activityDetails.querySelectorAll("input, textarea");
+  data.append("title", details[0].value.trim());
+  data.append("description", details[1].value.trim());
+  data.append("objectives", details[2].value.trim());
+  data.append("type", details[3].value.trim() || "General");
 
-  // Venue (third)
-  data.venue = sections[2].querySelector("input").value || "";
+  // Date & Time
+  const dates = dateTime.querySelectorAll("input");
+  data.append("date_start", `${dates[0].value}T${dates[2].value || "00:00"}`);
+  data.append("date_end", `${dates[1].value}T${dates[3].value || "23:59"}`);
+
+  // Academic Year & Term
+  data.append("acad_year", "2025-2026");
+  data.append("term", "1st Semester");
+
+  // Venue
+  data.append("venue", venueParticipants.querySelector("input").value.trim());
 
   // SDGs
-  data.sdgs = [];
-  sections[3].querySelectorAll('input[type="checkbox"]').forEach((cb) => {
-    if (cb.checked) data.sdgs.push(cb.getAttribute("data-sdg"));
-  });
+  sdgAlignment.querySelectorAll('input[type="checkbox"]:checked')
+    .forEach(cb => data.append("sdgs", cb.dataset.sdg));
 
-  // Supporting docs
-  data.supporting = [];
-  const supportType = document.getElementById("supporting-type");
-  const chosenType = supportType ? supportType.value : "";
-  sections[4].querySelectorAll(".upload-box").forEach((box) => {
-    const input = box.querySelector(".file-input");
-    const files =
-      input && input.files ? Array.from(input.files).map((f) => f.name) : [];
-    if (files.length) data.supporting.push({ type: chosenType, files });
+  // Supporting Documents
+  supportingDocs.querySelectorAll(".upload-box").forEach((box, i) => {
+    const type = box.querySelector(".supporting-type").value;
+    const files = box.querySelector(".file-input").files;
+    for (let j = 0; j < files.length; j++) {
+      data.append("supporting_docs", files[j]);
+      data.append(`supporting_meta[${i}][type]`, type);
+    }
   });
 
   // Evidence
-  data.evidence = [];
-  sections[5].querySelectorAll(".upload-box").forEach((box) => {
-    const input = box.querySelector(".file-input");
-    const files =
-      input && input.files ? Array.from(input.files).map((f) => f.name) : [];
-    if (files.length) data.evidence.push(files);
+  evidence.querySelectorAll(".upload-box").forEach(box => {
+    const files = box.querySelector(".file-input").files;
+    for (let f of files) data.append("evidences", f);
   });
 
   return data;
@@ -483,21 +502,18 @@ function escapeHtml(str) {
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-submitBtn.addEventListener("click", () => {
-  // If review card is present and visible, perform final submit
+ssubmitBtn.addEventListener("click", () => {
   const reviewCard = document.getElementById("review-card");
+
   if (reviewCard) {
-    alert("Activity submitted successfully!");
+    // READ-ONLY MODE: Just show success, no DB update
+    alert("Form reviewed! (Read-only mode – no data saved)");
     window.location.href = "dashboard.html";
     return;
   }
-  // Validate inputs before showing review
+
   const valid = validateForm();
-  if (!valid.ok) {
-    alert(valid.msg);
-    return;
-  }
-  // Otherwise, show review
+  if (!valid.ok) return alert(valid.msg);
   showReview();
 });
 
