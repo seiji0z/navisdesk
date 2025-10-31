@@ -325,26 +325,29 @@ class MyActivitiesModel {
 
   async loadSubmissions() {
     try {
-      // Fetch data from activities.json
-      const response = await fetch('../../../data/activities.json');
-      if (!response.ok) {
-        throw new Error('Failed to load activities data');
-      }
-      const allActivities = await response.json();
+      // Get org ID from localStorage or fallback
+      const orgId = localStorage.getItem("orgId") || this.ICON_ORG_ID;
 
-      // Filter activities for ICON organization only
-      const iconActivities = allActivities.filter(activity => {
-        const orgId = activity.org_id?.$oid || activity.org_id;
-        return orgId === this.ICON_ORG_ID;
+      // Fetch from backend API
+      const response = await fetch("http://localhost:5000/api/activities/my", {
+        headers: {
+          "x-org-id": orgId
+        }
       });
 
-      // Map JSON data to application format
-      this.submissions = iconActivities.map((activity, index) => {
-        const activityId = activity._id?.$oid || activity._id || `activity_${index}`;
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const allActivities = await response.json();
+
+      // Map backend data to frontend format
+      this.submissions = allActivities.map((activity, index) => {
+        const activityId = activity._id || `activity_${index}`;
         return {
           id: activityId,
           _id: activityId,
-          org_id: activity.org_id?.$oid || activity.org_id,
+          org_id: activity.org_id,
           title: activity.title || "Untitled Activity",
           description: activity.description || "No description provided",
           acad_year: activity.acad_year || "N/A",
@@ -356,17 +359,18 @@ class MyActivitiesModel {
           sdgs: activity.sdgs || [],
           evidences: activity.evidences || [],
           supporting_docs: activity.supporting_docs || [],
-          submitted_by: activity.submitted_by?.$oid || activity.submitted_by || "N/A",
+          submitted_by: activity.submitted_by || "N/A",
           submitted_at: activity.submitted_at || "",
-          reviewed_by: activity.reviewed_by?.$oid || activity.reviewed_by || null,
+          reviewed_by: activity.reviewed_by || null,
           reviewed_at: activity.reviewed_at || null,
           status: activity.status || "Pending",
           created_at: activity.created_at || "",
         };
       });
     } catch (error) {
-      console.error('Error loading activities:', error);
+      console.error('Error loading activities from database:', error);
       this.submissions = [];
+      alert("Failed to load activities. Please check server connection.");
     }
 
     // Summarize activity counts based on status

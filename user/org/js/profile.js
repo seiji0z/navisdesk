@@ -1,22 +1,60 @@
+// user/org/js/profile.js
 const folderBody = document.getElementById('folder-body');
 
-// Fetch organization data (simulation for ICON)
-async function fetchOrganizations() {
-  try {
-    const response = await fetch("../../../data/student_organizations.json");
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  } catch (error) {
-    console.error("Could not fetch organization data:", error);
-    return null;
-  }
+// =============================================
+// 1. API CONFIG & HELPERS
+// =============================================
+const API_BASE = "http://localhost:5000/api/orgs"; // Change port if needed
+
+// Get logged-in org ID (set after login)
+function getOrgId() {
+  return localStorage.getItem("orgId") || "6716001a9b8c2001abcd0001"; // fallback: ICON
 }
 
-// Template builder for the profile content
+// GET current org profile
+async function fetchOrgProfile() {
+  const orgId = getOrgId();
+  const response = await fetch(`${API_BASE}/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "x-org-id": orgId
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch org: ${response.status}`);
+  }
+  return await response.json();
+}
+
+// PUT updated profile (stores in temporary_details)
+async function updateOrgProfile(data) {
+  const orgId = getOrgId();
+  const response = await fetch(`${API_BASE}/me`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "x-org-id": orgId
+    },
+    body: JSON.stringify(data)
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Update failed");
+  }
+  return await response.json();
+}
+
+// =============================================
+// 2. RENDER PROFILE UI
+// =============================================
 function renderProfileContent() {
   return `
     <div class="profile-container activity-section">
       <div class="profile-grid">
+        <!-- Left: Avatar -->
         <div class="left-col">
           <div class="avatar-card">
             <div class="avatar-wrap">
@@ -27,20 +65,21 @@ function renderProfileContent() {
           </div>
         </div>
 
+        <!-- Right: Form -->
         <div class="right-col">
           <section class="card-section basic-info">
             <h3>Basic Information</h3>
             <div class="section-content">
-              <label for="official-name">Organization Name</label>
+              <label for="official-name">Organization Name <span class="required">*</span></label>
               <input id="official-name" type="text" required />
 
-              <label for="acronym">Acronym / Short Name</label>
+              <label for="acronym">Acronym / Short Name <span class="required">*</span></label>
               <input id="acronym" type="text" required />
 
               <label for="org-description">Organization Description</label>
               <textarea id="org-description" rows="3" placeholder="Enter a short description about your organization..."></textarea>
 
-              <label for="slu-email">Official SLU Institution Email</label>
+              <label for="slu-email">Official SLU Institution Email <span class="required">*</span></label>
               <input id="slu-email" type="email" required />
 
               <label for="org-type">Type of Organization</label>
@@ -104,7 +143,7 @@ function renderProfileContent() {
 
           <div class="info-note">
             <p>
-              Any changes made to your profile information are subject to review and approval by the Office of Student Affairs and Services (OSAS).
+              <strong>Note:</strong> Any changes made to your profile information are subject to review and approval by the Office of Student Affairs and Services (OSAS).
             </p>
           </div>
 
@@ -118,105 +157,169 @@ function renderProfileContent() {
   `;
 }
 
-// Inject content
-if (folderBody) {
-  folderBody.innerHTML = renderProfileContent();
-}
-
-// Helper to create a link row
-function createLinkRow(value = '', placeholder = 'https://example.com') {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'link-row';
+// =============================================
+// 3. LINK ROW HELPER
+// =============================================
+function createLinkRow(value = "", placeholder = "https://example.com") {
+  const wrapper = document.createElement("div");
+  wrapper.className = "link-row";
   wrapper.innerHTML = `
     <div class="link-input-row">
       <input type="text" class="link-input" placeholder="${placeholder}" value="${value}" />
       <button class="small-btn remove-btn remove-link">Remove</button>
     </div>
   `;
-  wrapper.querySelector('.remove-link').addEventListener('click', () => wrapper.remove());
+  wrapper.querySelector(".remove-link").addEventListener("click", () => wrapper.remove());
   return wrapper;
 }
 
-// Wire interactive elements and populate data
+// =============================================
+// 4. MAIN: Wire UI + API
+// =============================================
 async function wireProfileBehaviors() {
-  const orgData = await fetchOrganizations();
-  const org = orgData?.find(o => o._id.$oid === "6716001a9b8c2001abcd0001"); // ICON as default logged in org
-
-  const avatarInput = document.getElementById('avatar-input');
-  const orgAvatar = document.getElementById('org-avatar');
-  const cancelBtn = document.getElementById('cancel-btn');
-  const updateBtn = document.getElementById('update-btn');
-
-  const facebookList = document.getElementById('facebook-list');
-  const instagramList = document.getElementById('instagram-list');
-  const websiteList = document.getElementById('website-list');
-
-  facebookList.appendChild(createLinkRow(org?.fb_link || '', 'https://facebook.com/your-page'));
-  instagramList.appendChild(createLinkRow(org?.ig_link || '', 'https://instagram.com/your-handle'));
-  websiteList.appendChild(createLinkRow(org?.website_link || '', 'https://your-website.com'));
-
-  // Prefill fields if data is available
-  if (org) {
-    document.getElementById('official-name').value = org.name || '';
-    document.getElementById('acronym').value = org.abbreviation || '';
-    document.getElementById('org-description').value = org.description || '';
-    document.getElementById('slu-email').value = org.email || '';
-    document.getElementById('org-type').value = org.type || '';
-    document.getElementById('adviser-name').value = org.adviser?.name || '';
-    document.getElementById('adviser-email').value = org.adviser?.email || '';
+  // Render UI
+  if (folderBody) {
+    folderBody.innerHTML = renderProfileContent();
   }
 
-  // Image preview
+  // DOM Elements
+  const avatarInput = document.getElementById("avatar-input");
+  const orgAvatar = document.getElementById("org-avatar");
+  const cancelBtn = document.getElementById("cancel-btn");
+  const updateBtn = document.getElementById("update-btn");
+
+  const facebookList = document.getElementById("facebook-list");
+  const instagramList = document.getElementById("instagram-list");
+  const websiteList = document.getElementById("website-list");
+
+  // =============================================
+  // 4.1 Fetch & Populate Data
+  // =============================================
+  let org = {};
+  try {
+    org = await fetchOrgProfile();
+    console.log("Loaded org:", org);
+  } catch (err) {
+    console.error("Failed to load org data:", err);
+    alert("Could not load profile. Using demo mode.");
+  }
+
+  // Fill form
+  const setValue = (id, value) => {
+    const el = document.getElementById(id);
+    if (el && value) el.value = value;
+  };
+
+  setValue("official-name", org.name);
+  setValue("acronym", org.abbreviation);
+  setValue("org-description", org.description);
+  setValue("slu-email", org.email);
+  setValue("org-type", org.type);
+  setValue("adviser-name", org.adviser?.name);
+  setValue("adviser-email", org.adviser?.email);
+
+  // Social Links (only first non-empty)
+  const getFirst = (field) => (org[field] ? org[field] : "");
+
+  facebookList.appendChild(createLinkRow(getFirst("fb_link"), "https://facebook.com/your-page"));
+  instagramList.appendChild(createLinkRow(getFirst("ig_link"), "https://instagram.com/your-handle"));
+  websiteList.appendChild(createLinkRow(getFirst("website_link"), "https://your-website.com"));
+
+  // =============================================
+  // 4.2 Add More Links
+  // =============================================
+  document.getElementById("add-fb-btn")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    facebookList.appendChild(createLinkRow("", "https://facebook.com/your-page"));
+  });
+  document.getElementById("add-ig-btn")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    instagramList.appendChild(createLinkRow("", "https://instagram.com/your-handle"));
+  });
+  document.getElementById("add-web-btn")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    websiteList.appendChild(createLinkRow("", "https://your-website.com"));
+  });
+
+  // =============================================
+  // 4.3 Avatar Preview
+  // =============================================
   if (avatarInput && orgAvatar) {
-    avatarInput.addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
+    avatarInput.addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function (ev) {
+      reader.onload = (ev) => {
         orgAvatar.src = ev.target.result;
       };
       reader.readAsDataURL(file);
     });
   }
 
-  // Add link buttons
-  document.getElementById('add-fb-btn')?.addEventListener('click', (e) => {
+  // =============================================
+  // 4.4 Cancel Button
+  // =============================================
+  cancelBtn?.addEventListener("click", (e) => {
     e.preventDefault();
-    facebookList.appendChild(createLinkRow('', 'https://facebook.com/your-page'));
-  });
-  document.getElementById('add-ig-btn')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    instagramList.appendChild(createLinkRow('', 'https://instagram.com/your-handle'));
-  });
-  document.getElementById('add-web-btn')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    websiteList.appendChild(createLinkRow('', 'https://your-website.com'));
-  });
-
-  // Cancel button
-  cancelBtn?.addEventListener('click', (e) => {
-    e.preventDefault();
-    const confirmExit = confirm("Are you sure you want to cancel and return to the dashboard?");
-    if (confirmExit) {
+    if (confirm("Are you sure you want to cancel and return to the dashboard?")) {
       window.location.href = "../../../user/org/pages/dashboard.html";
     }
   });
 
-  // Update button
-  updateBtn?.addEventListener('click', (e) => {
+  // =============================================
+  // 4.5 Update Profile
+  // =============================================
+  updateBtn?.addEventListener("click", async (e) => {
     e.preventDefault();
 
-    const official = document.getElementById('official-name');
-    const acronym = document.getElementById('acronym');
-    const email = document.getElementById('slu-email');
+    // Required fields
+    const official = document.getElementById("official-name");
+    const acronym = document.getElementById("acronym");
+    const email = document.getElementById("slu-email");
 
-    if (!official.value.trim()) { official.focus(); alert('Organization name is required.'); return; }
-    if (!acronym.value.trim()) { acronym.focus(); alert('Acronym is required.'); return; }
-    if (!email.value.trim()) { email.focus(); alert('Official SLU email is required.'); return; }
+    if (!official.value.trim()) { official.focus(); alert("Organization name is required."); return; }
+    if (!acronym.value.trim()) { acronym.focus(); alert("Acronym is required."); return; }
+    if (!email.value.trim()) { email.focus(); alert("Email is required."); return; }
 
-    alert("Your updated profile information will be reviewed by the Office of Student Affairs and Services (OSAS) before final approval.");
+    // Get first non-empty social link
+    const getFirstLink = (listId) => {
+      const inputs = document.querySelectorAll(`#${listId} .link-input`);
+      for (const input of inputs) {
+        if (input.value.trim()) return input.value.trim();
+      }
+      return "";
+    };
+
+    const payload = {
+      name: official.value.trim(),
+      abbreviation: acronym.value.trim(),
+      email: email.value.trim(),
+      department: org.department || "SAMCIS", // preserve if not in form
+      type: document.getElementById("org-type").value,
+      adviser: {
+        name: document.getElementById("adviser-name").value.trim(),
+        email: document.getElementById("adviser-email").value.trim()
+      },
+      description: document.getElementById("org-description").value.trim(),
+      fb_link: getFirstLink("facebook-list"),
+      ig_link: getFirstLink("instagram-list"),
+      website_link: getFirstLink("website-list")
+    };
+
+    try {
+      const result = await updateOrgProfile(payload);
+      alert("Profile update submitted! It will be reviewed by OSAS.");
+      console.log("Update success:", result);
+    } catch (err) {
+      console.error("Update failed:", err);
+      alert("Failed to submit update. Check console for details.");
+    }
   });
 }
 
-// Initialize behaviors after DOM injection
-wireProfileBehaviors();
+// =============================================
+// 5. INIT
+// =============================================
+document.addEventListener("DOMContentLoaded", () => {
+  wireProfileBehaviors();
+});
