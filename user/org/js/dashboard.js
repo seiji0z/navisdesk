@@ -1,5 +1,5 @@
 // ===============================
-// ORGANIZATION DASHBOARD
+// ORGANIZATION DASHBOARD (GRID LAYOUT)
 // ===============================
 
 import { protectPage } from "../../../js/auth-guard.js";
@@ -10,13 +10,9 @@ let activitiesData = [];
 
 async function fetchActivitiesFromDB() {
   const orgId = localStorage.getItem("orgId") || ICON_ORG_ID;
-
   const response = await fetch("http://localhost:5000/api/activities/my", {
     method: "GET",
-    headers: {
-      "x-org-id": orgId,
-      "Content-Type": "application/json",
-    },
+    headers: { "x-org-id": orgId, "Content-Type": "application/json" },
   });
 
   if (!response.ok) {
@@ -25,174 +21,137 @@ async function fetchActivitiesFromDB() {
   }
 
   const rawData = await response.json();
-
-  // Normalize MongoDB data
-  activitiesData = rawData.map((activity) => ({
-    _id: activity._id || "",
-    org_id: activity.org_id || "",
-    title: activity.title || "Untitled Activity",
-    description: activity.description || "No description",
-    objectives: activity.objectives || "No objectives",
-    acad_year: activity.acad_year || "N/A",
-    term: activity.term || "N/A",
-    date_start: activity.date_start || "",
-    date_end: activity.date_end || "",
-    venue: activity.venue || "TBA",
-    sdgs: activity.sdgs || [],
-    supporting_docs: activity.supporting_docs || [],
-    evidences: activity.evidences || [],
-    submitted_by: activity.submitted_by || "N/A",
-    submitted_at: activity.submitted_at || "",
-    reviewed_by: activity.reviewed_by || null,
-    reviewed_at: activity.reviewed_at || null,
-    status: activity.status || "Pending",
-    created_at: activity.created_at || "",
-    remarks: activity.remarks || "",
+  activitiesData = rawData.map((a) => ({
+    _id: a._id || "",
+    org_id: a.org_id || "",
+    title: a.title || "Untitled Activity",
+    description: a.description || "No description",
+    objectives: a.objectives || "No objectives",
+    acad_year: a.acad_year || "N/A",
+    term: a.term || "N/A",
+    date_start: a.date_start || "",
+    date_end: a.date_end || "",
+    venue: a.venue || "TBA",
+    sdgs: a.sdgs || [],
+    supporting_docs: a.supporting_docs || [],
+    evidences: a.evidences || [],
+    submitted_by: a.submitted_by || "N/A",
+    submitted_at: a.submitted_at || "",
+    reviewed_by: a.reviewed_by || null,
+    reviewed_at: a.reviewed_at || null,
+    status: a.status || "Pending",
+    created_at: a.created_at || "",
+    remarks: a.remarks || "",
   }));
 
   return activitiesData;
 }
 
-// --- MAIN RENDER FUNCTION ---
+// --- MAIN RENDER ---
 async function renderOrgDashboard() {
   const folderBody = document.querySelector("#folder-body");
   if (!folderBody) return;
 
   await fetchActivitiesFromDB();
 
-  folderBody.innerHTML = `
-    <div class="org-dashboard">
-      <!-- Top Section -->
-      <div class="top-section">
-        ${createQuickActions()}
-        ${createSubmissionOverview()}
-      </div>
-
-      <!-- Bottom Section -->
-      <div class="bottom-section">
-        ${createRecentActivities()}
-        ${createReminders()}
-      </div>
-    </div>
-  `;
-
-  setupDashboardInteractions();
-  animateProgressBars();
-  bindActivityCardClicks(); // Enables clicking on activity/reminder cards
-}
-
-// ===============================
-// SECTION TEMPLATES
-// ===============================
-
-function createQuickActions() {
-  return `
-    <div class="quick-actions card">
-      <h3>Quick Actions</h3>
-      <button class="create-btn">+ Create New Activity</button>
-      <a href="#" class="view-link">View my Activities</a>
-    </div>
-  `;
-}
-
-function createSubmissionOverview() {
   const iconActivities = activitiesData.filter((a) => a.org_id === ICON_ORG_ID);
 
-  const approvedCount = iconActivities.filter(
-    (a) => a.status === "Approved"
-  ).length;
-  const pendingCount = iconActivities.filter(
-    (a) => a.status === "Pending"
-  ).length;
-  const returnedCount = iconActivities.filter(
-    (a) => a.status === "Returned"
-  ).length;
+  const approved = iconActivities.filter((a) => a.status === "Approved").length;
+  const pending = iconActivities.filter((a) => a.status === "Pending").length;
+  const returned = iconActivities.filter((a) => a.status === "Returned").length;
+  const recent = iconActivities.slice(0, 3);
+  const toRevise = iconActivities.filter((a) => a.status === "Returned");
 
-  const statuses = [
-    { title: "Approved", count: approvedCount, class: "approved" },
-    { title: "Pending", count: pendingCount, class: "review" },
-    { title: "Returned", count: returnedCount, class: "attention" },
-  ];
-
-  const statusItems = statuses
-    .map(
-      (s) => `
-        <div class="status-item">
-          <p class="status-title ${s.class}">${s.title}</p>
-          <p class="status-count">${s.count}</p>
-          <div class="progress-bar ${s.class}" data-value="${s.count}"></div>
-        </div>`
-    )
-    .join("");
-
-  return `
-    <div class="submission-overview card">
-      <h3>Submission Status Overview</h3>
-      <div class="status-container">${statusItems}</div>
-    </div>
-  `;
-}
-
-function createRecentActivities() {
-  const iconActivities = activitiesData
-    .filter((a) => a.org_id === ICON_ORG_ID)
-    .slice(0, 3);
-
-  const activityItems = iconActivities
-    .map(
-      (a) => `
-        <div class="activity-item" data-id="${a._id}">
-          <div class="activity-details">
-            <p class="activity-title">${a.title}</p>
-            <p class="activity-desc">${a.description}</p>
-          </div>
-          <span class="status-badge ${formatStatusClass(
-            a.status
-          )}">${formatStatus(a.status)}</span>
-        </div>`
-    )
-    .join("");
-
-  return `
-    <div class="recent-activities card">
-      <div class="section-header">
-        <h3>Recent Activities</h3>
-        <a href="my-activities.html" class="view-all">View all</a>
+  folderBody.innerHTML = `
+    <div class="grid-container">
+      <!-- Quick Actions -->
+      <div class="grid-item small">
+        <div class="card quick-actions-card">
+          <h3>Quick Actions</h3>
+          <button class="create-btn">+ Create New Activity</button>
+          <a href="#" class="view-link">View my Activities</a>
+        </div>
       </div>
-      <div class="activity-list">${activityItems}</div>
+
+      <!-- Status Counters -->
+      <div class="grid-item small">
+        <div class="card status-card">
+          <div class="left-details"><p class="number">${approved}</p><p class="desc">Approved</p></div>
+          <div class="right-icon"><img src="../../../assets/images/check-icon.png" class="card-icon"></div>
+        </div>
+      </div>
+
+      <div class="grid-item small">
+        <div class="card status-card">
+          <div class="left-details"><p class="number">${pending}</p><p class="desc">Pending</p></div>
+          <div class="right-icon"><img src="../../../assets/images/under-review.png" class="card-icon"></div>
+        </div>
+      </div>
+
+      <div class="grid-item small">
+        <div class="card status-card">
+          <div class="left-details"><p class="number">${returned}</p><p class="desc">Returned</p></div>
+          <div class="right-icon"><img src="../../../assets/images/close-icon.png" class="card-icon"></div>
+        </div>
+      </div>
+
+      <!-- Recent Activities -->
+      <div class="grid-item medium">
+        <div class="card recent-card">
+          <div class="section-header">
+            <h3>Recent Activities</h3>
+            <a href="my-activities.html" class="view-all">View all</a>
+          </div>
+          <div class="activity-list">
+            ${recent
+              .map(
+                (a) => `
+              <div class="activity-item" data-id="${a._id}">
+                <div class="activity-details">
+                  <p class="activity-title">${a.title}</p>
+                  <p class="activity-desc">${a.description}</p>
+                </div>
+                <span class="status-badge ${formatStatusClass(
+                  a.status
+                )}">${formatStatus(a.status)}</span>
+              </div>`
+              )
+              .join("")}
+          </div>
+        </div>
+      </div>
+
+      <!-- Reminders -->
+      <div class="grid-item medium">
+        <div class="card reminders-card">
+          <h3>To Be Revised</h3>
+          <div class="reminder-list">
+            ${
+              toRevise.length
+                ? toRevise
+                    .map(
+                      (r) => `
+                  <div class="reminder-item" data-id="${r._id}">
+                    <p class="reminder-title">${r.title}</p>
+                    <p class="reminder-date">Remarks: ${r.remarks || "None"}</p>
+                  </div>`
+                    )
+                    .join("")
+                : "<p>No items to revise.</p>"
+            }
+          </div>
+        </div>
+      </div>
     </div>
   `;
+
+  setupInteractions();
+  bindActivityCardClicks();
 }
 
-function createReminders() {
-  const reviseActivities = activitiesData.filter(
-    (a) => a.org_id === ICON_ORG_ID && a.status === "Returned"
-  );
-
-  const reminderItems = reviseActivities
-    .map(
-      (r) => `
-        <div class="reminder-item" data-id="${r._id}">
-          <p class="reminder-title">${r.title}</p>
-          <p class="reminder-date">Remarks: ${r.remarks || "None"}</p>
-        </div>`
-    )
-    .join("");
-
-  return `
-    <div class="reminders card">
-      <h3>To Be Revised</h3>
-      ${reminderItems}
-    </div>
-  `;
-}
-
-// ===============================
-// HELPER FUNCTIONS
-// ===============================
-
-function formatStatus(status) {
-  switch (status) {
+// === Helpers ===
+function formatStatus(s) {
+  switch (s) {
     case "Approved":
       return "Approved";
     case "Pending":
@@ -200,12 +159,11 @@ function formatStatus(status) {
     case "Returned":
       return "Returned";
     default:
-      return status;
+      return s;
   }
 }
-
-function formatStatusClass(status) {
-  switch (status) {
+function formatStatusClass(s) {
+  switch (s) {
     case "Approved":
       return "approved";
     case "Pending":
@@ -213,58 +171,34 @@ function formatStatusClass(status) {
     case "Returned":
       return "attention";
     default:
-      return status.toLowerCase();
+      return s.toLowerCase();
   }
 }
 
-function setupDashboardInteractions() {
-  const folder = document.querySelector("#folder-body");
-  if (!folder) return;
-
-  const createBtn = folder.querySelector(".create-btn");
-  const viewLink = folder.querySelector(".view-link");
+// === Interactions ===
+function setupInteractions() {
+  const createBtn = document.querySelector(".create-btn");
+  const viewLink = document.querySelector(".view-link");
 
   if (createBtn)
-    createBtn.addEventListener("click", () => {
-      window.location.href = "submit-activity.html";
-    });
-
+    createBtn.onclick = () => (location.href = "submit-activity.html");
   if (viewLink)
-    viewLink.addEventListener("click", (e) => {
+    viewLink.onclick = (e) => {
       e.preventDefault();
-      window.location.href = "my-activities.html";
-    });
-}
-
-function animateProgressBars() {
-  document.querySelectorAll(".progress-bar").forEach((bar) => {
-    bar.style.width = "0";
-    setTimeout(() => {
-      const value = parseInt(bar.dataset.value || 0, 10);
-      const max = 5;
-      const percentage = Math.min((value / max) * 100, 100);
-      bar.style.transition = "width 0.8s ease-out";
-      bar.style.width = `${percentage}%`;
-    }, 300);
-  });
+      location.href = "my-activities.html";
+    };
 }
 
 function bindActivityCardClicks() {
-  const folderBody = document.querySelector("#folder-body");
-  if (!folderBody) return;
-
-  const activityItems = folderBody.querySelectorAll(
-    ".activity-item, .reminder-item"
-  );
-  activityItems.forEach((item) => {
-    item.addEventListener("click", () => {
-      const activityId = item.dataset.id;
-      const selectedActivity = activitiesData.find((a) => a._id === activityId);
-      if (selectedActivity) {
-        showActivityDetails(selectedActivity);
-      }
+  document
+    .querySelectorAll(".activity-item, .reminder-item")
+    .forEach((item) => {
+      item.onclick = () => {
+        const id = item.dataset.id;
+        const act = activitiesData.find((a) => a._id === id);
+        if (act) showActivityDetails(act);
+      };
     });
-  });
 }
 
 // ===============================
@@ -274,7 +208,6 @@ function bindActivityCardClicks() {
 function showActivityDetails(submission) {
   const folderBody = document.querySelector("#folder-body");
   folderBody.classList.add("details-view-active");
-  folderBody.scrollTop = 0;
   folderBody.innerHTML = "";
 
   // Load my-activities.css dynamically
@@ -302,28 +235,6 @@ function showActivityDetails(submission) {
     renderOrgDashboard(); // Re-render dashboard
   });
 }
-
-// ===============================
-// INITIALIZER
-// ===============================
-
-function initDashboard() {
-  renderOrgDashboard();
-  window.addEventListener(
-    "resize",
-    debounce(() => {}, 300)
-  );
-}
-
-function debounce(fn, delay) {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => fn(...args), delay);
-  };
-}
-
-initDashboard();
 
 // ===============================
 // SHARED COMPONENTS
@@ -548,3 +459,12 @@ class ActivityDetailsComponent {
     if (backBtn) backBtn.addEventListener("click", handler);
   }
 }
+
+// ===============================
+// INITIALIZER
+// ===============================
+
+function initDashboard() {
+  renderOrgDashboard();
+}
+initDashboard();
