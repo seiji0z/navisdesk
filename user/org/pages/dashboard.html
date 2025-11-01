@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Dashboard | Navi’s Desk</title>
     <link
@@ -41,9 +41,10 @@
 
     <!-- Scripts -->
     <script src="../../shared/js/sidebar.js"></script>
-    <script src="../js/dashboard.js"></script>
-    <script src="../../../js/auth-guard.js"></script>
-    <script>
+    <script type="module" src="../js/dashboard.js"></script>
+    <script type="module" src="../../../js/auth-guard.js"></script>
+    <script type="module">
+      import { protectPage } from "../../../js/auth-guard.js";
       protectPage("org");
     </script>
   </body>

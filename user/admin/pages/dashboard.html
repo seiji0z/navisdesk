@@ -3,22 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Dashboard | Navi's Desk</title>
-    <link rel="icon" type="image/x-icon" href="../../../assets/images/navi-logo.png" />
-
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../../../assets/images/navi-logo.png"
+    />
     <link rel="stylesheet" href="../../../css/style.css" />
     <link rel="stylesheet" href="../css/dashboard.css" />
     <link rel="stylesheet" href="../../shared/css/sidebar.css" />
     <link rel="stylesheet" href="../../shared/css/folder.css" />
-
   </head>
-
   <body>
-    <!-- Sidebar -->
     <div id="sidebar" data-role="admin"></div>
 
-    <!-- Main content -->
     <main class="main">
       <div class="dashboard-folder">
         <div class="header">
@@ -29,17 +27,21 @@
             <p>Today is <span class="current-date"></span></p>
           </div>
         </div>
-
         <div class="folder-tab">
           <h2 class="folder-title">Dashboard</h2>
         </div>
-
         <div class="folder-body" id="folder-body" data-role="admin"></div>
       </div>
     </main>
 
-    <!-- Scripts -->
+    <!-- SCRIPTS -->
     <script src="../../shared/js/sidebar.js"></script>
-    <script src="../js/dashboard.js"></script>
+
+    <script type="module" src="../../../js/auth-guard.js"></script>
+    <script type="module" src="../js/dashboard.js"></script>
+    <script type="module">
+      import { protectPage } from "../../../js/auth-guard.js";
+      protectPage("org");
+    </script>
   </body>
 </html>

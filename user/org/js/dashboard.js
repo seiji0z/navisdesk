@@ -2,6 +2,9 @@
 // ORGANIZATION DASHBOARD
 // ===============================
 
+import { protectPage } from "../../../js/auth-guard.js";
+protectPage("org");
+
 const ICON_ORG_ID = "6716001a9b8c2001abcd0001";
 let activitiesData = [];
 
@@ -12,8 +15,8 @@ async function fetchActivitiesFromDB() {
     method: "GET",
     headers: {
       "x-org-id": orgId,
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   });
 
   if (!response.ok) {
@@ -24,7 +27,7 @@ async function fetchActivitiesFromDB() {
   const rawData = await response.json();
 
   // Normalize MongoDB data
-  activitiesData = rawData.map(activity => ({
+  activitiesData = rawData.map((activity) => ({
     _id: activity._id || "",
     org_id: activity.org_id || "",
     title: activity.title || "Untitled Activity",
@@ -44,7 +47,7 @@ async function fetchActivitiesFromDB() {
     reviewed_at: activity.reviewed_at || null,
     status: activity.status || "Pending",
     created_at: activity.created_at || "",
-    remarks: activity.remarks || ""
+    remarks: activity.remarks || "",
   }));
 
   return activitiesData;
@@ -93,13 +96,17 @@ function createQuickActions() {
 }
 
 function createSubmissionOverview() {
-  const iconActivities = activitiesData.filter(
-    (a) => a.org_id === ICON_ORG_ID
-  );
+  const iconActivities = activitiesData.filter((a) => a.org_id === ICON_ORG_ID);
 
-  const approvedCount = iconActivities.filter((a) => a.status === "Approved").length;
-  const pendingCount = iconActivities.filter((a) => a.status === "Pending").length;
-  const returnedCount = iconActivities.filter((a) => a.status === "Returned").length;
+  const approvedCount = iconActivities.filter(
+    (a) => a.status === "Approved"
+  ).length;
+  const pendingCount = iconActivities.filter(
+    (a) => a.status === "Pending"
+  ).length;
+  const returnedCount = iconActivities.filter(
+    (a) => a.status === "Returned"
+  ).length;
 
   const statuses = [
     { title: "Approved", count: approvedCount, class: "approved" },
@@ -139,7 +146,9 @@ function createRecentActivities() {
             <p class="activity-title">${a.title}</p>
             <p class="activity-desc">${a.description}</p>
           </div>
-          <span class="status-badge ${formatStatusClass(a.status)}">${formatStatus(a.status)}</span>
+          <span class="status-badge ${formatStatusClass(
+            a.status
+          )}">${formatStatus(a.status)}</span>
         </div>`
     )
     .join("");
@@ -184,19 +193,27 @@ function createReminders() {
 
 function formatStatus(status) {
   switch (status) {
-    case "Approved": return "Approved";
-    case "Pending": return "Pending";
-    case "Returned": return "Returned";
-    default: return status;
+    case "Approved":
+      return "Approved";
+    case "Pending":
+      return "Pending";
+    case "Returned":
+      return "Returned";
+    default:
+      return status;
   }
 }
 
 function formatStatusClass(status) {
   switch (status) {
-    case "Approved": return "approved";
-    case "Pending": return "review";
-    case "Returned": return "attention";
-    default: return status.toLowerCase();
+    case "Approved":
+      return "approved";
+    case "Pending":
+      return "review";
+    case "Returned":
+      return "attention";
+    default:
+      return status.toLowerCase();
   }
 }
 
@@ -236,13 +253,13 @@ function bindActivityCardClicks() {
   const folderBody = document.querySelector("#folder-body");
   if (!folderBody) return;
 
-  const activityItems = folderBody.querySelectorAll(".activity-item, .reminder-item");
+  const activityItems = folderBody.querySelectorAll(
+    ".activity-item, .reminder-item"
+  );
   activityItems.forEach((item) => {
     item.addEventListener("click", () => {
       const activityId = item.dataset.id;
-      const selectedActivity = activitiesData.find(
-        (a) => a._id === activityId
-      );
+      const selectedActivity = activitiesData.find((a) => a._id === activityId);
       if (selectedActivity) {
         showActivityDetails(selectedActivity);
       }
@@ -292,7 +309,10 @@ function showActivityDetails(submission) {
 
 function initDashboard() {
   renderOrgDashboard();
-  window.addEventListener("resize", debounce(() => {}, 300));
+  window.addEventListener(
+    "resize",
+    debounce(() => {}, 300)
+  );
 }
 
 function debounce(fn, delay) {
@@ -314,7 +334,11 @@ function formatDate(dateString) {
   try {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return "";
-    return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   } catch {
     return "";
   }
@@ -335,7 +359,9 @@ class ActivityDetailsComponent {
         <div class="info-grid">
           <div class="info-item">
             <strong>Status:</strong>
-            <span class="status ${submission.status.toLowerCase()}">${submission.status}</span>
+            <span class="status ${submission.status.toLowerCase()}">${
+      submission.status
+    }</span>
           </div>
           <div class="info-item">
             <strong>Description:</strong>
@@ -398,7 +424,11 @@ class ActivityDetailsComponent {
           </div>
           <div class="info-item full-width">
             <strong>SDGs:</strong>
-            <span>${submission.sdgs && submission.sdgs.length ? submission.sdgs.join(", ") : "None"}</span>
+            <span>${
+              submission.sdgs && submission.sdgs.length
+                ? submission.sdgs.join(", ")
+                : "None"
+            }</span>
           </div>
         </div>
       </section>
@@ -418,7 +448,11 @@ class ActivityDetailsComponent {
                   </div>
                   <div class="evidence-info">
                     <p class="evidence-name">${d.file_name || d}</p>
-                    <p class="evidence-date"><small>Uploaded: ${d.upload_date ? formatDate(d.upload_date) : formatDate(submission.submitted_at)}</small></p>
+                    <p class="evidence-date"><small>Uploaded: ${
+                      d.upload_date
+                        ? formatDate(d.upload_date)
+                        : formatDate(submission.submitted_at)
+                    }</small></p>
                   </div>
                 </div>`
                   )
@@ -438,10 +472,16 @@ class ActivityDetailsComponent {
                   .map(
                     (e) => `
                 <div class="evidence-item">
-                  <img src="../../../uploads/${e.file_name || e}" alt="${e.file_name || e}" loading="lazy" />
+                  <img src="../../../uploads/${e.file_name || e}" alt="${
+                      e.file_name || e
+                    }" loading="lazy" />
                   <div class="evidence-info">
                     <p class="evidence-name">${e.file_name || e}</p>
-                    <p class="evidence-date"><small>Uploaded: ${e.upload_date ? formatDate(e.upload_date) : formatDate(submission.submitted_at)}</small></p>
+                    <p class="evidence-date"><small>Uploaded: ${
+                      e.upload_date
+                        ? formatDate(e.upload_date)
+                        : formatDate(submission.submitted_at)
+                    }</small></p>
                   </div>
                 </div>`
                   )
@@ -471,7 +511,7 @@ class ActivityDetailsComponent {
       historyItems.push({
         date: submission.submitted_at,
         status: submission.status,
-        remarks: submission.remarks || "No Remarks"
+        remarks: submission.remarks || "No Remarks",
       });
     }
 
@@ -480,7 +520,7 @@ class ActivityDetailsComponent {
       historyItems.push({
         date: submission.created_at || new Date().toISOString(),
         status: submission.status,
-        remarks: submission.remarks || "No Remarks"
+        remarks: submission.remarks || "No Remarks",
       });
     }
 

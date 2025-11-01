@@ -1,4 +1,8 @@
 // ---- OSAS Dashboard ----
+
+import { protectPage } from "../../../js/auth-guard.js"; // Adjust path if needed
+protectPage("osas");
+
 async function loadOsasDashboard() {
   document.querySelector("#folder-body").innerHTML = `
     <div class="grid-container">
@@ -73,40 +77,47 @@ async function loadOsasDashboard() {
 
 // fetch data from json file
 async function fetchActivityData() {
-    try {
-        const response = await fetch('../../../data/activities.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const activities = await response.json();
-        
-        const totalSubmissions = activities.length;
-        const approvedCount = activities.filter(a => a.status === 'Approved').length;
-        const pendingCount = activities.filter(a => a.status === 'Pending').length;
-        const reviseCount = activities.filter(a => a.status === 'Returned').length;
-
-        document.getElementById('total-submissions').textContent = totalSubmissions;
-        document.getElementById('approved-count').textContent = approvedCount;
-        document.getElementById('pending-count').textContent = pendingCount;
-        document.getElementById('returned-count').textContent = reviseCount;
-
-        // --- data for charts (for future use) ---
-        const activitiesByTerm = activities.reduce((acc, activity) => {
-            acc[activity.term] = (acc[activity.term] || 0) + 1;
-            return acc;
-        }, {});
-        console.log("Activities by Term:", activitiesByTerm);
-
-        const sdgCounts = activities.flatMap(a => a.sdgs).reduce((acc, sdg) => {
-            acc[sdg] = (acc[sdg] || 0) + 1;
-            return acc;
-        }, {});
-        console.log("SDG Counts:", sdgCounts);
-
-    } catch (error) {
-        console.error('Could not fetch or process activities data:', error);
-        document.getElementById('total-submissions').textContent = 'Error';
+  try {
+    const response = await fetch("../../../data/activities.json");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    const activities = await response.json();
+
+    const totalSubmissions = activities.length;
+    const approvedCount = activities.filter(
+      (a) => a.status === "Approved"
+    ).length;
+    const pendingCount = activities.filter(
+      (a) => a.status === "Pending"
+    ).length;
+    const reviseCount = activities.filter(
+      (a) => a.status === "Returned"
+    ).length;
+
+    document.getElementById("total-submissions").textContent = totalSubmissions;
+    document.getElementById("approved-count").textContent = approvedCount;
+    document.getElementById("pending-count").textContent = pendingCount;
+    document.getElementById("returned-count").textContent = reviseCount;
+
+    // --- data for charts (for future use) ---
+    const activitiesByTerm = activities.reduce((acc, activity) => {
+      acc[activity.term] = (acc[activity.term] || 0) + 1;
+      return acc;
+    }, {});
+    console.log("Activities by Term:", activitiesByTerm);
+
+    const sdgCounts = activities
+      .flatMap((a) => a.sdgs)
+      .reduce((acc, sdg) => {
+        acc[sdg] = (acc[sdg] || 0) + 1;
+        return acc;
+      }, {});
+    console.log("SDG Counts:", sdgCounts);
+  } catch (error) {
+    console.error("Could not fetch or process activities data:", error);
+    document.getElementById("total-submissions").textContent = "Error";
+  }
 }
 
 function initDashboard() {
