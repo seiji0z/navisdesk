@@ -45,7 +45,7 @@ router.get("/activities/my", async (req, res) => {
 });
 
 // =============================================
-// GET: Single activity by ID (READ-ONLY)
+// GET: Single activity by ID
 // =============================================
 router.get("/activities/:id", async (req, res) => {
   try {
@@ -79,6 +79,19 @@ router.get("/activities/:id", async (req, res) => {
   } catch (err) {
     console.error("GET /activities/:id error:", err);
     res.status(500).json({ error: "Server error" });
+  }
+});
+
+// =============================================
+// GET: Fetch all activities
+// =============================================
+router.get("/activities", async (req, res) => {
+  try {
+    const activities = await Activity.find().populate("org_id");
+    res.json(activities);
+  } catch (err) {
+    console.error("GET /activities error:", err);
+    res.status(500).json({ error: "Failed to fetch activities" });
   }
 });
 

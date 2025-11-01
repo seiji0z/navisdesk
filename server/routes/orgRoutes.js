@@ -40,11 +40,12 @@ router.put("/orgs/me", async (req, res) => {
 // GET: All orgs (name + id)
 router.get("/student-orgs", async (req, res) => {
   try {
-    const orgs = await StudentOrg.find({}, { _id: 1, name: 1 }).lean();
-    const formatted = orgs.map(o => ({
-      _id: o._id.toString(),
-      name: o.name
-    }));
+    const orgs = await StudentOrg.find({}, { _id: 1, name: 1, department: 1 }).lean();
+const formatted = orgs.map(o => ({
+  _id: o._id.toString(),
+  name: o.name,
+  department: o.department || "Unknown Department"
+}));
     res.json(formatted);
   } catch (err) {
     console.error("GET /api/student-orgs error:", err);

@@ -22,7 +22,7 @@ app.use("/api", userRoutes);
 app.use("/api", logRoutes);
 app.use("/api", adminRoutes);
 app.use("/api", orgRoutes);
-app.use("/api", activityRoutes); // GOOD: /api/activities/my is now live
+app.use("/api", activityRoutes);
 
 // Start server
 mongoose
@@ -37,8 +37,7 @@ mongoose
       console.log("   GET /api/admins");
       console.log("   GET /api/student-orgs");
       console.log("   GET/PUT /api/orgs/me");
-      // ADD THIS LINE BELOW:
-      console.log("   GET /api/activities/my"); // <-- ADD THIS
+      console.log("   GET /api/activities/my");
     });
   })
   .catch((err) => {
