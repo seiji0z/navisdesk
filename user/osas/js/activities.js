@@ -103,7 +103,7 @@ export async function loadActivities() {
   }
 }
 
-// 🧠 Fetch all activities from your Express backend
+// Fetch all activities from your Express backend
 async function fetchActivitiesFromDB() {
   try {
     const res = await fetch("http://localhost:5000/api/activities");
@@ -115,7 +115,7 @@ async function fetchActivitiesFromDB() {
   }
 }
 
-// 🧠 Fetch all orgs from your Express backend
+// Fetch all orgs from your Express backend
 async function fetchOrganizationsFromDB() {
   try {
     const res = await fetch("http://localhost:5000/api/student-orgs");
@@ -127,7 +127,7 @@ async function fetchOrganizationsFromDB() {
   }
 }
 
-// ✅ Reuse your existing helper functions below
+// Reuse your existing helper functions below
 function populateFilters(activities, orgMap) {
   const statuses = new Set();
   const organizations = new Set();
