@@ -14,19 +14,17 @@ const getProp = (obj, path) =>
   path.split(".").reduce((acc, part) => acc && acc[part], obj);
 
 function createOrganizationCardHTML(org) {
-  const statusClass =
-    org.status.toLowerCase() === "active" ? "active" : "pending";
-  const statusText =
-    org.status.charAt(0).toUpperCase() + org.status.slice(1).toLowerCase();
+  const statusClass = org.status.toLowerCase() === "active" ? "active" : "pending";
+  const statusText = org.status.charAt(0).toUpperCase() + org.status.slice(1).toLowerCase();
   const adviserName = (org.adviser && org.adviser.name) || "Not Specified";
-  const logoSrc = org.profile_pic || "../../../assets/images/schema-logo.png";
+  const logoSrc = org.profile_pic || "../../../assets/images/navi-logo.png";
   const pendingReviewClass = org.has_pending_update ? "pending-review" : "";
 
   return `
     <div class="organization-card ${pendingReviewClass}" onclick="loadOrganizationDetails('${org._id}')">
       <div class="organization-identifier">
         <div class="organization-logo">
-          <img src="${logoSrc}" alt="${org.abbreviation} logo" />
+          <img src="${logoSrc}" alt="${org.abbreviation} logo" style="width:60px;height:60px;border-radius:50%;object-fit:cover;" />
         </div>
         <p class="organization-acronym">${org.abbreviation}</p>
       </div>
@@ -189,7 +187,7 @@ async function fetchOrganizations() {
       list.map(async (short) => {
         try {
           const full = await apiFetch(`http://localhost:5000/api/orgs/me`, {
-            headers: { "x-org-id": short._id }   // <-- needed for /orgs/me
+            headers: { "x-org-id": short._id }
           });
 
           // Mark pending updates
@@ -295,7 +293,7 @@ function loadOrganizationDetails(orgId) {
     organization.status.charAt(0).toUpperCase() +
     organization.status.slice(1).toLowerCase();
   const logoSrc =
-    organization.profile_pic || "../../../assets/images/schema-logo.png";
+    organization.profile_pic || "../../../assets/images/navi-logo.png";
   const description =
     organization.description ||
     "No description provided for this organization.";
@@ -343,7 +341,7 @@ function loadOrganizationDetails(orgId) {
             
             <div class="detail-header">
               <div class="detail-logo">
-                <img src="${logoSrc}" alt="${organization.abbreviation} logo" />
+                <img src="${logoSrc}" alt="${organization.abbreviation} logo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" />
               </div>
               <div class="detail-title">
                 <h1>${organization.name}</h1>
