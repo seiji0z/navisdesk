@@ -1,12 +1,15 @@
-// server/index.js
 import dotenv from "dotenv";
 dotenv.config();
+
+import { fileURLToPath } from "url";
+import path from "path";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import session from "express-session"; // NEW
-import path from "path";
 
 import userRoutes from "./routes/userRoutes.js";
 import logRoutes from "./routes/logRoutes.js";
@@ -25,8 +28,6 @@ app.use(
   })
 );
 app.use(express.json());
-
-app.use(express.static(path.join(process.cwd(), ".")));
 
 app.use(
   session({
@@ -48,6 +49,12 @@ app.use("/api", adminRoutes);
 app.use("/api", orgRoutes);
 app.use("/api", activityRoutes);
 app.use("/api/auth", authRoutes); // NEW: Mount at /api/auth to avoid conflicts
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "login.html"));
+});
+
+app.use(express.static(path.join(process.cwd(), "..")));
 
 // Start server
 mongoose
