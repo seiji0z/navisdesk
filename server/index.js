@@ -1,8 +1,10 @@
 // server/index.js
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import dotenv from "dotenv";
 import session from "express-session"; // NEW
 import path from "path";
 
@@ -13,7 +15,6 @@ import orgRoutes from "./routes/orgRoutes.js";
 import activityRoutes from "./routes/activityRoutes.js";
 import authRoutes from "./routes/authRoutes.js"; // NEW
 
-dotenv.config();
 const app = express();
 
 // Middleware
