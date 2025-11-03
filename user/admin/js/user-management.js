@@ -1,10 +1,12 @@
 // ======== GLOBAL USERS ARRAY ========
 let users = [];
 
-// ======== LOAD USERS FROM DATABASE (MongoDB via API) ========
+// ======== LOAD USERS FROM DATABASE========
 async function loadUsersFromDB() {
   try {
-    const res = await fetch("http://localhost:5000/api/users");
+
+    const res = await fetch("../../../server/php/get-users.php");
+
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
 
     const data = await res.json();

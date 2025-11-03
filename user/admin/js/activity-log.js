@@ -1,11 +1,10 @@
 // ======== LOAD AND RENDER ACTIVITY LOG ========
 async function loadActivityLogData() {
   try {
-    const API_BASE = "http://localhost:5000";
     const [logsRes, adminRes, orgRes] = await Promise.all([
-      fetch(`${API_BASE}/api/activity-logs`),
-      fetch(`${API_BASE}/api/admins`),
-      fetch(`${API_BASE}/api/student-orgs`)
+      fetch("../../../server/php/get-user-logs.php"),
+      fetch("../../../server/php/get-admins.php"),
+      fetch("../../../server/php/get-student-orgs.php")
     ]);
 
     if (!logsRes.ok || !adminRes.ok || !orgRes.ok) {

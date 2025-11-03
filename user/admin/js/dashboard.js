@@ -1,4 +1,3 @@
-// admin/js/dashboard.js
 import { protectPage } from "../../../js/auth-guard.js";
 
 // Wait for DOM + Auth
@@ -17,9 +16,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function loadAdminDashboard() {
   try {
+    // === CHANGED: Fetch from PHP (Local MongoDB) instead of JSON files ===
     const [activitiesRes, orgsRes] = await Promise.all([
-      fetch("../../../data/activities.json"),
-      fetch("../../../data/student_organizations.json"),
+      fetch("../../../server/php/get-activities.php"),
+      fetch("../../../server/php/get-orgs.php")
     ]);
 
     if (!activitiesRes.ok || !orgsRes.ok) {

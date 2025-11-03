@@ -1,7 +1,9 @@
 async function handleCredentialResponse(response) {
   try {
-    const res = await fetch("/api/auth/google", {
-      // Post to server
+    // ---- STORE TOKEN IN HTTP-ONLY COOKIE (via Set-Cookie) ----
+    document.cookie = `google_token=${response.credential}; path=/; SameSite=Lax`;
+
+    const res = await fetch("/server/php/auth/google.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ credential: response.credential }),
