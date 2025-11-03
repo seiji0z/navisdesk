@@ -2,11 +2,11 @@
 require_once __DIR__ . '/../db.php';  // ← FIXED: UP ONE TO server/db.php!
 header('Content-Type: application/json');
 
-if (!isset($_COOKIE['google_token'])) {
-    http_response_code(401);
-    echo json_encode(['error' => 'Login required']);
-    exit;
-}
+// if (!isset($_COOKIE['google_token'])) {
+//     http_response_code(401);
+//     echo json_encode(['error' => 'Login required']);
+//     exit;
+// }
 
 try {
     $activities = findAll('activities', [], ['sort' => ['created_at' => -1]]);

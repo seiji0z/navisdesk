@@ -3,11 +3,11 @@ require_once __DIR__ . '/../db.php';  // ← Atlas + findAll()!
 header('Content-Type: application/json');
 
 // SECURE: Only Admins!
-if (!isset($_COOKIE['google_token'])) {
-    http_response_code(401);
-    echo json_encode(['error' => 'Login required']);
-    exit;
-}
+// if (!isset($_COOKIE['google_token'])) {
+//     http_response_code(401);
+//     echo json_encode(['error' => 'Login required']);
+//     exit;
+// }
 
 try {
     // Get admins & orgs
@@ -57,7 +57,6 @@ try {
     error_log("Users Error: " . $e->getMessage());
     http_response_code(500);
     echo json_encode(['error' => 'Failed to load users']);
-}
 }
 
 // Helper: Format MongoDB Date

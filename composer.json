@@ -3,7 +3,7 @@
     "description": "Navisdesk SSO",
     "type": "project",
     "require": {
-        "mongodb/mongodb": "^1.18",
+        "mongodb/mongodb": "^2.0",
         "google/apiclient": "^2.15"
     },
     "license": "MIT",
