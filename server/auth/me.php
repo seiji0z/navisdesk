@@ -1,6 +1,6 @@
 <?php
 // server/php/auth/me.php
-require_once '../db.php';
+require_once __DIR__ . '/../db.php';
 
 $token = $_COOKIE['google_token'] ?? '';
 if (!$token) {

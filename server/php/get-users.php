@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../db.php';
+
 // Tell browser we send JSON
 header("Content-Type: application/json");
 

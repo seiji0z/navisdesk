@@ -1,6 +1,6 @@
 export async function protectPage(expectedRole) {
   try {
-    const res = await fetch("/server/php/auth/me.php", {
+    const res = await fetch("/server/auth/me.php", {
       credentials: "include",
     });
 
