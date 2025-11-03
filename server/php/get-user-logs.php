@@ -1,30 +1,34 @@
 <?php
-require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../db.php';  // ← Atlas + findAll()!
+header('Content-Type: application/json');
 
-header("Content-Type: application/json");
+// SECURE: Only Admins!
+if (!isset($_COOKIE['google_token'])) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Login required']);
+    exit;
+}
 
-$mongo = new MongoDB\Driver\Manager("mongodb://localhost:27017");
+try {
+    // Get logs, newest first
+    $logs = findAll('user_logs', [], ['sort' => ['timestamp' => -1]]);
 
-$command = new MongoDB\Driver\Command([
-    'aggregate' => 'user_logs',
-    'pipeline' => [
-        ['$sort' => ['timestamp' => -1]]
-    ],
-    'cursor' => new stdClass
-]);
+    // Format for frontend
+    $formatted = array_map(function($log) {
+        $log = (array)$log;
+        return [
+            '_id' => (string)$log['_id'],
+            'user_id' => (string)$log['user_id'],
+            'role' => $log['role'] ?? 'Unknown',
+            'action' => $log['action'] ?? '',
+            'timestamp' => $log['timestamp'] ?? ''
+        ];
+    }, $logs);
 
-$cursor = $mongo->executeCommand('navisdesk_db', $command);
-$logs = current($cursor->toArray())->result ?? [];
-
-$formatted = array_map(function($log) {
-    return [
-        '_id' => (string)$log->_id,
-        'user_id' => (string)$log->user_id,
-        'role' => $log->role ?? "Unknown",
-        'action' => $log->action ?? "",
-        'timestamp' => $log->timestamp?->toDateTime()->format('c') ?? ""
-    ];
-}, $logs);
-
-echo json_encode($formatted);
+    echo json_encode(array_values($formatted));
+} catch (Exception $e) {
+    error_log("Logs Error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['error' => 'Failed to load logs']);
+}
 ?>

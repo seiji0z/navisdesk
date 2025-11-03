@@ -18,8 +18,12 @@ async function loadAdminDashboard() {
   try {
     // === CHANGED: Fetch from PHP (Local MongoDB) instead of JSON files ===
     const [activitiesRes, orgsRes] = await Promise.all([
-      fetch("../../../server/php/get-activities.php"),
-      fetch("../../../server/php/get-orgs.php")
+      fetch("../../../server/php/get-activities.php", {
+        credentials: 'include'
+      }),
+      fetch("../../../server/php/get-student-orgs.php", {
+        credentials: 'include'
+      }),
     ]);
 
     if (!activitiesRes.ok || !orgsRes.ok) {
