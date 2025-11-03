@@ -75,8 +75,10 @@
 }
 
 .grid-item.medium canvas {
-  width: 100% !important;
-  height: 380px !important;
+  width: 100%;
+  height: auto;
+  max-height: 380px;
+  display: block;
 }
 
 

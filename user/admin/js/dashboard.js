@@ -82,58 +82,90 @@ async function loadAdminDashboard() {
 
 // === BAR CHART ===
 function drawBarChart(activities, orgs) {
-  const departments = ["SAMCIS", "SEA", "SONAHBS", "STELA", "SOM"];
+  // derive departments from a canonical list plus any departments present in orgs
+  // This ensures common departments always appear (even with zero submissions)
+  const canonicalDepartments = ["SAMCIS", "SEA", "SONAHBS", "STELA", "SOM"];
+  const orgDepartments = Array.from(new Set(orgs.map((o) => o.department).filter(Boolean)));
+  const extraDepartments = orgDepartments.filter((d) => !canonicalDepartments.includes(d));
+  const departments = [...canonicalDepartments, ...extraDepartments];
+  if (departments.length === 0) departments.push("Unknown");
+
   const deptCount = Object.fromEntries(departments.map((d) => [d, 0]));
 
   activities
     .filter((a) => a.status?.toLowerCase() === "approved")
     .forEach((a) => {
       const org = orgs.find((o) => o._id?.$oid === a.org_id?.$oid);
-      if (org?.department && deptCount.hasOwnProperty(org.department)) {
-        deptCount[org.department]++;
+      const dept = org?.department || "Unknown";
+      if (deptCount.hasOwnProperty(dept)) {
+        deptCount[dept]++;
+      } else {
+        deptCount[dept] = (deptCount[dept] || 0) + 1;
+        if (!departments.includes(dept)) departments.push(dept);
       }
     });
 
   const canvas = document.getElementById("activitiesChart");
   const ctx = canvas.getContext("2d");
-  const values = departments.map((d) => deptCount[d]);
-  const maxVal = Math.max(...values, 1);
-  const barWidth = 60,
-    gap = 60,
-    baseY = 350,
-    chartHeight = 300;
 
-  // Clear
+  // responsive pixel sizing (desired CSS height)
+  setupCanvas(canvas, 360);
+
+  const width = canvas.clientWidth;
+  const height = 320;
+  const padding = { left: 50, right: 20, top: 30, bottom: 70 };
+  const chartW = width - padding.left - padding.right;
+  const chartH = height - padding.top - padding.bottom;
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = "13px Poppins";
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#374151";
 
-  // Grid + Y-axis
+  const values = departments.map((d) => deptCount[d] || 0);
+  const maxVal = Math.max(...values, 1);
+
+  // grid lines + y labels
   ctx.strokeStyle = "#e5e7eb";
   ctx.fillStyle = "#6b7280";
-  for (let i = 0; i <= 5; i++) {
-    const y = baseY - (i * chartHeight) / 5;
+  const gridLines = 5;
+  for (let i = 0; i <= gridLines; i++) {
+    const y = padding.top + (chartH * i) / gridLines;
     ctx.beginPath();
-    ctx.moveTo(40, y);
-    ctx.lineTo(500, y);
+    ctx.moveTo(padding.left, y);
+    ctx.lineTo(padding.left + chartW, y);
     ctx.stroke();
-    ctx.fillText(Math.round((maxVal / 5) * i), 25, y + 5);
+    const labelVal = Math.round(((gridLines - i) * maxVal) / gridLines);
+    ctx.textAlign = "right";
+    ctx.fillText(labelVal, padding.left - 8, y + 4);
   }
 
-  // Bars
-  const colors = ["#FFD700", "#FF3B30", "#007AFF", "#34C759", "#9B59B6"];
-  values.forEach((val, i) => {
-    const x = 70 + i * (barWidth + gap);
-    const h = (val / maxVal) * chartHeight;
-    const y = baseY - h;
+  // bars
+  const barGap = Math.max(12, Math.floor(chartW / (departments.length * 6)));
+  const barWidth = Math.max(24, (chartW - barGap * (departments.length - 1)) / departments.length);
+  const colors = ["#FFD700", "#FF3B30", "#007AFF", "#34C759", "#9B59B6", "#FF8C42", "#6EE7B7"];
 
-    ctx.fillStyle = colors[i];
+  departments.forEach((dep, i) => {
+    const val = deptCount[dep] || 0;
+    const x = padding.left + i * (barWidth + barGap);
+    const h = (val / maxVal) * chartH;
+    const y = padding.top + (chartH - h);
+
+    ctx.fillStyle = colors[i % colors.length];
     ctx.beginPath();
-    ctx.roundRect(x, y, barWidth, baseY - y, 12);
+    ctx.roundRect(x, y, barWidth, h, 6);
     ctx.fill();
 
+    // value label
     ctx.fillStyle = "#111827";
-    ctx.fillText(val, x + barWidth / 2, y - 10);
+    ctx.textAlign = "center";
+    ctx.fillText(val, x + barWidth / 2, y - 8);
+
+    // department label (wrapped)
     ctx.fillStyle = "#374151";
-    ctx.fillText(departments[i], x + barWidth / 2, baseY + 25);
+    const labelX = x + barWidth / 2;
+    const labelY = padding.top + chartH + 18;
+    wrapText(ctx, dep, labelX, labelY, barWidth + 10, 14);
   });
 }
 
@@ -141,34 +173,29 @@ function drawBarChart(activities, orgs) {
 function drawDonutChart(activities) {
   const canvas = document.getElementById("sdgChart");
   const ctx = canvas.getContext("2d");
-  const cx = canvas.width / 2,
-    cy = canvas.height / 2 - 25;
-  const radius = 120,
-    cutout = 70;
 
   const sdgCount = {};
-  activities.forEach((a) =>
-    (a.sdgs || []).forEach((s) => (sdgCount[s] = (sdgCount[s] || 0) + 1))
-  );
+  activities.forEach((a) => (a.sdgs || []).forEach((s) => (sdgCount[s] = (sdgCount[s] || 0) + 1)));
   const labels = Object.keys(sdgCount);
   const data = Object.values(sdgCount);
-  const colors = [
-    "#E5233D",
-    "#DDA73A",
-    "#4CA146",
-    "#C5192D",
-    "#EF402C",
-    "#27BFE6",
-    "#FBC412",
-    "#A31C44",
-    "#F26A2D",
-    "#E01483",
-    "#C49631",
-    "#56C02B",
-    "#00689D",
-    "#19486A",
-    "#DD1367",
-  ];
+
+  if (data.length === 0) {
+    setupCanvas(canvas, 260);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "16px Poppins";
+    ctx.fillStyle = "#374151";
+    ctx.textAlign = "center";
+    ctx.fillText("No SDG data available", canvas.clientWidth / 2, canvas.clientHeight / 2);
+    return;
+  }
+
+  setupCanvas(canvas, 300);
+  const cx = canvas.clientWidth / 2;
+  const cy = canvas.clientHeight / 2 - 10;
+  const radius = Math.min(canvas.clientWidth, canvas.clientHeight) * 0.28;
+  const cutout = radius * 0.45;
+
+  const colors = ["#E5233D","#DDA73A","#4CA146","#C5192D","#EF402C","#27BFE6","#FBC412","#A31C44","#F26A2D","#E01483","#C49631","#56C02B","#00689D","#19486A","#DD1367"];
   const total = data.reduce((a, b) => a + b, 0);
 
   let start = -Math.PI / 2;
@@ -190,7 +217,7 @@ function drawDonutChart(activities) {
   ctx.fill();
 
   // Center text
-  ctx.font = "bold 18px Poppins";
+  ctx.font = "bold 16px Poppins";
   ctx.fillStyle = "#111827";
   ctx.textAlign = "center";
   ctx.fillText("SDG Focus", cx, cy + 6);
@@ -198,13 +225,20 @@ function drawDonutChart(activities) {
   // Legend
   ctx.font = "13px Poppins";
   ctx.textAlign = "left";
+  let lx = canvas.clientWidth * 0.6;
+  let ly = canvas.clientHeight * 0.2;
+  const lineHeight = 18;
   labels.forEach((l, i) => {
-    const x = 30 + (i % 2) * 200;
-    const y = 330 + Math.floor(i / 2) * 20;
-    ctx.fillStyle = colors[i % colors.length];
-    ctx.fillRect(x, y - 9, 10, 10);
+    const color = colors[i % colors.length];
+    ctx.fillStyle = color;
+    ctx.fillRect(lx, ly - 10, 12, 12);
     ctx.fillStyle = "#374151";
-    ctx.fillText(l, x + 18, y);
+    ctx.fillText(`${l} (${sdgCount[l]})`, lx + 18, ly);
+    ly += lineHeight;
+    if (ly > canvas.clientHeight - 20) {
+      ly = canvas.clientHeight * 0.2;
+      lx += 140;
+    }
   });
 }
 
@@ -222,3 +256,44 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
   this.quadraticCurveTo(x, y, x + r, y);
   this.closePath();
 };
+
+// Resize canvas to match display size and devicePixelRatio. desiredHeight is CSS pixels height.
+function setupCanvas(canvas, desiredHeight) {
+  const dpr = window.devicePixelRatio || 1;
+  // set CSS height for layout
+  canvas.style.width = "100%";
+  canvas.style.height = desiredHeight + "px";
+  const displayWidth = Math.floor(canvas.clientWidth);
+  const displayHeight = Math.floor(desiredHeight);
+  // set actual pixel size for crisp drawing
+  canvas.width = displayWidth * dpr;
+  canvas.height = displayHeight * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  // default font
+  ctx.font = "13px Poppins";
+}
+
+// utility to wrap text inside a given width (centered by x param)
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = (text || "").split(" ");
+  let line = "";
+  const lines = [];
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + " ";
+    const metrics = ctx.measureText(testLine);
+    const testWidth = metrics.width;
+    if (testWidth > maxWidth && n > 0) {
+      lines.push(line.trim());
+      line = words[n] + " ";
+    } else {
+      line = testLine;
+    }
+  }
+  lines.push(line.trim());
+  // draw lines centered at x
+  ctx.textAlign = "center";
+  for (let i = 0; i < lines.length; i++) {
+    ctx.fillText(lines[i], x, y + i * lineHeight);
+  }
+}
