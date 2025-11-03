@@ -1,0 +1,22 @@
+{
+    "name": "navisdesk/app",
+    "description": "Navisdesk SSO",
+    "type": "project",
+    "require": {
+        "mongodb/mongodb": "^1.18",
+        "google/apiclient": "^2.15"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Navisdesk\\App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Anjelo",
+            "email": "2240084@slu.edu.ph"
+        }
+    ],
+    "minimum-stability": "stable"
+}

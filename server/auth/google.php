@@ -1,41 +1,7 @@
 <?php
-require_once __DIR__ . '/../db.php';
-require_once __DIR__ . '/../../vendor/autoload.php';
-$dbPath = 'C:/Users/Anjelo/Downloads/webtech/navisdesk/server/db.php';
-
-if (!file_exists($dbPath)) {
-    error_log("DB.PHP NOT FOUND! Path: $dbPath");
-    http_response_code(500);
-    echo json_encode(['error' => 'Server config error - db.php missing!']);
-    exit;
-}
-
-require_once $dbPath;
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../db.php';  // This loads autoload and MongoDB connection
 
 use Google\Client as GoogleClient;
-
-// TEST DB NOW!
-try {
-    $db->listCollections();
-    error_log("DB LOADED! findOne() READY! Path: $dbPath");
-} catch (Exception $e) {
-    error_log("DB CONNECT ERROR: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['error' => 'Database down']);
-    exit;
-}
-
-// TEST DB
-try {
-    $db->listCollections();
-    error_log("DB CONNECTED! Ready for SSO.");
-} catch (Exception $e) {
-    error_log("DB Error: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['error' => 'DB failed']);
-    exit;
-}
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -80,7 +46,7 @@ if ($admin) {
     setcookie('google_token', $credential, [
         'expires' => time() + 3600,
         'path' => '/',
-        'secure' => false,
+        'secure' => false,  // Set to true in production (HTTPS)
         'httponly' => true,
         'samesite' => 'Lax'
     ]);
@@ -93,10 +59,14 @@ if ($org) {
     setcookie('google_token', $credential, [
         'expires' => time() + 3600,
         'path' => '/',
-        'secure' => false,
+        'secure' => false,  // Set to true in production (HTTPS)
         'httponly' => true,
         'samesite' => 'Lax'
     ]);
     echo json_encode(['role' => 'org']);
     exit;
 }
+
+http_response_code(401);
+echo json_encode(['error' => 'Unauthorized']);
+?>
