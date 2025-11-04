@@ -52,15 +52,32 @@ function loadUserModules() {
                 </button>
               </div>
             </div>
+
             <div class="select-group">
-  <label>Role</label>
-  <select id="filter-role">
-    <option value="">All Roles</option>
-    <option value="admin">Admin</option>
-    <option value="osas">OSAS Officer</option>
-    <option value="Organization">Student Org</option>
-  </select>
-</div>
+              <label>Role</label>
+              <select id="filter-role">
+                <option value="">All Roles</option>
+                <option value="admin">Admin</option>
+                <option value="osas">OSAS Officer</option>
+                <option value="Organization">Student Org</option>
+              </select>
+            </div>
+
+            <!-- NEW DEPARTMENT FILTER -->
+            <div class="select-group">
+              <label>Department</label>
+              <select id="filter-department">
+                <option value="">All Departments</option>
+                <option value="SAMCIS">SAMCIS</option>
+                <option value="SOHNABS">SOHNABS</option>
+                <option value="STELA">STELA</option>
+                <option value="SEA">SEA</option>
+                <option value="SOM">SOM</option>
+                <option value="SOL">SOL</option>
+                <option value="UNIV WIDE">UNIV WIDE</option>
+              </select>
+            </div>
+
             <div class="select-group">
               <label>Status</label>
               <select id="filter-status">
@@ -70,6 +87,7 @@ function loadUserModules() {
                 <option>Suspended</option>
               </select>
             </div>
+
             <div class="btn-group">
               <button class="add-user-btn" onclick="showAddUserModal()">
                 <img src="../../../assets/images/add-user.png" alt="Add User" />
@@ -135,18 +153,20 @@ function renderTable(userList) {
 
 // ======== FILTER FUNCTIONS ========
 function setupFilters() {
-  const searchInput = document.getElementById("search-user");
-  const roleFilter = document.getElementById("filter-role");
-  const statusFilter = document.getElementById("filter-status");
+  const searchInput   = document.getElementById("search-user");
+  const roleFilter    = document.getElementById("filter-role");
+  const deptFilter    = document.getElementById("filter-department");
+  const statusFilter  = document.getElementById("filter-status");
 
-  if (!searchInput || !roleFilter || !statusFilter) return;
+  if (!searchInput || !roleFilter || !deptFilter || !statusFilter) return;
 
   // Remove any old listeners to prevent stacking
   applyFilters = () => {
     const filters = {
-      search: searchInput.value.trim(),
-      role: roleFilter.value,
-      status: statusFilter.value,
+      search:      searchInput.value.trim(),
+      role:        roleFilter.value,
+      department:  deptFilter.value,
+      status:      statusFilter.value,
     };
     loadUsersFromDB(filters);
   };
@@ -154,11 +174,13 @@ function setupFilters() {
   // Clean up old listeners
   searchInput.removeEventListener("input", applyFilters);
   roleFilter.removeEventListener("change", applyFilters);
+  deptFilter.removeEventListener("change", applyFilters);
   statusFilter.removeEventListener("change", applyFilters);
 
   // Add fresh listeners
   searchInput.addEventListener("input", applyFilters);
   roleFilter.addEventListener("change", applyFilters);
+  deptFilter.addEventListener("change", applyFilters);
   statusFilter.addEventListener("change", applyFilters);
 }
 

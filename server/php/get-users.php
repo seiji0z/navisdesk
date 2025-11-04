@@ -5,9 +5,10 @@ header('Content-Type: application/json');
 /* -------------------------------------------------
    1. READ FILTERS FROM GET
    ------------------------------------------------- */
-$search = trim($_GET['search'] ?? '');
-$role   = trim($_GET['role'] ?? '');
-$status = trim($_GET['status'] ?? '');
+$search     = trim($_GET['search'] ?? '');
+$role       = trim($_GET['role'] ?? '');
+$department = trim($_GET['department'] ?? '');
+$status     = trim($_GET['status'] ?? '');
 
 /* -------------------------------------------------
    2. MAP FRONTEND ROLE TO DB VALUE
@@ -45,6 +46,13 @@ if ($dbRoleFilter !== null) {
     $filter['role'] = $dbRoleFilter;
 }
 
+/* ---- NEW: Department filter ---- */
+if ($department !== '') {
+    // For admin/osas the field is called "department"
+    // For orgs it is also "department"
+    $filter['department'] = $department;
+}
+
 if ($status !== '') {
     $filter['status'] = $status;
 }
@@ -67,7 +75,7 @@ try {
         $displayRole = match ($dbRole) {
             'admin' => 'Admin',
             'osas'  => 'OSAS Officer',
-            'org'   => 'Student Org',   // ← This was missing!
+            'org'   => 'Student Org',
             default => 'Unknown'
         };
 
@@ -78,6 +86,9 @@ try {
             "status"         => $a['status'] ?? 'Active',
             "dateRegistered" => formatDate($a['created_at'] ?? null),
             "lastLogin"      => formatDate($a['last_log'] ?? null),
+
+            // Keep department for the front-end (used in edit modal)
+            "department"     => $a['department'] ?? '',
         ];
     }
 
