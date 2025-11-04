@@ -1,7 +1,16 @@
 // ---- OSAS Dashboard ----
+import { protectPage } from "../../../js/auth-guard.js";
 
-import { protectPage } from "../../../js/auth-guard.js"; // Adjust path if needed
-protectPage("osas");
+// Wait for DOM + Auth
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    await protectPage("osas");
+    await loadOsasDashboard();
+  } catch (err) {
+    console.error("Access denied or error:", err);
+    document.body.innerHTML = "<h1>Access Denied</h1>";
+  }
+});
 
 async function loadOsasDashboard() {
   document.querySelector("#folder-body").innerHTML = `
@@ -120,8 +129,4 @@ async function fetchActivityData() {
   }
 }
 
-function initDashboard() {
-  loadOsasDashboard();
-}
-
-initDashboard();
+// init is handled by the DOMContentLoaded listener above

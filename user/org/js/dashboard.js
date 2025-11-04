@@ -3,7 +3,17 @@
 // ===============================
 
 import { protectPage } from "../../../js/auth-guard.js";
-protectPage("org");
+
+// Wait for DOM + Auth
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    await protectPage("org");
+    renderOrgDashboard();
+  } catch (err) {
+    console.error("Access denied or error:", err);
+    document.body.innerHTML = "<h1>Access Denied</h1>";
+  }
+});
 
 const ICON_ORG_ID = "6716001a9b8c2001abcd0001";
 let activitiesData = [];
@@ -452,7 +462,4 @@ class ActivityDetailsComponent {
 // INITIALIZER
 // ===============================
 
-function initDashboard() {
-  renderOrgDashboard();
-}
-initDashboard();
+// init is handled by the DOMContentLoaded listener above
