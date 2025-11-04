@@ -35,21 +35,42 @@ let activitiesData = [];
 
 async function fetchActivitiesFromDB() {
   try {
-    const response = await fetch("../../../server/php/get-activities.php");
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const response = await fetch("../../../server/php/get-activities.php", {
+      headers: {
+        "x-org-id": ICON_ORG_ID, // THIS IS THE MISSING LINE
+      },
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      throw new Error(`HTTP ${response.status}: ${err}`);
+    }
 
     const allActivities = await response.json();
-    activitiesData = allActivities
-      .filter((a) => a.org_id === ICON_ORG_ID)
-      .map((a) => ({
-        _id: a._id,
-        org_id: a.org_id,
-        title: a.title || "Untitled",
-        description: a.description || "No description",
-        status: a.status || "Pending",
-        submitted_at: a.submitted_at || a.created_at,
-        remarks: a.remarks || "",
-      }));
+
+    activitiesData = allActivities.map((a) => ({
+      _id: a._id,
+      org_id: a.org_id,
+      title: a.title || "Untitled",
+      description: a.description || "No description",
+      status: a.status || "Pending",
+      submitted_at: a.submitted_at || a.created_at,
+      remarks: a.remarks || "",
+      // Add other fields you need
+      venue: a.venue,
+      date_start: a.date_start,
+      date_end: a.date_end,
+      objectives: a.objectives,
+      acad_year: a.acad_year,
+      term: a.term,
+      submitted_by: a.submitted_by,
+      reviewed_by: a.reviewed_by,
+      reviewed_at: a.reviewed_at,
+      created_at: a.created_at,
+      sdgs: a.sdgs,
+      supporting_docs: a.supporting_docs,
+      evidences: a.evidences,
+    }));
 
     console.log("ICON Activities:", activitiesData);
     return activitiesData;
@@ -432,13 +453,17 @@ class ActivityDetailsComponent {
       </section>
 
       <!-- Re-submit Button (Only for Returned activities) -->
-      ${submission.status === "Returned" ? `
+      ${
+        submission.status === "Returned"
+          ? `
       <div class="resubmit-action-row">
         <button class="resubmit-btn" data-activity-id="${submission._id}">
           <i class="fas fa-edit"></i> Re-submit Activity
         </button>
       </div>
-      ` : ""}
+      `
+          : ""
+      }
     `;
 
     return container;
