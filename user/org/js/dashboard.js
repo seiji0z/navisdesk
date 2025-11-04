@@ -25,15 +25,15 @@ async function fetchActivitiesFromDB() {
 
     const allActivities = await response.json();
     activitiesData = allActivities
-      .filter(a => a.org_id === ICON_ORG_ID)
-      .map(a => ({
+      .filter((a) => a.org_id === ICON_ORG_ID)
+      .map((a) => ({
         _id: a._id,
         org_id: a.org_id,
         title: a.title || "Untitled",
         description: a.description || "No description",
         status: a.status || "Pending",
         submitted_at: a.submitted_at || a.created_at,
-        remarks: a.remarks || ""
+        remarks: a.remarks || "",
       }));
 
     console.log("ICON Activities:", activitiesData);
@@ -104,15 +104,18 @@ async function renderOrgDashboard() {
             ${recent
               .map(
                 (a) => `
-              <div class="activity-item" data-id="${a._id}">
-                <div class="activity-details">
-                  <p class="activity-title">${a.title}</p>
-                  <p class="activity-desc">${a.description}</p>
-                </div>
-                <span class="status-badge ${formatStatusClass(
-                  a.status
-                )}">${formatStatus(a.status)}</span>
-              </div>`
+                  <div class="activity-item" data-id="${a._id}">
+                    <div class="activity-details">
+                      <p class="activity-title">${a.title}</p>
+                      <p class="activity-meta"><small>${formatDate(
+                        a.submitted_at
+                      )}</small></p>
+                      <p class="activity-desc">${a.description}</p>
+                    </div>
+                    <span class="status-badge ${formatStatusClass(
+                      a.status
+                    )}">${formatStatus(a.status)}</span>
+                  </div>`
               )
               .join("")}
           </div>

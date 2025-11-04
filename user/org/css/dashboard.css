@@ -160,7 +160,8 @@
   background: #fff;
   border-radius: 12px;
   padding: 0.9rem 1.2rem;
-  box-shadow: 0 2px 6 "0" px rgba(0, 0, 0, 0.05);
+  /* fixed: proper box-shadow value */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   transition: 0.2s;
 }
@@ -168,6 +169,49 @@
 .reminder-item:hover {
   background: #f9fafb;
   transform: translateY(-2px);
+}
+
+/* Activity item improved layout */
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.activity-item .activity-details {
+  flex: 1 1 auto;
+  min-width: 0; /* allow truncation */
+}
+.activity-item .activity-title {
+  margin: 0 0 6px 0;
+  font-weight: 600;
+  color: #073066;
+  font-size: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.activity-item .activity-meta {
+  margin: 0 0 6px 0;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+.activity-item .activity-desc {
+  margin: 0;
+  color: #374151;
+  font-size: 0.92rem;
+  line-height: 1.2;
+  overflow: hidden;
+  display: -webkit-box; /* multiline truncation */
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  /* fallback compatibility */
+  line-clamp: 2;
+}
+.activity-item .status-badge {
+  flex: 0 0 auto;
+  align-self: center;
+  margin-left: 8px;
 }
 
 /* Badges */
@@ -250,5 +294,46 @@
     flex-direction: column;
     text-align: center;
     gap: 0.5rem;
+  }
+}
+
+/* Small screens (phones) tweaks */
+@media (max-width: 600px) {
+  .grid-container {
+    padding: 1rem;
+    gap: 0.85rem;
+  }
+
+  /* Give more breathing room under the section header */
+  .recent-card .section-header {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Allow titles and descriptions to wrap instead of forcing single-line ellipsis */
+  .activity-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .activity-item .activity-title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+  .activity-item .activity-desc {
+    -webkit-line-clamp: 3; /* allow one more line on small screens */
+    line-clamp: 3;
+  }
+
+  /* Move status badge to top-right of the card on phones */
+  .activity-item .status-badge {
+    align-self: flex-end;
+    margin-left: 0;
+    margin-top: 6px;
+  }
+
+  /* Slightly reduce padding on cards for small viewports */
+  .grid-item > .card {
+    padding: 1rem;
   }
 }
