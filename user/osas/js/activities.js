@@ -103,10 +103,9 @@ export async function loadActivities() {
   }
 }
 
-// Fetch all activities from your Express backend
 async function fetchActivitiesFromDB() {
   try {
-    const res = await fetch("http://localhost:5000/api/activities");
+    const res = await fetch("../../../server/php/get-activities.php");
     if (!res.ok) throw new Error("Failed to fetch activities");
     return await res.json();
   } catch (err) {
@@ -115,11 +114,10 @@ async function fetchActivitiesFromDB() {
   }
 }
 
-// Fetch all orgs from your Express backend
 async function fetchOrganizationsFromDB() {
   try {
-    const res = await fetch("http://localhost:5000/api/student-orgs");
-    if (!res.ok) throw new Error("Failed to fetch student organizations");
+    const res = await fetch("../../../server/php/get-student-orgs.php");
+    if (!res.ok) throw new Error("Failed to fetch orgs");
     return await res.json();
   } catch (err) {
     console.error("fetchOrganizationsFromDB error:", err);

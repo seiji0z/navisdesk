@@ -176,38 +176,22 @@ function renderOrganizationCards(organizations) {
   grid.innerHTML = organizationCardsHTML;
 }
 
-// fetch ALL organizations from the backend
+// fetch ALL organizations from the db
 async function fetchOrganizations() {
   try {
-    // 1. Get the list of all orgs (id + name + department)
-    const list = await apiFetch("http://localhost:5000/api/student-orgs");
+    const res = await fetch("../../../server/php/get-student-orgs.php");
+    if (!res.ok) throw new Error("Failed to fetch orgs");
+    const orgs = await res.json();
 
-    // 2. For every org fetch its full details (temporary_details, etc.)
-    const fullOrgs = await Promise.all(
-      list.map(async (short) => {
-        try {
-          const full = await apiFetch(`http://localhost:5000/api/orgs/me`, {
-            headers: { "x-org-id": short._id }
-          });
-
-          // Mark pending updates
-          full.has_pending_update = !!full.temporary_details;
-          full.pending_data = full.temporary_details || {};
-          full.pending_update_description =
-            "The organization has requested to update several details.";
-
-          return full;
-        } catch (e) {
-          console.error(`Failed to load details for org ${short._id}:`, e);
-          return null;
-        }
-      })
-    );
-
-    // Drop any that failed
-    return fullOrgs.filter(Boolean);
+    return orgs.map(org => ({
+      ...org,
+      _id: org._id,
+      has_pending_update: !!org.temporary_details,
+      pending_data: org.temporary_details || {},
+      pending_update_description: "The organization has requested to update several details."
+    }));
   } catch (error) {
-    console.error("Could not fetch organizations from API:", error);
+    console.error("Could not fetch organizations from PHP:", error);
     return null;
   }
 }
