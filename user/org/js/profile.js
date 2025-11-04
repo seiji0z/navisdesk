@@ -4,34 +4,41 @@ const folderBody = document.getElementById('folder-body');
 // =============================================
 // 1. API CONFIG & HELPERS
 // =============================================
-const API_BASE = "http://localhost:5000/api/orgs"; // Change port if needed
+const DB = "../../../server/php"; // PHP + MongoDB backend
 
-// Get logged-in org ID (set after login)
+// Get current org ID (hardcoded for now)
 function getOrgId() {
-  return localStorage.getItem("orgId") || "6716001a9b8c2001abcd0001"; // fallback: ICON
+  return "6716001a9b8c2001abcd0001"; // ICON ORG
 }
 
-// GET current org profile
+// GET current org profile from get-student-orgs.php
 async function fetchOrgProfile() {
   const orgId = getOrgId();
-  const response = await fetch(`${API_BASE}/me`, {
+  const response = await fetch(`${DB}/get-student-orgs.php`, {
     method: "GET",
     headers: {
-      "Content-Type": "application/json",
-      "x-org-id": orgId
+      "Content-Type": "application/json"
     }
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch org: ${response.status}`);
+    throw new Error(`Failed to fetch orgs: ${response.status}`);
   }
-  return await response.json();
+
+  const allOrgs = await response.json();
+  const org = allOrgs.find(o => o._id === orgId);
+
+  if (!org) {
+    throw new Error("Organization not found");
+  }
+
+  return org;
 }
 
-// PUT updated profile (stores in temporary_details)
+// PUT updated profile → still use update-org-profile.php
 async function updateOrgProfile(data) {
   const orgId = getOrgId();
-  const response = await fetch(`${API_BASE}/me`, {
+  const response = await fetch(`${DB}/update-org-profile.php`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -294,7 +301,7 @@ async function wireProfileBehaviors() {
       name: official.value.trim(),
       abbreviation: acronym.value.trim(),
       email: email.value.trim(),
-      department: org.department || "SAMCIS", // preserve if not in form
+      department: org.department || "SAMCIS",
       type: document.getElementById("org-type").value,
       adviser: {
         name: document.getElementById("adviser-name").value.trim(),

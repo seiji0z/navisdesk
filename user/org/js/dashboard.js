@@ -9,42 +9,30 @@ const ICON_ORG_ID = "6716001a9b8c2001abcd0001";
 let activitiesData = [];
 
 async function fetchActivitiesFromDB() {
-  const orgId = localStorage.getItem("orgId") || ICON_ORG_ID;
-  const response = await fetch("http://localhost:5000/api/activities/my", {
-    method: "GET",
-    headers: { "x-org-id": orgId, "Content-Type": "application/json" },
-  });
+  try {
+    const response = await fetch("../../../server/php/get-activities.php");
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.error || `Server error: ${response.status}`);
+    const allActivities = await response.json();
+    activitiesData = allActivities
+      .filter(a => a.org_id === ICON_ORG_ID)
+      .map(a => ({
+        _id: a._id,
+        org_id: a.org_id,
+        title: a.title || "Untitled",
+        description: a.description || "No description",
+        status: a.status || "Pending",
+        submitted_at: a.submitted_at || a.created_at,
+        remarks: a.remarks || ""
+      }));
+
+    console.log("ICON Activities:", activitiesData);
+    return activitiesData;
+  } catch (error) {
+    console.error("Fetch error:", error);
+    activitiesData = [];
+    return [];
   }
-
-  const rawData = await response.json();
-  activitiesData = rawData.map((a) => ({
-    _id: a._id || "",
-    org_id: a.org_id || "",
-    title: a.title || "Untitled Activity",
-    description: a.description || "No description",
-    objectives: a.objectives || "No objectives",
-    acad_year: a.acad_year || "N/A",
-    term: a.term || "N/A",
-    date_start: a.date_start || "",
-    date_end: a.date_end || "",
-    venue: a.venue || "TBA",
-    sdgs: a.sdgs || [],
-    supporting_docs: a.supporting_docs || [],
-    evidences: a.evidences || [],
-    submitted_by: a.submitted_by || "N/A",
-    submitted_at: a.submitted_at || "",
-    reviewed_by: a.reviewed_by || null,
-    reviewed_at: a.reviewed_at || null,
-    status: a.status || "Pending",
-    created_at: a.created_at || "",
-    remarks: a.remarks || "",
-  }));
-
-  return activitiesData;
 }
 
 // --- MAIN RENDER ---

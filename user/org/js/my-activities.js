@@ -323,80 +323,55 @@ class MyActivitiesModel {
     ];
   }
 
-  async loadSubmissions() {
-    try {
-      // Get org ID from localStorage or fallback
-      const orgId = localStorage.getItem("orgId") || this.ICON_ORG_ID;
+async loadSubmissions() {
+  try {
+    const orgId = "6716001a9b8c2001abcd0001"; // ICON ORG
+    const response = await fetch("../../../server/php/get-activities.php", {
+      headers: { "x-org-id": orgId }
+    });
 
-      // Fetch from backend API
-      const response = await fetch("http://localhost:5000/api/activities/my", {
-        headers: {
-          "x-org-id": orgId
-        }
-      });
+    if (!response.ok) throw new Error("Failed to fetch");
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
+    const allActivities = await response.json();
+    this.submissions = allActivities.map(a => ({
+      id: a._id,
+      _id: a._id,
+      org_id: a.org_id,
+      title: a.title,
+      description: a.description,
+      venue: a.venue,
+      status: a.status,
+      submitted_at: a.submitted_at,
+      sdgs: a.sdgs,
+      supporting_docs: a.supporting_docs,
+      evidences: a.evidences,
+      objectives: a.objectives,
+      acad_year: a.acad_year,
+      term: a.term,
+      submitted_by: a.submitted_by || "ICON Org",
+      reviewed_by: a.reviewed_by,
+      reviewed_at: a.reviewed_at,
+      created_at: a.created_at,
+      remarks: a.remarks || ""
+    }));
 
-      const allActivities = await response.json();
-
-      // Map backend data to frontend format
-      this.submissions = allActivities.map((activity, index) => {
-        const activityId = activity._id || `activity_${index}`;
-        return {
-          id: activityId,
-          _id: activityId,
-          org_id: activity.org_id,
-          title: activity.title || "Untitled Activity",
-          description: activity.description || "No description provided",
-          acad_year: activity.acad_year || "N/A",
-          term: activity.term || "N/A",
-          date_start: activity.date_start || "",
-          date_end: activity.date_end || "",
-          venue: activity.venue || "TBA",
-          objectives: activity.objectives || "No objectives specified",
-          sdgs: activity.sdgs || [],
-          evidences: activity.evidences || [],
-          supporting_docs: activity.supporting_docs || [],
-          submitted_by: activity.submitted_by || "N/A",
-          submitted_at: activity.submitted_at || "",
-          reviewed_by: activity.reviewed_by || null,
-          reviewed_at: activity.reviewed_at || null,
-          status: activity.status || "Pending",
-          created_at: activity.created_at || "",
-        };
-      });
-    } catch (error) {
-      console.error('Error loading activities from database:', error);
-      this.submissions = [];
-      alert("Failed to load activities. Please check server connection.");
-    }
-
-    // Summarize activity counts based on status
+    // Update summary counts
     const summaryMap = {};
-    this.submissions.forEach((s) => {
+    this.submissions.forEach(s => {
       summaryMap[s.status] = (summaryMap[s.status] || 0) + 1;
     });
 
     this.activities = [
-      {
-        title: "Approved",
-        count: summaryMap["Approved"] || 0,
-        description: "Approved activities",
-      },
-      {
-        title: "Returned",
-        count: summaryMap["Returned"] || 0,
-        description: "Requires revision",
-      },
-      {
-        title: "Pending",
-        count: summaryMap["Pending"] || 0,
-        description: "Awaiting approval",
-      },
+      { title: "Approved", count: summaryMap["Approved"] || 0, description: "Approved activities" },
+      { title: "Returned", count: summaryMap["Returned"] || 0, description: "Requires revision" },
+      { title: "Pending", count: summaryMap["Pending"] || 0, description: "Awaiting approval" },
     ];
+
+  } catch (error) {
+    console.error("Error:", error);
+    this.submissions = [];
   }
+}
 
   getActivities() {
     return this.activities;

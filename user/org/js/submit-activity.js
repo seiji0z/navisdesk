@@ -5,19 +5,17 @@ const folderBody = document.getElementById("folder-body");
 // Save activity to database
 window.DB = {
   async saveActivity(formData) {
-    const orgId = localStorage.getItem("orgId") || "6716001a9b8c2001abcd0001";
-    
-    const response = await fetch("http://localhost:5000/api/activities", {
+    const orgId = "6716001a9b8c2001abcd0001"; // ICON ORG
+
+    const response = await fetch("../../../server/php/submit-activity.php", {
       method: "POST",
-      headers: {
-        "x-org-id": orgId
-      },
+      headers: { "x-org-id": orgId },
       body: formData
     });
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.message || "Submission failed");
+      throw new Error(error.error || "Submission failed");
     }
     return await response.json();
   }
