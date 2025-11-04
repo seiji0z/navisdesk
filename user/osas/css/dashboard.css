@@ -73,19 +73,19 @@ html {
 
 .number#first,
 .number#total-submissions {
-  color: #208bff;
+  color: #073066;
 }
 .number#second,
 .number#approved-count {
-  color: #34c759;
+  color: #073066;
 }
 .number#third,
 .number#pending-count {
-  color: #ffa325;
+  color: #073066;
 }
 .number#fourth,
 .number#returned-count {
-  color: #ff5039;
+  color: #073066;
 }
 
 .desc {

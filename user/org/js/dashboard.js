@@ -49,7 +49,6 @@ async function fetchActivitiesFromDB() {
     }
 
     const allActivities = await response.json();
-<<<<<<< HEAD
 
     activitiesData = allActivities.map((a) => ({
       _id: a._id,
@@ -74,10 +73,6 @@ async function fetchActivitiesFromDB() {
       supporting_docs: a.supporting_docs,
       evidences: a.evidences,
     }));
-=======
-    // Keep all fields from MongoDB, just filter by org_id
-    activitiesData = allActivities.filter((a) => a.org_id === ICON_ORG_ID);
->>>>>>> 5237f983807e629bf5b157fecd18f2ea51e32fe0
 
     console.log("ICON Activities:", activitiesData);
     return activitiesData;
