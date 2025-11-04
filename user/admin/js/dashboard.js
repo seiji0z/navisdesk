@@ -203,55 +203,55 @@ function drawBarChart(activities, orgs) {
   const values = departments.map((d) => deptCount[d]);
   const maxVal = Math.max(...values, 1);
 
-  // Calculate dimensions based on canvas size
-  const padding = { top: 40, right: 20, bottom: 60, left: 50 };
+  // Calculate dimensions based on canvas size (adjusted for horizontal bars)
+  const padding = { top: 40, right: 80, bottom: 40, left: 100 };
   const chartWidth = rect.width - padding.left - padding.right;
   const chartHeight = rect.height - padding.top - padding.bottom;
-  const barCount = departments.length;
-  const barWidth = Math.min(40, (chartWidth / barCount) * 0.6);
-  const barGap = (chartWidth - barWidth * barCount) / (barCount + 1);
-  const baseY = rect.height - padding.bottom;
 
   // Clear
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Grid + Y-axis
-  ctx.textAlign = "right";
-  ctx.font = "12px Poppins";
+  // Grid + X-axis (vertical lines for horizontal bars)
+  ctx.textAlign = "center";
+  ctx.font = "11px Poppins";
   ctx.strokeStyle = "#e5e7eb";
-  ctx.fillStyle = "#6b7280";
+  ctx.fillStyle = "#9ca3af";
 
   for (let i = 0; i <= 5; i++) {
-    const y = baseY - (i * chartHeight) / 5;
+    const x = padding.left + (i * chartWidth) / 5;
     ctx.beginPath();
-    ctx.moveTo(padding.left, y);
-    ctx.lineTo(rect.width - padding.right, y);
+    ctx.moveTo(x, padding.top);
+    ctx.lineTo(x, rect.height - padding.bottom);
     ctx.stroke();
-    ctx.fillText(Math.round((maxVal / 5) * i), padding.left - 8, y + 4);
+    ctx.fillText(Math.round((maxVal / 5) * i), x, rect.height - padding.bottom + 20);
   }
 
-  // Bars
+  // Horizontal bars
   const colors = ["#FFD700", "#FF3B30", "#007AFF", "#34C759", "#9B59B6"];
+  const barHeight = 24; // Thinner bars
+  const barSpacing = 60; // Space between bars
+  
   values.forEach((val, i) => {
-    const x = padding.left + barGap + i * (barWidth + barGap);
-    const h = (val / maxVal) * chartHeight;
-    const y = baseY - h;
-
+    const y = padding.top + i * barSpacing;
+    const barLength = (val / maxVal) * chartWidth;
+    
+    // Draw bar
     ctx.fillStyle = colors[i];
     ctx.beginPath();
-    ctx.roundRect(x, y, barWidth, baseY - y, 12);
+    ctx.roundRect(padding.left, y, barLength, barHeight, 8);
     ctx.fill();
 
-    // Value label
-    ctx.fillStyle = "#111827";
-    ctx.textAlign = "center";
-    ctx.font = "bold 13px Poppins";
-    ctx.fillText(val, x + barWidth / 2, y - 8);
-
-    // Department label
+    // Department label (left side)
     ctx.fillStyle = "#374151";
-    ctx.font = "12px Poppins";
-    ctx.fillText(departments[i], x + barWidth / 2, baseY + 20);
+    ctx.textAlign = "right";
+    ctx.font = "13px Poppins";
+    ctx.fillText(departments[i], padding.left - 10, y + barHeight / 2 + 4);
+
+    // Value label (right side of bar or end of chart area)
+    ctx.fillStyle = "#111827";
+    ctx.textAlign = "left";
+    ctx.font = "bold 13px Poppins";
+    ctx.fillText(val, padding.left + barLength + 8, y + barHeight / 2 + 4);
   });
 }
 

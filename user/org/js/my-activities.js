@@ -280,6 +280,15 @@ class ActivityDetailsComponent {
           ${this.generateHistory(submission)}
         </div>
       </section>
+
+      <!-- Re-submit Button (Only for Returned activities) -->
+      ${submission.status === "Returned" ? `
+      <div class="resubmit-action-row">
+        <button class="resubmit-btn" data-activity-id="${submission._id}">
+          <i class="fas fa-edit"></i> Revise Activity
+        </button>
+      </div>
+      ` : ""}
     `;
 
     return container;
@@ -328,6 +337,16 @@ class ActivityDetailsComponent {
   bindBackButton(handler) {
     const backBtn = document.querySelector(".back-btn");
     if (backBtn) backBtn.addEventListener("click", handler);
+  }
+
+  bindResubmitButton(handler) {
+    const resubmitBtn = document.querySelector(".resubmit-btn");
+    if (resubmitBtn) {
+      resubmitBtn.addEventListener("click", () => {
+        const activityId = resubmitBtn.getAttribute("data-activity-id");
+        handler(activityId);
+      });
+    }
   }
 }
 
@@ -548,6 +567,11 @@ class MyActivitiesView {
     this.detailsComponent.bindBackButton(() => {
       this.render(this.activitiesData, this.submissionsData);
     });
+
+      this.detailsComponent.bindResubmitButton((activityId) => {
+        // Redirect to submit-activity page with activity ID
+        window.location.href = `submit-activity.html?edit=${activityId}`;
+      });
   }
 
   updateActivityCounts(activities) {

@@ -55,6 +55,7 @@
   color: #073066;
   font-weight: 600;
   font-size: 1.1rem;
+  align-self: flex-start;
 }
 .create-btn {
   background: #073066;
@@ -234,6 +235,12 @@
 }
 
 /* Reminder specific */
+.reminders-card .section-header {
+  margin-bottom: 1.5rem;
+}
+.reminders-card .reminder-list {
+  margin-top: 1rem;
+}
 .reminder-item {
   border-left: 5px solid #073066;
 }
