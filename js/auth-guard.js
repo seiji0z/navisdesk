@@ -1,4 +1,3 @@
-/*
 export async function protectPage(expectedRole) {
   try {
     const res = await fetch("/server/auth/me.php", {
@@ -20,9 +19,8 @@ export async function protectPage(expectedRole) {
     window.location.href = "/login.html";
   }
 }
-*/
 
-  export async function protectPage(expectedRole) {
+export async function protectPage(expectedRole) {
   // --- TEMP BYPASS FOR LOCAL TESTING ---
   if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
     console.log("Bypassing auth guard (local mode)");
