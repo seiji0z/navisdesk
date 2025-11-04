@@ -261,7 +261,7 @@ class ActivityDetailsComponent {
       ${submission.status === "Returned" ? `
       <div class="resubmit-action-row">
         <button class="resubmit-btn" data-activity-id="${submission._id}">
-          <i class="fas fa-edit"></i> Re-submit Activity
+          <i class="fas fa-edit"></i> Revise Activity
         </button>
       </div>
       ` : ""}
