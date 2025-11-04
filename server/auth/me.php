@@ -31,7 +31,8 @@ if (!$email) {
 
 $admin = findOne('admin_osas', ['email' => $email]);
 if ($admin) {
-    $role = $admin->role === 'admin' ? 'admin' : 'osas';
+    // Use the role directly from the database
+    $role = $admin->role;
 
     // Build response including available name fields from token and DB
     $resp = [

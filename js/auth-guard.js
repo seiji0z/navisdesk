@@ -11,7 +11,7 @@ export async function protectPage(expectedRole) {
 
     const user = await res.json();
     if (!user.loggedIn || user.role !== expectedRole) {
-      alert("Access denied!");
+      alert(`Access denied! This page is only accessible to ${expectedRole} users.`);
       window.location.href = "/login.html";
       return null;
     }
