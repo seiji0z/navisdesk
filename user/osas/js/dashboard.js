@@ -42,120 +42,420 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function loadOsasDashboard() {
-  document.querySelector("#folder-body").innerHTML = `
-    <div class="grid-container">
-
-      <div class="grid-item small">
-        <div class="card">
-          <div class="left-details">
-            <p class="number" id="total-submissions">...</p>
-            <p class="desc">Total Submissions</p>
-          </div>
-          <div class="right-icon"> 
-            <img src="../../../assets/images/blue-submissions-icon.png" alt="Submissions icon" class="card-icon" /> 
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-item small">
-        <div class="card">
-          <div class="left-details">
-            <p class="number" id="approved-count">...</p>
-            <p class="desc">Approved</p>
-          </div>
-          <div class="right-icon"> 
-            <img src="../../../assets/images/check-icon.png" alt="Check icon" class="card-icon" /> 
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-item small">
-        <div class="card">
-          <div class="left-details">
-            <p class="number" id="pending-count">...</p>
-            <p class="desc">Pending Review</p>
-          </div>
-          <div class="right-icon"> 
-            <img src="../../../assets/images/clock-icon.png" alt="Clock icon" class="card-icon" /> 
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-item small">
-        <div class="card">
-          <div class="left-details">
-            <p class="number" id="returned-count">...</p>
-            <p class="desc">Returned</p>
-          </div>
-          <div class="right-icon"> 
-            <img src="../../../assets/images/close-icon.png" alt="Close icon" class="card-icon" /> 
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-item medium">
-        <div class="card chart">
-          <h3>Activities by Term</h3>
-          <div id="activities-by-term-chart"></div>
-        </div>
-      </div>
-
-      <div class="grid-item medium">
-        <div class="card chart">
-          <h3>Top SDGs</h3>
-          <div id="top-sdgs-chart"></div>
-        </div>
-      </div>
-
-    </div>
-  `;
-
-  await fetchActivityData();
-}
-
-// fetch data from json file
-async function fetchActivityData() {
   try {
-    const response = await fetch("../../../data/activities.json");
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    // === Fetch from PHP (Local MongoDB) ===
+    const [activitiesRes, orgsRes] = await Promise.all([
+      fetch("../../../server/php/get-activities.php", {
+        credentials: "include",
+      }),
+      fetch("../../../server/php/get-student-orgs.php", {
+        credentials: "include",
+      }),
+    ]);
+
+    if (!activitiesRes.ok) {
+      throw new Error(
+        `Failed to load activities: ${activitiesRes.status} ${activitiesRes.statusText}`
+      );
     }
-    const activities = await response.json();
+    if (!orgsRes.ok) {
+      throw new Error(
+        `Failed to load organizations: ${orgsRes.status} ${orgsRes.statusText}`
+      );
+    }
 
-    const totalSubmissions = activities.length;
-    const approvedCount = activities.filter(
-      (a) => a.status === "Approved"
+    const activities = await activitiesRes.json();
+    const orgs = await orgsRes.json();
+
+    // === COUNTERS ===
+    const total = activities.length;
+    const approved = activities.filter(
+      (a) => a.status?.toLowerCase() === "approved"
     ).length;
-    const pendingCount = activities.filter(
-      (a) => a.status === "Pending"
+    const pending = activities.filter(
+      (a) => a.status?.toLowerCase() === "pending"
     ).length;
-    const reviseCount = activities.filter(
-      (a) => a.status === "Returned"
+    const returned = activities.filter(
+      (a) => a.status?.toLowerCase() === "returned"
     ).length;
 
-    document.getElementById("total-submissions").textContent = totalSubmissions;
-    document.getElementById("approved-count").textContent = approvedCount;
-    document.getElementById("pending-count").textContent = pendingCount;
-    document.getElementById("returned-count").textContent = reviseCount;
+    // === INJECT HTML ===
+    document.querySelector("#folder-body").innerHTML = `
+      <div class="grid-container">
 
-    // --- data for charts (for future use) ---
-    const activitiesByTerm = activities.reduce((acc, activity) => {
-      acc[activity.term] = (acc[activity.term] || 0) + 1;
-      return acc;
-    }, {});
-    console.log("Activities by Term:", activitiesByTerm);
+        <div class="grid-item small">
+          <div class="card">
+            <div class="left-details">
+              <p class="number" id="total-submissions">${total}</p>
+              <p class="desc">Total Submissions</p>
+            </div>
+            <div class="right-icon"> 
+              <img src="../../../assets/images/blue-submissions-icon.png" alt="Submissions icon" class="card-icon" /> 
+            </div>
+          </div>
+        </div>
 
-    const sdgCounts = activities
-      .flatMap((a) => a.sdgs)
-      .reduce((acc, sdg) => {
-        acc[sdg] = (acc[sdg] || 0) + 1;
-        return acc;
-      }, {});
-    console.log("SDG Counts:", sdgCounts);
-  } catch (error) {
-    console.error("Could not fetch or process activities data:", error);
-    document.getElementById("total-submissions").textContent = "Error";
+        <div class="grid-item small">
+          <div class="card">
+            <div class="left-details">
+              <p class="number" id="approved-count">${approved}</p>
+              <p class="desc">Approved</p>
+            </div>
+            <div class="right-icon"> 
+              <img src="../../../assets/images/check-icon.png" alt="Check icon" class="card-icon" /> 
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-item small">
+          <div class="card">
+            <div class="left-details">
+              <p class="number" id="pending-count">${pending}</p>
+              <p class="desc">Pending Review</p>
+            </div>
+            <div class="right-icon"> 
+              <img src="../../../assets/images/clock-icon.png" alt="Clock icon" class="card-icon" /> 
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-item small">
+          <div class="card">
+            <div class="left-details">
+              <p class="number" id="returned-count">${returned}</p>
+              <p class="desc">Returned</p>
+            </div>
+            <div class="right-icon"> 
+              <img src="../../../assets/images/close-icon.png" alt="Close icon" class="card-icon" /> 
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-item medium">
+          <div class="card chart">
+            <h3>Approved Activities per Department</h3>
+            <canvas id="activitiesChart" width="500" height="380"></canvas>
+          </div>
+        </div>
+
+        <div class="grid-item medium">
+          <div class="card chart">
+            <h3>Top SDGs Used</h3>
+            <canvas id="sdgChart" width="500" height="380"></canvas>
+          </div>
+        </div>
+
+      </div>
+    `;
+
+    // === DRAW CHARTS ===
+    try {
+      // Draw bar chart
+      drawBarChart(activities, orgs);
+
+      // Draw donut chart
+      drawDonutChart(activities);
+
+      // Add resize handler
+      let resizeTimeout;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          drawBarChart(activities, orgs);
+          drawDonutChart(activities);
+        }, 250);
+      });
+    } catch (chartErr) {
+      console.error("Error drawing charts:", chartErr);
+      throw chartErr;
+    }
+  } catch (err) {
+    console.error("Dashboard load error:", err);
+    document.querySelector(
+      "#folder-body"
+    ).innerHTML = `<p>Error loading dashboard: ${err.message}</p>`;
   }
 }
 
-// init is handled by the DOMContentLoaded listener above
+// === BAR CHART ===
+function drawBarChart(activities, orgs) {
+  if (!Array.isArray(activities)) {
+    console.error("Activities is not an array:", activities);
+    throw new Error("Invalid activities data");
+  }
+
+  if (!Array.isArray(orgs)) {
+    console.error("Organizations is not an array:", orgs);
+    throw new Error("Invalid organizations data");
+  }
+
+  const departments = ["SAMCIS", "SEA", "SONAHBS", "STELA", "SOM"];
+  const deptCount = Object.fromEntries(departments.map((d) => [d, 0]));
+
+  activities
+    .filter((a) => a.status?.toLowerCase() === "approved")
+    .forEach((a) => {
+      const org = orgs.find((o) => o._id?.$oid === a.org_id?.$oid);
+      if (org?.department && deptCount.hasOwnProperty(org.department)) {
+        deptCount[org.department]++;
+      }
+    });
+
+  const canvas = document.getElementById("activitiesChart");
+  if (!canvas) {
+    throw new Error("Canvas element not found");
+  }
+
+  const container = canvas.parentElement;
+  const dpr = window.devicePixelRatio || 1;
+
+  // Set canvas size based on container
+  const containerStyle = getComputedStyle(container);
+  const containerWidth = parseInt(containerStyle.width, 10) - 40; // Account for padding
+  const containerHeight = Math.min(380, containerWidth * 0.75); // Maintain aspect ratio
+
+  // Update canvas size
+  canvas.style.width = containerWidth + "px";
+  canvas.style.height = containerHeight + "px";
+  canvas.width = containerWidth * dpr;
+  canvas.height = containerHeight * dpr;
+
+  // Store dimensions for later use
+  const rect = {
+    width: containerWidth,
+    height: containerHeight,
+  };
+
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const values = departments.map((d) => deptCount[d]);
+  const maxVal = Math.max(...values, 1);
+
+  // Calculate dimensions based on canvas size (adjusted for horizontal bars)
+  const padding = { top: 40, right: 80, bottom: 40, left: 100 };
+  const chartWidth = rect.width - padding.left - padding.right;
+  const chartHeight = rect.height - padding.top - padding.bottom;
+
+  // Clear
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Grid + X-axis (vertical lines for horizontal bars)
+  ctx.textAlign = "center";
+  ctx.font = "11px Poppins";
+  ctx.strokeStyle = "#e5e7eb";
+  ctx.fillStyle = "#9ca3af";
+
+  for (let i = 0; i <= 5; i++) {
+    const x = padding.left + (i * chartWidth) / 5;
+    ctx.beginPath();
+    ctx.moveTo(x, padding.top);
+    ctx.lineTo(x, rect.height - padding.bottom);
+    ctx.stroke();
+    ctx.fillText(Math.round((maxVal / 5) * i), x, rect.height - padding.bottom + 20);
+  }
+
+  // Horizontal bars
+  const colors = ["#FFD700", "#FF3B30", "#007AFF", "#34C759", "#9B59B6"];
+  const barHeight = 24; // Thinner bars
+  const barSpacing = 60; // Space between bars
+  
+  values.forEach((val, i) => {
+    const y = padding.top + i * barSpacing;
+    const barLength = (val / maxVal) * chartWidth;
+    
+    // Draw bar
+    ctx.fillStyle = colors[i];
+    ctx.beginPath();
+    ctx.roundRect(padding.left, y, barLength, barHeight, 8);
+    ctx.fill();
+
+    // Department label (left side)
+    ctx.fillStyle = "#374151";
+    ctx.textAlign = "right";
+    ctx.font = "13px Poppins";
+    ctx.fillText(departments[i], padding.left - 10, y + barHeight / 2 + 4);
+
+    // Value label (right side of bar or end of chart area)
+    ctx.fillStyle = "#111827";
+    ctx.textAlign = "left";
+    ctx.font = "bold 13px Poppins";
+    ctx.fillText(val, padding.left + barLength + 8, y + barHeight / 2 + 4);
+  });
+}
+
+// === DONUT CHART ===
+function drawDonutChart(activities) {
+  const canvas = document.getElementById("sdgChart");
+  if (!canvas) {
+    throw new Error("Canvas element not found");
+  }
+
+  const container = canvas.parentElement;
+  const dpr = window.devicePixelRatio || 1;
+
+  // Set canvas size based on container with minimum dimensions
+  const containerStyle = getComputedStyle(container);
+  const minSize = 200; // Minimum size to ensure chart is visible
+  const paddingSpace = 40;
+
+  const containerWidth = Math.max(
+    minSize,
+    parseInt(containerStyle.width, 10) - paddingSpace
+  );
+  // For donut chart, prefer square aspect ratio
+  const containerHeight = Math.max(minSize, Math.min(380, containerWidth));
+
+  // Update canvas size
+  canvas.style.width = containerWidth + "px";
+  canvas.style.height = containerHeight + "px";
+  canvas.width = containerWidth * dpr;
+  canvas.height = containerHeight * dpr;
+
+  // Store dimensions for later use
+  const rect = {
+    width: containerWidth,
+    height: containerHeight,
+  };
+
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  // Calculate dimensions ensuring minimum sizes
+  const legendSpace = Math.min(60, rect.height * 0.2); // Adaptive legend space
+  const cx = rect.width / 2;
+  const cy = (rect.height - legendSpace) / 2;
+
+  // Ensure minimum radius while maintaining proportions
+  const minRadius = 40;
+  const maxRadius = Math.min(cx - 30, cy - 30);
+  const radius = Math.max(minRadius, maxRadius);
+  const cutout = radius * 0.6;
+
+  const sdgCount = {};
+  activities.forEach((a) =>
+    (a.sdgs || []).forEach((s) => (sdgCount[s] = (sdgCount[s] || 0) + 1))
+  );
+  // Sort SDGs by count
+  const sortedEntries = Object.entries(sdgCount).sort((a, b) => b[1] - a[1]);
+  const labels = sortedEntries.map(([label]) => label);
+  const data = sortedEntries.map(([_, count]) => count);
+  const colors = [
+    "#E5233D",
+    "#DDA73A",
+    "#4CA146",
+    "#C5192D",
+    "#EF402C",
+    "#27BFE6",
+    "#FBC412",
+    "#A31C44",
+    "#F26A2D",
+    "#E01483",
+    "#C49631",
+    "#56C02B",
+    "#00689D",
+    "#19486A",
+    "#DD1367",
+  ];
+  const total = data.reduce((a, b) => a + b, 0);
+
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw donut segments
+  let start = -Math.PI / 2;
+  data.forEach((val, i) => {
+    const angle = (val / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.arc(cx, cy, radius, start, start + angle);
+    ctx.closePath();
+    ctx.fill();
+
+    // Add percentage label if segment is large enough
+    const percent = ((val / total) * 100).toFixed(0);
+    if (percent > 5) {
+      // Only show label if segment is > 5%
+      const midAngle = start + angle / 2;
+      const labelRadius = radius * 0.8; // Position label at 80% of radius
+      const x = cx + Math.cos(midAngle) * labelRadius;
+      const y = cy + Math.sin(midAngle) * labelRadius;
+
+      ctx.font = "bold 12px Poppins";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(percent + "%", x, y);
+    }
+
+    start += angle;
+  });
+
+  // Cutout
+  ctx.beginPath();
+  ctx.fillStyle = "#fff";
+  ctx.arc(cx, cy, cutout, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Center text with count
+  ctx.font = "bold 18px Poppins";
+  ctx.fillStyle = "#111827";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("SDG Focus", cx, cy - 12);
+  ctx.font = "bold 24px Poppins";
+  ctx.fillText(total.toString(), cx, cy + 12);
+  ctx.font = "12px Poppins";
+  ctx.fillText("Total", cx, cy + 30);
+
+  // Legend
+  const legendPadding = 10;
+  const legendItemHeight = Math.min(20, rect.height * 0.05);
+  const maxLegendWidth = rect.width - legendPadding * 2;
+  const legendItemWidth = Math.min(200, maxLegendWidth / 2);
+  const legendColumns = Math.max(
+    1,
+    Math.floor(maxLegendWidth / legendItemWidth)
+  );
+  const legendRows = Math.ceil(labels.length / legendColumns);
+
+  // Calculate legend Y position to ensure it fits
+  const legendTotalHeight = legendRows * legendItemHeight;
+  const legendY = rect.height - legendTotalHeight - legendPadding;
+
+  ctx.font = `${Math.min(13, rect.height * 0.035)}px Poppins`;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+
+  labels.forEach((l, i) => {
+    const column = i % legendColumns;
+    const row = Math.floor(i / legendColumns);
+    const x = legendPadding + column * legendItemWidth;
+    const y = legendY + row * legendItemHeight;
+
+    // Draw legend item box
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fillRect(x, y - 4, 8, 8);
+
+    // Draw legend text
+    ctx.fillStyle = "#374151";
+    const truncatedLabel = l.length > 20 ? l.substring(0, 17) + "..." : l;
+    ctx.fillText(truncatedLabel, x + 14, y);
+  });
+}
+
+// Helper for rounded rect
+CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+  this.beginPath();
+  this.moveTo(x + r, y);
+  this.lineTo(x + w - r, y);
+  this.quadraticCurveTo(x + w, y, x + w, y + r);
+  this.lineTo(x + w, y + h - r);
+  this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  this.lineTo(x + r, y + h);
+  this.quadraticCurveTo(x, y + h, x, y + h - r);
+  this.lineTo(x, y + r);
+  this.quadraticCurveTo(x, y, x + r, y);
+  this.closePath();
+};

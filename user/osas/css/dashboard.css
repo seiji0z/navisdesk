@@ -124,8 +124,28 @@ html {
 }
 
 /* -------------------------------------
-   Chart
+   Chart Styles
 ------------------------------------- */
+.grid-item.medium .card.chart {
+  height: 100%;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.grid-item.medium .card.chart h3 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.grid-item.medium canvas {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto !important;
+}
+
 .chart-placeholder {
   width: 100%;
   height: 200px;
@@ -242,6 +262,15 @@ html {
   .card-icon {
     width: 30px;
     height: auto;
+  }
+
+  .grid-item.medium .card.chart {
+    padding: 1rem;
+  }
+
+  .grid-item.medium .card.chart h3 {
+    font-size: 1.1em;
+    margin-bottom: 0.8rem;
   }
 }
 
