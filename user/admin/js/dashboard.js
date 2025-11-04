@@ -99,33 +99,54 @@ function drawBarChart(activities, orgs) {
     });
 
   const canvas = document.getElementById("activitiesChart");
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  
+  // Set display size
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  
+  // Set actual size in memory
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  
   const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
   const values = departments.map((d) => deptCount[d]);
   const maxVal = Math.max(...values, 1);
-  const barWidth = 60,
-    gap = 60,
-    baseY = 350,
-    chartHeight = 300;
+  
+  // Calculate dimensions based on canvas size
+  const padding = { top: 40, right: 20, bottom: 60, left: 50 };
+  const chartWidth = rect.width - padding.left - padding.right;
+  const chartHeight = rect.height - padding.top - padding.bottom;
+  const barCount = departments.length;
+  const barWidth = Math.min(40, (chartWidth / barCount) * 0.6);
+  const barGap = (chartWidth - barWidth * barCount) / (barCount + 1);
+  const baseY = rect.height - padding.bottom;
 
   // Clear
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Grid + Y-axis
+  ctx.textAlign = "right";
+  ctx.font = "12px Poppins";
   ctx.strokeStyle = "#e5e7eb";
   ctx.fillStyle = "#6b7280";
+  
   for (let i = 0; i <= 5; i++) {
     const y = baseY - (i * chartHeight) / 5;
     ctx.beginPath();
-    ctx.moveTo(40, y);
-    ctx.lineTo(500, y);
+    ctx.moveTo(padding.left, y);
+    ctx.lineTo(rect.width - padding.right, y);
     ctx.stroke();
-    ctx.fillText(Math.round((maxVal / 5) * i), 25, y + 5);
+    ctx.fillText(Math.round((maxVal / 5) * i), padding.left - 8, y + 4);
   }
 
   // Bars
   const colors = ["#FFD700", "#FF3B30", "#007AFF", "#34C759", "#9B59B6"];
   values.forEach((val, i) => {
-    const x = 70 + i * (barWidth + gap);
+    const x = padding.left + barGap + i * (barWidth + barGap);
     const h = (val / maxVal) * chartHeight;
     const y = baseY - h;
 
@@ -134,28 +155,50 @@ function drawBarChart(activities, orgs) {
     ctx.roundRect(x, y, barWidth, baseY - y, 12);
     ctx.fill();
 
+    // Value label
     ctx.fillStyle = "#111827";
-    ctx.fillText(val, x + barWidth / 2, y - 10);
+    ctx.textAlign = "center";
+    ctx.font = "bold 13px Poppins";
+    ctx.fillText(val, x + barWidth / 2, y - 8);
+    
+    // Department label
     ctx.fillStyle = "#374151";
-    ctx.fillText(departments[i], x + barWidth / 2, baseY + 25);
+    ctx.font = "12px Poppins";
+    ctx.fillText(departments[i], x + barWidth / 2, baseY + 20);
   });
 }
 
 // === DONUT CHART ===
 function drawDonutChart(activities) {
   const canvas = document.getElementById("sdgChart");
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  
+  // Set display size
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  
+  // Set actual size in memory
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  
   const ctx = canvas.getContext("2d");
-  const cx = canvas.width / 2,
-    cy = canvas.height / 2 - 25;
-  const radius = 120,
-    cutout = 70;
+  ctx.scale(dpr, dpr);
+  
+  // Calculate dimensions
+  const cx = rect.width / 2;
+  const cy = (rect.height - 60) / 2;  // Account for legend space
+  const radius = Math.min(cx - 60, cy - 60);
+  const cutout = radius * 0.6;
 
   const sdgCount = {};
   activities.forEach((a) =>
     (a.sdgs || []).forEach((s) => (sdgCount[s] = (sdgCount[s] || 0) + 1))
   );
-  const labels = Object.keys(sdgCount);
-  const data = Object.values(sdgCount);
+  // Sort SDGs by count
+  const sortedEntries = Object.entries(sdgCount).sort((a, b) => b[1] - a[1]);
+  const labels = sortedEntries.map(([label]) => label);
+  const data = sortedEntries.map(([_, count]) => count);
   const colors = [
     "#E5233D",
     "#DDA73A",
@@ -175,6 +218,10 @@ function drawDonutChart(activities) {
   ];
   const total = data.reduce((a, b) => a + b, 0);
 
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Draw donut segments
   let start = -Math.PI / 2;
   data.forEach((val, i) => {
     const angle = (val / total) * Math.PI * 2;
@@ -184,6 +231,22 @@ function drawDonutChart(activities) {
     ctx.arc(cx, cy, radius, start, start + angle);
     ctx.closePath();
     ctx.fill();
+    
+    // Add percentage label if segment is large enough
+    const percent = ((val / total) * 100).toFixed(0);
+    if (percent > 5) {  // Only show label if segment is > 5%
+      const midAngle = start + angle / 2;
+      const labelRadius = radius * 0.8;  // Position label at 80% of radius
+      const x = cx + Math.cos(midAngle) * labelRadius;
+      const y = cy + Math.sin(midAngle) * labelRadius;
+      
+      ctx.font = "bold 12px Poppins";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(percent + "%", x, y);
+    }
+    
     start += angle;
   });
 
@@ -193,20 +256,36 @@ function drawDonutChart(activities) {
   ctx.arc(cx, cy, cutout, 0, Math.PI * 2);
   ctx.fill();
 
-  // Center text
+  // Center text with count
   ctx.font = "bold 18px Poppins";
   ctx.fillStyle = "#111827";
   ctx.textAlign = "center";
-  ctx.fillText("SDG Focus", cx, cy + 6);
+  ctx.textBaseline = "middle";
+  ctx.fillText("SDG Focus", cx, cy - 12);
+  ctx.font = "bold 24px Poppins";
+  ctx.fillText(total.toString(), cx, cy + 12);
+  ctx.font = "12px Poppins";
+  ctx.fillText("Total", cx, cy + 30);
 
   // Legend
+  const legendY = rect.height - 50;  // Fixed position from bottom
+  const legendItemWidth = Math.min(200, rect.width / 2);
+  const legendItemHeight = 20;
+  const legendColumns = Math.floor(rect.width / legendItemWidth);
+  
   ctx.font = "13px Poppins";
   ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  
   labels.forEach((l, i) => {
-    const x = 30 + (i % 2) * 200;
-    const y = 330 + Math.floor(i / 2) * 20;
+    const column = i % legendColumns;
+    const row = Math.floor(i / legendColumns);
+    const x = 30 + column * legendItemWidth;
+    const y = legendY + row * legendItemHeight;
+    
     ctx.fillStyle = colors[i % colors.length];
-    ctx.fillRect(x, y - 9, 10, 10);
+    ctx.fillRect(x, y - 5, 10, 10);
+    
     ctx.fillStyle = "#374151";
     ctx.fillText(l, x + 18, y);
   });
