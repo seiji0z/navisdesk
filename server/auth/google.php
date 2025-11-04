@@ -46,7 +46,7 @@ error_log("Exact-match admin_osas: " . ($admin ? json_encode((array)$admin) : 'N
 error_log("Exact-match student_organizations: " . ($org ? json_encode((array)$org) : 'NULL'));
 
 if ($admin || $org) {
-    $role = $admin ? ($admin->role === 'admin' ? 'admin' : 'osas') : 'org';
+    $role = $admin ? $admin->role : 'org';
     setcookie('google_token', $credential, [
         'expires'   => time() + 3600,
         'path'      => '/',
@@ -69,7 +69,7 @@ error_log("Regex admin_osas: " . ($admin ? json_encode((array)$admin) : 'NULL'))
 error_log("Regex student_organizations: " . ($org ? json_encode((array)$org) : 'NULL'));
 
 if ($admin || $org) {
-    $role = $admin ? ($admin->role === 'admin' ? 'admin' : 'osas') : 'org';
+    $role = $admin ? $admin->role : 'org';
     setcookie('google_token', $credential, [
         'expires'   => time() + 3600,
         'path'      => '/',
