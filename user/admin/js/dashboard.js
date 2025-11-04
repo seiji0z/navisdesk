@@ -1,5 +1,3 @@
-import { protectPage } from "../../../js/auth-guard.js";
-
 // Wait for DOM + Auth
 document.addEventListener("DOMContentLoaded", async () => {
   try {
@@ -7,13 +5,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Set welcome name if available
     try {
-      const welcomeSpan = document.querySelector('.welcome span');
+      const welcomeSpan = document.querySelector(".welcome span");
       if (welcomeSpan) {
         const name = getDisplayName(user);
         welcomeSpan.textContent = name;
       }
     } catch (e) {
-      console.warn('Could not set welcome name:', e);
+      console.warn("Could not set welcome name:", e);
     }
 
     // NOW load the dashboard
@@ -26,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Helper: pick a friendly display name from user object
 function getDisplayName(user) {
-  if (!user) return 'User';
+  if (!user) return "User";
   const nameCandidates = [
     user.first_name,
     user.firstName,
@@ -36,22 +34,22 @@ function getDisplayName(user) {
     user.full_name,
   ];
   for (const n of nameCandidates) {
-    if (n && typeof n === 'string' && n.trim()) {
+    if (n && typeof n === "string" && n.trim()) {
       // Return first token of the name, capitalized
-      const first = n.trim().split(' ')[0];
+      const first = n.trim().split(" ")[0];
       return first.charAt(0).toUpperCase() + first.slice(1);
     }
   }
   if (user.email) {
     // Derive a friendlier name from email local-part (e.g. anjelo.esperanzate -> Anjelo)
-    const local = user.email.split('@')[0];
+    const local = user.email.split("@")[0];
     const parts = local.split(/[^a-zA-Z0-9]+/).filter(Boolean);
     if (parts.length) {
       const candidate = parts[0];
       return candidate.charAt(0).toUpperCase() + candidate.slice(1);
     }
   }
-  return user.role || 'User';
+  return user.role || "User";
 }
 
 async function loadAdminDashboard() {

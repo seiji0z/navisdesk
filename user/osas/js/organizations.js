@@ -1,5 +1,3 @@
-import { protectPage } from "../../../js/auth-guard.js";
-
 // Helper: pick a friendly display name from user object
 function getDisplayName(user) {
   if (!user) return "User";
@@ -20,7 +18,8 @@ function getDisplayName(user) {
   if (user.email) {
     const local = user.email.split("@")[0];
     const parts = local.split(/[^a-zA-Z0-9]+/).filter(Boolean);
-    if (parts.length) return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+    if (parts.length)
+      return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
   }
   return user.role || "User";
 }
@@ -28,7 +27,10 @@ function getDisplayName(user) {
 let allOrganizationsData = [];
 
 async function apiFetch(url, options = {}) {
-  const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {}),
+  };
   const resp = await fetch(url, { ...options, headers });
   if (!resp.ok) {
     const txt = await resp.text();
@@ -41,8 +43,10 @@ const getProp = (obj, path) =>
   path.split(".").reduce((acc, part) => acc && acc[part], obj);
 
 function createOrganizationCardHTML(org) {
-  const statusClass = org.status.toLowerCase() === "active" ? "active" : "pending";
-  const statusText = org.status.charAt(0).toUpperCase() + org.status.slice(1).toLowerCase();
+  const statusClass =
+    org.status.toLowerCase() === "active" ? "active" : "pending";
+  const statusText =
+    org.status.charAt(0).toUpperCase() + org.status.slice(1).toLowerCase();
   const adviserName = (org.adviser && org.adviser.name) || "Not Specified";
   const logoSrc = org.profile_pic || "../../../assets/images/navi-logo.png";
   const pendingReviewClass = org.has_pending_update ? "pending-review" : "";
@@ -210,12 +214,13 @@ async function fetchOrganizations() {
     if (!res.ok) throw new Error("Failed to fetch orgs");
     const orgs = await res.json();
 
-    return orgs.map(org => ({
+    return orgs.map((org) => ({
       ...org,
       _id: org._id,
       has_pending_update: !!org.temporary_details,
       pending_data: org.temporary_details || {},
-      pending_update_description: "The organization has requested to update several details."
+      pending_update_description:
+        "The organization has requested to update several details.",
     }));
   } catch (error) {
     console.error("Could not fetch organizations from PHP:", error);
@@ -286,9 +291,7 @@ function filterAndRenderOrganizations() {
 function loadOrganizationDetails(orgId) {
   console.log("Loading details for organization ID:", orgId);
 
-  const organization = allOrganizationsData.find(
-    (org) => org._id === orgId
-  );
+  const organization = allOrganizationsData.find((org) => org._id === orgId);
 
   if (!organization) {
     console.error("Organization not found!");
@@ -440,9 +443,7 @@ function generateDiffTableHTML(current, pending) {
 function showUpdateReviewModal(orgId) {
   closeReviewModal();
 
-  const organization = allOrganizationsData.find(
-    (org) => org._id === orgId
-  );
+  const organization = allOrganizationsData.find((org) => org._id === orgId);
   if (!organization || !organization.pending_data) {
     console.error("No pending data found for this organization.");
     return;
@@ -576,9 +577,7 @@ function closeConfirmationModal() {
 
 // toggle org status
 function promptToggleStatus(orgId) {
-  const organization = allOrganizationsData.find(
-    (org) => org._id === orgId
-  );
+  const organization = allOrganizationsData.find((org) => org._id === orgId);
   if (!organization) {
     console.error("Cannot toggle status: organization not found.");
     return;
@@ -605,9 +604,7 @@ function promptToggleStatus(orgId) {
 
 // update org status to inactive
 function updateStatusToInactive(orgId) {
-  const organization = allOrganizationsData.find(
-    (org) => org._id === orgId
-  );
+  const organization = allOrganizationsData.find((org) => org._id === orgId);
   if (!organization) return;
 
   organization.status = "Inactive";
@@ -623,9 +620,7 @@ function updateStatusToInactive(orgId) {
 
 // update org status to active
 function updateStatusToActive(orgId) {
-  const organization = allOrganizationsData.find(
-    (org) => org._id === orgId
-  );
+  const organization = allOrganizationsData.find((org) => org._id === orgId);
   if (!organization) return;
 
   organization.status = "Active";
@@ -666,21 +661,24 @@ async function initOrganizations() {
 // Initialize with authentication, set welcome name, then load orgs
 async function initWithAuth() {
   try {
-    const sidebar = document.getElementById('sidebar');
-    const expectedRole = (sidebar && sidebar.dataset && sidebar.dataset.role) ? sidebar.dataset.role : 'org';
+    const sidebar = document.getElementById("sidebar");
+    const expectedRole =
+      sidebar && sidebar.dataset && sidebar.dataset.role
+        ? sidebar.dataset.role
+        : "org";
     const user = await protectPage(expectedRole);
 
     try {
-      const welcomeSpan = document.querySelector('.welcome span');
+      const welcomeSpan = document.querySelector(".welcome span");
       if (welcomeSpan) welcomeSpan.textContent = getDisplayName(user);
     } catch (e) {
-      console.warn('Could not set welcome name on organizations page', e);
+      console.warn("Could not set welcome name on organizations page", e);
     }
 
     await initOrganizations();
   } catch (err) {
-    console.error('Access denied or error on organizations page:', err);
-    document.body.innerHTML = '<h1>Access Denied</h1>';
+    console.error("Access denied or error on organizations page:", err);
+    document.body.innerHTML = "<h1>Access Denied</h1>";
   }
 }
 

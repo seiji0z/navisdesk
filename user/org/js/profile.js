@@ -1,5 +1,5 @@
 // user/org/js/profile.js
-const folderBody = document.getElementById('folder-body');
+const folderBody = document.getElementById("folder-body");
 
 // =============================================
 // 1. API CONFIG & HELPERS
@@ -17,8 +17,8 @@ async function fetchOrgProfile() {
   const response = await fetch(`${DB}/get-student-orgs.php`, {
     method: "GET",
     headers: {
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   });
 
   if (!response.ok) {
@@ -26,7 +26,7 @@ async function fetchOrgProfile() {
   }
 
   const allOrgs = await response.json();
-  const org = allOrgs.find(o => o._id === orgId);
+  const org = allOrgs.find((o) => o._id === orgId);
 
   if (!org) {
     throw new Error("Organization not found");
@@ -42,9 +42,9 @@ async function updateOrgProfile(data) {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "x-org-id": orgId
+      "x-org-id": orgId,
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
 
   if (!response.ok) {
@@ -176,7 +176,9 @@ function createLinkRow(value = "", placeholder = "https://example.com") {
       <button class="small-btn remove-btn remove-link">Remove</button>
     </div>
   `;
-  wrapper.querySelector(".remove-link").addEventListener("click", () => wrapper.remove());
+  wrapper
+    .querySelector(".remove-link")
+    .addEventListener("click", () => wrapper.remove());
   return wrapper;
 }
 
@@ -205,7 +207,6 @@ async function wireProfileBehaviors() {
   let org = {};
   try {
     org = await fetchOrgProfile();
-    console.log("Loaded org:", org);
   } catch (err) {
     console.error("Failed to load org data:", err);
     alert("Could not load profile. Using demo mode.");
@@ -228,20 +229,30 @@ async function wireProfileBehaviors() {
   // Social Links (only first non-empty)
   const getFirst = (field) => (org[field] ? org[field] : "");
 
-  facebookList.appendChild(createLinkRow(getFirst("fb_link"), "https://facebook.com/your-page"));
-  instagramList.appendChild(createLinkRow(getFirst("ig_link"), "https://instagram.com/your-handle"));
-  websiteList.appendChild(createLinkRow(getFirst("website_link"), "https://your-website.com"));
+  facebookList.appendChild(
+    createLinkRow(getFirst("fb_link"), "https://facebook.com/your-page")
+  );
+  instagramList.appendChild(
+    createLinkRow(getFirst("ig_link"), "https://instagram.com/your-handle")
+  );
+  websiteList.appendChild(
+    createLinkRow(getFirst("website_link"), "https://your-website.com")
+  );
 
   // =============================================
   // 4.2 Add More Links
   // =============================================
   document.getElementById("add-fb-btn")?.addEventListener("click", (e) => {
     e.preventDefault();
-    facebookList.appendChild(createLinkRow("", "https://facebook.com/your-page"));
+    facebookList.appendChild(
+      createLinkRow("", "https://facebook.com/your-page")
+    );
   });
   document.getElementById("add-ig-btn")?.addEventListener("click", (e) => {
     e.preventDefault();
-    instagramList.appendChild(createLinkRow("", "https://instagram.com/your-handle"));
+    instagramList.appendChild(
+      createLinkRow("", "https://instagram.com/your-handle")
+    );
   });
   document.getElementById("add-web-btn")?.addEventListener("click", (e) => {
     e.preventDefault();
@@ -268,7 +279,9 @@ async function wireProfileBehaviors() {
   // =============================================
   cancelBtn?.addEventListener("click", (e) => {
     e.preventDefault();
-    if (confirm("Are you sure you want to cancel and return to the dashboard?")) {
+    if (
+      confirm("Are you sure you want to cancel and return to the dashboard?")
+    ) {
       window.location.href = "../../../user/org/pages/dashboard.html";
     }
   });
@@ -284,9 +297,21 @@ async function wireProfileBehaviors() {
     const acronym = document.getElementById("acronym");
     const email = document.getElementById("slu-email");
 
-    if (!official.value.trim()) { official.focus(); alert("Organization name is required."); return; }
-    if (!acronym.value.trim()) { acronym.focus(); alert("Acronym is required."); return; }
-    if (!email.value.trim()) { email.focus(); alert("Email is required."); return; }
+    if (!official.value.trim()) {
+      official.focus();
+      alert("Organization name is required.");
+      return;
+    }
+    if (!acronym.value.trim()) {
+      acronym.focus();
+      alert("Acronym is required.");
+      return;
+    }
+    if (!email.value.trim()) {
+      email.focus();
+      alert("Email is required.");
+      return;
+    }
 
     // Get first non-empty social link
     const getFirstLink = (listId) => {
@@ -305,12 +330,12 @@ async function wireProfileBehaviors() {
       type: document.getElementById("org-type").value,
       adviser: {
         name: document.getElementById("adviser-name").value.trim(),
-        email: document.getElementById("adviser-email").value.trim()
+        email: document.getElementById("adviser-email").value.trim(),
       },
       description: document.getElementById("org-description").value.trim(),
       fb_link: getFirstLink("facebook-list"),
       ig_link: getFirstLink("instagram-list"),
-      website_link: getFirstLink("website-list")
+      website_link: getFirstLink("website-list"),
     };
 
     try {
@@ -327,6 +352,21 @@ async function wireProfileBehaviors() {
 // =============================================
 // 5. INIT
 // =============================================
-document.addEventListener("DOMContentLoaded", () => {
-  wireProfileBehaviors();
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    // Authenticate
+    await protectPage("org");
+
+    // Fetch organization details and update name
+    const org = await fetchOrgProfile();
+    const nameSpan = document.querySelector(".welcome span");
+    if (nameSpan) {
+      nameSpan.textContent = org.abbreviation;
+    }
+
+    // Initialize the rest of the page
+    await wireProfileBehaviors();
+  } catch (err) {
+    console.error("Failed to initialize:", err);
+  }
 });

@@ -1,5 +1,3 @@
-import { loadActivities } from "./activities.js";
-
 // temp wala pang database e
 const sdgTitlesMap = {
   1: "No Poverty",
@@ -27,7 +25,7 @@ const sdgTitlesMap = {
 const cardIcons = {
   "Activity Details": "activity-details.svg",
   "Date and Time": "date-and-time.svg",
-  "Venue": "venue.svg",
+  Venue: "venue.svg",
   "SDG Alignment": "sdg-alignment.svg",
   "Supporting Documents": "supporting-document.svg",
   "Evidence of Activity": "evidence-of-activity.svg",
@@ -75,7 +73,7 @@ function formatDateForDisplay(isoString) {
 }
 
 // table redirection
-export function showActivityReview(activity) {
+function showActivityReview(activity) {
   const folderBody = document.getElementById("folder-body");
   folderBody.innerHTML = generateReview(activity);
 
@@ -95,18 +93,16 @@ export function showActivityReview(activity) {
     .getElementById("accept-activity-btn")
     .addEventListener("click", () => {
       showConfirmationModal(
-        "Are you sure you want to accept this activity?", 
-        "Accept Activity",                               
-        "active",                                        
-        handleAcceptActivity                           
+        "Are you sure you want to accept this activity?",
+        "Accept Activity",
+        "active",
+        handleAcceptActivity
       );
     });
 
   const handleReturnActivity = () => {
     const remarks = document.getElementById("osas-remarks").value;
-    alert(
-      `Activity "${activity.title}" RETURNED.\nRemarks: ${remarks}`
-    );
+    alert(`Activity "${activity.title}" RETURNED.\nRemarks: ${remarks}`);
     loadActivities();
   };
 
@@ -122,16 +118,15 @@ export function showActivityReview(activity) {
 
       showConfirmationModal(
         "Are you sure you want to return this activity with your remarks?",
-        "Return Activity",                                               
-        "inactive",                                                      
-        handleReturnActivity                                           
+        "Return Activity",
+        "inactive",
+        handleReturnActivity
       );
     });
 }
 
 // generate the review display
 function generateReview(activity) {
-
   const backButtonHTML = `
   <div class="back-button-container" style="margin-bottom: 15px;">
     <button class="back-button" id="back-to-table-btn">Back to Activities</button>
@@ -146,7 +141,11 @@ function generateReview(activity) {
     <div class="review-row"><div class="review-label">Academic Year</div><div class="review-value">${activity.acad_year}</div></div>
     <div class="review-row"><div class="review-label">Term</div><div class="review-value">${activity.term}</div></div>
   `;
-  const detailsSection = createSection("Activity Details", detailsHTML, backButtonHTML).outerHTML;
+  const detailsSection = createSection(
+    "Activity Details",
+    detailsHTML,
+    backButtonHTML
+  ).outerHTML;
 
   // date and time
   const dateTimeHTML = `
@@ -157,7 +156,10 @@ function generateReview(activity) {
       activity.date_end
     )}</div></div>
   `;
-  const dateTimeSection = createSection("Date and Time", dateTimeHTML).outerHTML;
+  const dateTimeSection = createSection(
+    "Date and Time",
+    dateTimeHTML
+  ).outerHTML;
 
   // venue
   const venueHTML = `
@@ -248,7 +250,7 @@ function generateReview(activity) {
 
 // confirmation prompt
 function showConfirmationModal(message, confirmText, confirmClass, onConfirm) {
-  closeConfirmationModal(); 
+  closeConfirmationModal();
 
   const modalOverlay = document.createElement("div");
   modalOverlay.className = "modal-overlay";
@@ -269,17 +271,17 @@ function showConfirmationModal(message, confirmText, confirmClass, onConfirm) {
   modalOverlay.appendChild(modalContent);
   document.body.appendChild(modalOverlay);
 
-  document.getElementById("modalConfirmButton").onclick = function() {
+  document.getElementById("modalConfirmButton").onclick = function () {
     onConfirm();
     closeConfirmationModal();
   };
 
-  modalOverlay.onclick = function(e) {
+  modalOverlay.onclick = function (e) {
     if (e.target === modalOverlay) {
       closeConfirmationModal();
     }
   };
-  
+
   window.closeConfirmationModal = closeConfirmationModal;
 }
 

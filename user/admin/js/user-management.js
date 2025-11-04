@@ -1,5 +1,3 @@
-import { protectPage } from "../../../js/auth-guard.js";
-
 // Helper: pick a friendly display name from user object
 function getDisplayName(user) {
   if (!user) return "User";
@@ -20,7 +18,8 @@ function getDisplayName(user) {
   if (user.email) {
     const local = user.email.split("@")[0];
     const parts = local.split(/[^a-zA-Z0-9]+/).filter(Boolean);
-    if (parts.length) return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+    if (parts.length)
+      return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
   }
   return user.role || "User";
 }
@@ -180,20 +179,20 @@ function renderTable(userList) {
 
 // ======== FILTER FUNCTIONS ========
 function setupFilters() {
-  const searchInput   = document.getElementById("search-user");
-  const roleFilter    = document.getElementById("filter-role");
-  const deptFilter    = document.getElementById("filter-department");
-  const statusFilter  = document.getElementById("filter-status");
+  const searchInput = document.getElementById("search-user");
+  const roleFilter = document.getElementById("filter-role");
+  const deptFilter = document.getElementById("filter-department");
+  const statusFilter = document.getElementById("filter-status");
 
   if (!searchInput || !roleFilter || !deptFilter || !statusFilter) return;
 
   // Remove any old listeners to prevent stacking
   applyFilters = () => {
     const filters = {
-      search:      searchInput.value.trim(),
-      role:        roleFilter.value,
-      department:  deptFilter.value,
-      status:      statusFilter.value,
+      search: searchInput.value.trim(),
+      role: roleFilter.value,
+      department: deptFilter.value,
+      status: statusFilter.value,
     };
     loadUsersFromDB(filters);
   };
@@ -591,15 +590,15 @@ async function initUserManagement() {
   try {
     const user = await protectPage("admin");
     try {
-      const welcomeSpan = document.querySelector('.welcome span');
+      const welcomeSpan = document.querySelector(".welcome span");
       if (welcomeSpan) welcomeSpan.textContent = getDisplayName(user);
     } catch (e) {
-      console.warn('Could not set welcome name on user-management page', e);
+      console.warn("Could not set welcome name on user-management page", e);
     }
     loadUserModules();
   } catch (err) {
-    console.error('Access denied or error on user-management page:', err);
-    document.body.innerHTML = '<h1>Access Denied</h1>';
+    console.error("Access denied or error on user-management page:", err);
+    document.body.innerHTML = "<h1>Access Denied</h1>";
   }
 }
 

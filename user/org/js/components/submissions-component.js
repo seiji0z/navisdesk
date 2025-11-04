@@ -1,4 +1,23 @@
-export class SubmissionsComponent {
+class SubmissionsComponent {
+  constructor() {
+    this.orgAbbreviation = "";
+  }
+
+  async init() {
+    try {
+      const response = await fetch("../../../server/php/get-student-orgs.php");
+      if (!response.ok) throw new Error("Failed to fetch organization details");
+      const orgs = await response.json();
+
+      const myOrg = orgs.find((org) => org._id === ICON_ORG_ID);
+      if (!myOrg) throw new Error("Organization not found");
+
+      this.orgAbbreviation = myOrg.abbreviation;
+    } catch (err) {
+      console.error("Failed to fetch org details:", err);
+    }
+  }
+
   render(submissions, viewType = "cards") {
     if (viewType === "table") {
       return this.renderTable(submissions);
@@ -59,7 +78,9 @@ export class SubmissionsComponent {
         </tr>
       </thead>
       <tbody>
-        ${submissions.map((s) => `
+        ${submissions
+          .map(
+            (s) => `
           <tr data-id="${s.id}">
             <td>${s.activity}</td>
             <td><span class="status-badge" style="${
@@ -76,7 +97,9 @@ export class SubmissionsComponent {
             <td>${s.venue}</td>
             <td>${s.participants}</td>
           </tr>
-        `).join("")}
+        `
+          )
+          .join("")}
       </tbody>
     `;
     wrapper.appendChild(table);

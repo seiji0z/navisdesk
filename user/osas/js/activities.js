@@ -1,6 +1,3 @@
-import { showActivityReview } from "./activity-review.js";
-import { protectPage } from "../../../js/auth-guard.js";
-
 // Helper: pick a friendly display name from user object
 function getDisplayName(user) {
   if (!user) return "User";
@@ -21,7 +18,8 @@ function getDisplayName(user) {
   if (user.email) {
     const local = user.email.split("@")[0];
     const parts = local.split(/[^a-zA-Z0-9]+/).filter(Boolean);
-    if (parts.length) return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+    if (parts.length)
+      return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
   }
   return user.role || "User";
 }
@@ -29,7 +27,7 @@ function getDisplayName(user) {
 let allActivitiesData = null;
 let currentOrgMap = null;
 
-export async function loadActivities() {
+async function loadActivities() {
   const folderBody = document.querySelector("#folder-body");
 
   folderBody.innerHTML = `
@@ -100,11 +98,12 @@ export async function loadActivities() {
   try {
     const [activities, orgs] = await Promise.all([
       fetchActivitiesFromDB(),
-      fetchOrganizationsFromDB()
+      fetchOrganizationsFromDB(),
     ]);
 
     if (!activities || !orgs) {
-      folderBody.innerHTML = "<p>Error loading activities or organizations.</p>";
+      folderBody.innerHTML =
+        "<p>Error loading activities or organizations.</p>";
       return;
     }
 
@@ -114,7 +113,7 @@ export async function loadActivities() {
     currentOrgMap = orgs.reduce((map, org) => {
       map[org._id] = {
         name: org.name || "Unknown Organization",
-        dept: org.department || "Unknown Department"
+        dept: org.department || "Unknown Department",
       };
       return map;
     }, {});
@@ -200,8 +199,10 @@ function renderActivitiesTable(activities, orgMap) {
   if (!tableBody || !cardsContainer) return;
 
   if (!activities.length) {
-    tableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No activities found.</td></tr>';
-    cardsContainer.innerHTML = '<div style="text-align:center;padding:2rem;color:#666;">No activities found.</div>';
+    tableBody.innerHTML =
+      '<tr><td colspan="8" style="text-align:center;">No activities found.</td></tr>';
+    cardsContainer.innerHTML =
+      '<div style="text-align:center;padding:2rem;color:#666;">No activities found.</div>';
     return;
   }
 
@@ -217,14 +218,16 @@ function renderActivitiesTable(activities, orgMap) {
     const submitDate = activity.submitted_at
       ? new Date(activity.submitted_at)
       : new Date();
-    const formattedDate = submitDate.toLocaleString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }).replace(",", "");
+    const formattedDate = submitDate
+      .toLocaleString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(",", "");
 
     const activitySdgs = Array.isArray(activity.sdgs) ? activity.sdgs : [];
     const sdgTooltip =
@@ -258,7 +261,9 @@ function renderActivitiesTable(activities, orgMap) {
         <td>${activity.term || "N/A"}</td>
         <td><span class="status ${statusClass}">${activity.status}</span></td>
         <td>${formattedDate}</td>
-        <td><button class="review-btn" data-activity-id="${activity._id}">Review</button></td>
+        <td><button class="review-btn" data-activity-id="${
+          activity._id
+        }">Review</button></td>
       </tr>
     `;
 
@@ -298,7 +303,9 @@ function renderActivitiesTable(activities, orgMap) {
           </div>
         </div>
         <div class="activity-card-actions">
-          <button class="review-btn" data-activity-id="${activity._id}">Review</button>
+          <button class="review-btn" data-activity-id="${
+            activity._id
+          }">Review</button>
         </div>
       </div>
     `;
@@ -306,7 +313,12 @@ function renderActivitiesTable(activities, orgMap) {
 }
 
 function addFilterEventListeners() {
-  ["status-filter", "organization-filter", "department-filter", "sdgs-filter"].forEach((id) => {
+  [
+    "status-filter",
+    "organization-filter",
+    "department-filter",
+    "sdgs-filter",
+  ].forEach((id) => {
     const select = document.getElementById(id);
     if (select) select.addEventListener("change", filterAndRenderActivities);
   });
@@ -327,10 +339,14 @@ function addFilterEventListeners() {
 function filterAndRenderActivities() {
   if (!allActivitiesData || !currentOrgMap) return;
 
-  const searchTerm = document.getElementById("activity-search")?.value.toLowerCase().trim() || "";
+  const searchTerm =
+    document.getElementById("activity-search")?.value.toLowerCase().trim() ||
+    "";
   const statusFilter = document.getElementById("status-filter")?.value || "";
-  const organizationFilter = document.getElementById("organization-filter")?.value || "";
-  const departmentFilter = document.getElementById("department-filter")?.value || "";
+  const organizationFilter =
+    document.getElementById("organization-filter")?.value || "";
+  const departmentFilter =
+    document.getElementById("department-filter")?.value || "";
   const sdgsFilter = document.getElementById("sdgs-filter")?.value || "";
 
   const filtered = allActivitiesData.filter((activity) => {
@@ -348,18 +364,15 @@ function filterAndRenderActivities() {
       orgInfo.dept.toLowerCase().includes(searchTerm);
 
     const matchesStatus = !statusFilter || activity.status === statusFilter;
-    const matchesOrg = !organizationFilter || orgInfo.name === organizationFilter;
+    const matchesOrg =
+      !organizationFilter || orgInfo.name === organizationFilter;
     const matchesDept = !departmentFilter || orgInfo.dept === departmentFilter;
     const matchesSdgs =
       !sdgsFilter ||
       (Array.isArray(activity.sdgs) && activity.sdgs.includes(sdgsFilter));
 
     return (
-      matchesSearch &&
-      matchesStatus &&
-      matchesOrg &&
-      matchesDept &&
-      matchesSdgs
+      matchesSearch && matchesStatus && matchesOrg && matchesDept && matchesSdgs
     );
   });
 
@@ -389,22 +402,25 @@ function initActivities() {
 async function initWithAuth() {
   try {
     // Determine expected role from sidebar if present, fallback to 'org'
-    const sidebar = document.getElementById('sidebar');
-    const expectedRole = (sidebar && sidebar.dataset && sidebar.dataset.role) ? sidebar.dataset.role : 'org';
+    const sidebar = document.getElementById("sidebar");
+    const expectedRole =
+      sidebar && sidebar.dataset && sidebar.dataset.role
+        ? sidebar.dataset.role
+        : "org";
     const user = await protectPage(expectedRole);
 
     // set welcome name if DOM element exists
     try {
-      const welcomeSpan = document.querySelector('.welcome span');
+      const welcomeSpan = document.querySelector(".welcome span");
       if (welcomeSpan) welcomeSpan.textContent = getDisplayName(user);
     } catch (e) {
-      console.warn('Could not set welcome name on activities page', e);
+      console.warn("Could not set welcome name on activities page", e);
     }
 
     initActivities();
   } catch (err) {
-    console.error('Access denied or error on activities page:', err);
-    document.body.innerHTML = '<h1>Access Denied</h1>';
+    console.error("Access denied or error on activities page:", err);
+    document.body.innerHTML = "<h1>Access Denied</h1>";
   }
 }
 

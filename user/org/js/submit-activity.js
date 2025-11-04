@@ -1,16 +1,65 @@
+// Define organization ID
+const ICON_ORG_ID = "6716001a9b8c2001abcd0001";
+
+// Helper: pick a friendly display name from user object
+function getDisplayName(user) {
+  if (!user) return "User";
+  const nameCandidates = [
+    user.first_name,
+    user.firstName,
+    user.given_name,
+    user.name,
+    user.displayName,
+    user.full_name,
+  ];
+  for (const n of nameCandidates) {
+    if (n && typeof n === "string" && n.trim()) {
+      return n.trim();
+    }
+  }
+  if (user.email) {
+    const local = user.email.split("@")[0];
+    const parts = local.split(/[^a-zA-Z0-9]+/).filter(Boolean);
+    if (parts.length) return parts[0];
+  }
+  return user.role || "User";
+}
+
+// Initialize page
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    // Authenticate user
+    await protectPage("org");
+
+    // Fetch org details
+    const response = await fetch("../../../server/php/get-student-orgs.php");
+    if (!response.ok) throw new Error("Failed to fetch organization details");
+    const orgs = await response.json();
+
+    // Find our organization using the ICON_ORG_ID
+    const myOrg = orgs.find((org) => org._id === ICON_ORG_ID);
+    if (!myOrg) throw new Error("Organization not found");
+
+    // Set welcome name to abbreviation
+    const nameSpan = document.querySelector(".welcome span");
+    if (nameSpan) {
+      nameSpan.textContent = myOrg.abbreviation;
+    }
+  } catch (err) {
+    console.error("Auth error:", err);
+  }
+});
+
 // Select folder body container
 const folderBody = document.getElementById("folder-body");
-
 
 // Save activity to database
 window.DB = {
   async saveActivity(formData) {
-    const orgId = "6716001a9b8c2001abcd0001"; // ICON ORG
-
     const response = await fetch("../../../server/php/submit-activity.php", {
       method: "POST",
-      headers: { "x-org-id": orgId },
-      body: formData
+      headers: { "x-org-id": ICON_ORG_ID },
+      body: formData,
     });
 
     if (!response.ok) {
@@ -18,9 +67,8 @@ window.DB = {
       throw new Error(error.error || "Submission failed");
     }
     return await response.json();
-  }
+  },
 };
-
 
 // Helper function: create form section card
 // Map card titles to icon filenames
@@ -415,8 +463,9 @@ function gatherFormData() {
   data.append("venue", venueParticipants.querySelector("input").value.trim());
 
   // SDGs
-  sdgAlignment.querySelectorAll('input[type="checkbox"]:checked')
-    .forEach(cb => data.append("sdgs", cb.dataset.sdg));
+  sdgAlignment
+    .querySelectorAll('input[type="checkbox"]:checked')
+    .forEach((cb) => data.append("sdgs", cb.dataset.sdg));
 
   // Supporting Documents
   supportingDocs.querySelectorAll(".upload-box").forEach((box, i) => {
@@ -429,7 +478,7 @@ function gatherFormData() {
   });
 
   // Evidence
-  evidence.querySelectorAll(".upload-box").forEach(box => {
+  evidence.querySelectorAll(".upload-box").forEach((box) => {
     const files = box.querySelector(".file-input").files;
     for (let f of files) data.append("evidences", f);
   });
@@ -500,7 +549,7 @@ function escapeHtml(str) {
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-ssubmitBtn.addEventListener("click", () => {
+submitBtn.addEventListener("click", () => {
   const reviewCard = document.getElementById("review-card");
 
   if (reviewCard) {

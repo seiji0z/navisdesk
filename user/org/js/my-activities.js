@@ -6,8 +6,8 @@ function formatDate(dateString) {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return "";
 
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
   } catch (error) {
     return "";
   }
@@ -56,16 +56,22 @@ class SubmissionsComponent {
       container.innerHTML = submissions
         .map(
           (s) => `
-          <div class="submission-card ${s.status.toLowerCase()}" data-id="${s.id}">
+          <div class="submission-card ${s.status.toLowerCase()}" data-id="${
+            s.id
+          }">
             <div class="submission-card-content">
               <h3>${s.title}</h3>
               <p class="description">${s.description}</p>
               <div class="submission-meta">
                 <div class="status-info">
-                  <span class="status ${s.status.toLowerCase()}">${s.status}</span>
+                  <span class="status ${s.status.toLowerCase()}">${
+            s.status
+          }</span>
                 </div>
                 <div class="submission-details">
-                  <span class="submission-date">${formatDate(s.submitted_at)}</span>
+                  <span class="submission-date">${formatDate(
+                    s.submitted_at
+                  )}</span>
                   <span class="submission-venue">${s.venue}</span>
                 </div>
               </div>
@@ -94,7 +100,9 @@ class SubmissionsComponent {
               (s) => `
             <tr class="${s.status.toLowerCase()}" data-id="${s.id}">
               <td>${s.title}</td>
-              <td><span class="status ${s.status.toLowerCase()}">${s.status}</span></td>
+              <td><span class="status ${s.status.toLowerCase()}">${
+                s.status
+              }</span></td>
               <td>${formatDate(s.submitted_at)}</td>
               <td>${s.venue}</td>
             </tr>`
@@ -133,7 +141,9 @@ class ActivityDetailsComponent {
         <div class="info-grid">
           <div class="info-item">
             <strong>Status:</strong>
-            <span class="status ${submission.status.toLowerCase()}">${submission.status}</span>
+            <span class="status ${submission.status.toLowerCase()}">${
+      submission.status
+    }</span>
           </div>
           <div class="info-item">
             <strong>Description:</strong>
@@ -196,7 +206,11 @@ class ActivityDetailsComponent {
           </div>
           <div class="info-item full-width">
             <strong>SDGs:</strong>
-            <span>${submission.sdgs && submission.sdgs.length ? submission.sdgs.join(", ") : "None"}</span>
+            <span>${
+              submission.sdgs && submission.sdgs.length
+                ? submission.sdgs.join(", ")
+                : "None"
+            }</span>
           </div>
         </div>
       </section>
@@ -216,7 +230,11 @@ class ActivityDetailsComponent {
                   </div>
                   <div class="evidence-info">
                     <p class="evidence-name">${d.file_name || d}</p>
-                    <p class="evidence-date"><small>Uploaded: ${d.upload_date ? formatDate(d.upload_date) : formatDate(submission.submitted_at)}</small></p>
+                    <p class="evidence-date"><small>Uploaded: ${
+                      d.upload_date
+                        ? formatDate(d.upload_date)
+                        : formatDate(submission.submitted_at)
+                    }</small></p>
                   </div>
                 </div>`
                   )
@@ -236,10 +254,16 @@ class ActivityDetailsComponent {
                   .map(
                     (e) => `
                 <div class="evidence-item">
-                  <img src="../../../uploads/${e.file_name || e}" alt="${e.file_name || e}" loading="lazy" />
+                  <img src="../../../uploads/${e.file_name || e}" alt="${
+                      e.file_name || e
+                    }" loading="lazy" />
                   <div class="evidence-info">
                     <p class="evidence-name">${e.file_name || e}</p>
-                    <p class="evidence-date"><small>Uploaded: ${e.upload_date ? formatDate(e.upload_date) : formatDate(submission.submitted_at)}</small></p>
+                    <p class="evidence-date"><small>Uploaded: ${
+                      e.upload_date
+                        ? formatDate(e.upload_date)
+                        : formatDate(submission.submitted_at)
+                    }</small></p>
                   </div>
                 </div>`
                   )
@@ -269,7 +293,7 @@ class ActivityDetailsComponent {
       historyItems.push({
         date: submission.submitted_at,
         status: submission.status,
-        remarks: submission.remarks || "No Remarks"
+        remarks: submission.remarks || "No Remarks",
       });
     }
 
@@ -278,7 +302,7 @@ class ActivityDetailsComponent {
       historyItems.push({
         date: submission.created_at || new Date().toISOString(),
         status: submission.status,
-        remarks: submission.remarks || "No Remarks"
+        remarks: submission.remarks || "No Remarks",
       });
     }
 
@@ -311,7 +335,7 @@ class MyActivitiesModel {
   constructor() {
     this.activities = [];
     this.submissions = [];
-    this.ICON_ORG_ID = "6716001a9b8c2001abcd0001"; // ICON organization ID
+    this.orgId = ICON_ORG_ID; // Use global organization ID
   }
 
   async loadActivities() {
@@ -323,55 +347,65 @@ class MyActivitiesModel {
     ];
   }
 
-async loadSubmissions() {
-  try {
-    const orgId = "6716001a9b8c2001abcd0001"; // ICON ORG
-    const response = await fetch("../../../server/php/get-activities.php", {
-      headers: { "x-org-id": orgId }
-    });
+  async loadSubmissions() {
+    try {
+      const response = await fetch("../../../server/php/get-activities.php", {
+        headers: { "x-org-id": this.orgId },
+      });
 
-    if (!response.ok) throw new Error("Failed to fetch");
+      if (!response.ok) throw new Error("Failed to fetch");
 
-    const allActivities = await response.json();
-    this.submissions = allActivities.map(a => ({
-      id: a._id,
-      _id: a._id,
-      org_id: a.org_id,
-      title: a.title,
-      description: a.description,
-      venue: a.venue,
-      status: a.status,
-      submitted_at: a.submitted_at,
-      sdgs: a.sdgs,
-      supporting_docs: a.supporting_docs,
-      evidences: a.evidences,
-      objectives: a.objectives,
-      acad_year: a.acad_year,
-      term: a.term,
-      submitted_by: a.submitted_by || "ICON Org",
-      reviewed_by: a.reviewed_by,
-      reviewed_at: a.reviewed_at,
-      created_at: a.created_at,
-      remarks: a.remarks || ""
-    }));
+      const allActivities = await response.json();
+      this.submissions = allActivities.map((a) => ({
+        id: a._id,
+        _id: a._id,
+        org_id: a.org_id,
+        title: a.title,
+        description: a.description,
+        venue: a.venue,
+        status: a.status,
+        submitted_at: a.submitted_at,
+        sdgs: a.sdgs,
+        supporting_docs: a.supporting_docs,
+        evidences: a.evidences,
+        objectives: a.objectives,
+        acad_year: a.acad_year,
+        term: a.term,
+        submitted_by: a.submitted_by || "ICON Org",
+        reviewed_by: a.reviewed_by,
+        reviewed_at: a.reviewed_at,
+        created_at: a.created_at,
+        remarks: a.remarks || "",
+      }));
 
-    // Update summary counts
-    const summaryMap = {};
-    this.submissions.forEach(s => {
-      summaryMap[s.status] = (summaryMap[s.status] || 0) + 1;
-    });
+      // Update summary counts
+      const summaryMap = {};
+      this.submissions.forEach((s) => {
+        summaryMap[s.status] = (summaryMap[s.status] || 0) + 1;
+      });
 
-    this.activities = [
-      { title: "Approved", count: summaryMap["Approved"] || 0, description: "Approved activities" },
-      { title: "Returned", count: summaryMap["Returned"] || 0, description: "Requires revision" },
-      { title: "Pending", count: summaryMap["Pending"] || 0, description: "Awaiting approval" },
-    ];
-
-  } catch (error) {
-    console.error("Error:", error);
-    this.submissions = [];
+      this.activities = [
+        {
+          title: "Approved",
+          count: summaryMap["Approved"] || 0,
+          description: "Approved activities",
+        },
+        {
+          title: "Returned",
+          count: summaryMap["Returned"] || 0,
+          description: "Requires revision",
+        },
+        {
+          title: "Pending",
+          count: summaryMap["Pending"] || 0,
+          description: "Awaiting approval",
+        },
+      ];
+    } catch (error) {
+      console.error("Error:", error);
+      this.submissions = [];
+    }
   }
-}
 
   getActivities() {
     return this.activities;
@@ -496,9 +530,11 @@ class MyActivitiesView {
   }
 
   showActivityDetails(submissionId) {
-    const submission = this.submissionsData.find((s) => s.id === submissionId || s._id === submissionId);
+    const submission = this.submissionsData.find(
+      (s) => s.id === submissionId || s._id === submissionId
+    );
     if (!submission) {
-      console.error('Submission not found:', submissionId);
+      console.error("Submission not found:", submissionId);
       return;
     }
 
@@ -535,11 +571,37 @@ class MyActivitiesController {
   }
 
   async init() {
-    await this.model.loadActivities();
-    await this.model.loadSubmissions();
-    this.view.render(this.model.getActivities(), this.model.getSubmissions());
+    try {
+      // Authenticate user
+      await protectPage("org");
+
+      // Fetch org details
+      const response = await fetch("../../../server/php/get-student-orgs.php");
+      if (!response.ok) throw new Error("Failed to fetch organization details");
+      const orgs = await response.json();
+
+      // Find our organization
+      const myOrg = orgs.find((org) => org._id === ICON_ORG_ID);
+      if (!myOrg) throw new Error("Organization not found");
+
+      // Set welcome name to abbreviation
+      const nameSpan = document.querySelector(".welcome span");
+      if (nameSpan) {
+        nameSpan.textContent = myOrg.abbreviation;
+      }
+
+      // Load page data
+      await this.model.loadActivities();
+      await this.model.loadSubmissions();
+      this.view.render(this.model.getActivities(), this.model.getSubmissions());
+    } catch (err) {
+      console.error("Initialization error:", err);
+    }
   }
 }
+
+// Define the organization ID
+const ICON_ORG_ID = "6716001a9b8c2001abcd0001"; // ICON organization ID
 
 // Initialize the application
 const controller = new MyActivitiesController();

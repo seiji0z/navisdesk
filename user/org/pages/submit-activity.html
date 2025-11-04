@@ -3,8 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Submit Activity | Navi’s Desk</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link
       rel="icon"
@@ -30,7 +29,7 @@
       <div class="dashboard-folder">
         <div class="header">
           <div class="welcome">
-            <h1>Welcome, <span>ICON!</span></h1>
+            <h1>Welcome, <span></span></h1>
           </div>
           <div class="date-info">
             <p>Today is <span class="current-date"></span></p>
@@ -47,12 +46,9 @@
     </main>
 
     <!-- Scripts -->
+    <script src="../../../js/auth-guard.js"></script>
     <script src="../../shared/js/sidebar.js"></script>
     <script src="../../shared/js/folder.js"></script>
-    <script type="module" src="../js/submit-activity.js"></script>
-    <script src="../../../js/auth-guard.js"></script>
-    <script>
-      protectPage("org");
-    </script>
+    <script src="../js/submit-activity.js"></script>
   </body>
 </html>

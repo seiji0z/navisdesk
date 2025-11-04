@@ -25,7 +25,7 @@
       <div class="dashboard-folder">
         <div class="header">
           <div class="welcome">
-            <h1>Welcome, <span>OSAS!</span></h1>
+            <h1>Welcome, <span></span></h1>
           </div>
           <div class="date-info">
             <p>Today is <span class="current-date"></span></p>
@@ -41,11 +41,12 @@
     </main>
 
     <!-- Scripts -->
-    <script src="../../shared/js/sidebar.js"></script>
-    <script type="module" src="../js/activities.js"></script>
     <script src="../../../js/auth-guard.js"></script>
+    <script src="../../shared/js/sidebar.js"></script>
+    <script src="../js/activity-review.js"></script>
+    <script src="../js/activities.js"></script>
     <script>
-      //protectPage("osas");
+      protectPage("osas"); // Enable authentication
     </script>
   </body>
 </html>

@@ -1,5 +1,3 @@
-import { protectPage } from "../../../js/auth-guard.js";
-
 // Helper: pick a friendly display name from user object
 function getDisplayName(user) {
   if (!user) return "User";
@@ -20,7 +18,8 @@ function getDisplayName(user) {
   if (user.email) {
     const local = user.email.split("@")[0];
     const parts = local.split(/[^a-zA-Z0-9]+/).filter(Boolean);
-    if (parts.length) return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+    if (parts.length)
+      return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
   }
   return user.role || "User";
 }
@@ -34,7 +33,7 @@ async function loadActivityLogData(filters = {}) {
     const [logsRes, adminRes, orgRes] = await Promise.all([
       fetch(url),
       fetch("../../../server/php/get-admins.php"),
-      fetch("../../../server/php/get-student-orgs.php")
+      fetch("../../../server/php/get-student-orgs.php"),
     ]);
 
     if (!logsRes.ok || !adminRes.ok || !orgRes.ok) {
@@ -44,22 +43,23 @@ async function loadActivityLogData(filters = {}) {
     const [logsData, adminData, orgData] = await Promise.all([
       logsRes.json(),
       adminRes.json(),
-      orgRes.json()
+      orgRes.json(),
     ]);
 
     if (logsData.error) {
       throw new Error(logsData.error);
     }
 
-    const adminMap = new Map(adminData.map(a => [a._id.toString(), a.name]));
-    const orgMap = new Map(orgData.map(o => [o._id.toString(), o.name]));
+    const adminMap = new Map(adminData.map((a) => [a._id.toString(), a.name]));
+    const orgMap = new Map(orgData.map((o) => [o._id.toString(), o.name]));
 
     const activities = logsData
-      .filter(log => log.user_id && log.action && log.timestamp)
-      .map(log => {
+      .filter((log) => log.user_id && log.action && log.timestamp)
+      .map((log) => {
         const userIdStr = log.user_id.toString();
         const role = log.role || "Unknown";
-        const username = adminMap.get(userIdStr) || orgMap.get(userIdStr) || "Unknown User";
+        const username =
+          adminMap.get(userIdStr) || orgMap.get(userIdStr) || "Unknown User";
 
         return {
           _id: log._id.toString(),
@@ -67,7 +67,7 @@ async function loadActivityLogData(filters = {}) {
           userName: username,
           role,
           action: log.action,
-          timestamp: log.timestamp
+          timestamp: log.timestamp,
         };
       });
 
@@ -80,7 +80,6 @@ async function loadActivityLogData(filters = {}) {
     }
 
     renderActivityTable(activities);
-
   } catch (error) {
     console.error("Activity Log Load Failed:", error);
     document.getElementById("activities-table-body").innerHTML = `
@@ -161,23 +160,31 @@ function renderActivityTable(data) {
   const tbody = document.getElementById("activities-table-body");
   tbody.innerHTML = "";
 
-  const sorted = [...data].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  const sorted = [...data].sort(
+    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+  );
 
   if (sorted.length === 0) {
     tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#666;">No activities found.</td></tr>`;
     return;
   }
 
-  sorted.forEach(activity => {
+  sorted.forEach((activity) => {
     const row = document.createElement("tr");
     const date = new Date(activity.timestamp).toLocaleString("en-US", {
-      year: "numeric", month: "short", day: "numeric",
-      hour: "2-digit", minute: "2-digit", hour12: true
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
     });
 
     row.innerHTML = `
       <td>${escapeHtml(activity.userName)}</td>
-      <td><span class="role-badge role-${activity.role.toLowerCase().replace(' ', '-')}">
+      <td><span class="role-badge role-${activity.role
+        .toLowerCase()
+        .replace(" ", "-")}">
         ${formatRoleDisplay(activity.role)}
       </span></td>
       <td>${escapeHtml(activity.action)}</td>
@@ -194,11 +201,13 @@ function escapeHtml(text) {
 }
 
 function formatRoleDisplay(role) {
-  return {
-    "Organization": "Student Org",
-    "OSAS Officer": "OSAS Officer",
-    "Admin": "Admin"
-  }[role] || role;
+  return (
+    {
+      Organization: "Student Org",
+      "OSAS Officer": "OSAS Officer",
+      Admin: "Admin",
+    }[role] || role
+  );
 }
 
 // ======== FILTERS (PHP-BASED) ========
@@ -215,7 +224,7 @@ function setupActivityFilters() {
       search: searchInput.value.trim(),
       role: roleFilter.value,
       date_from: dateFrom.value,
-      date_to: dateTo.value
+      date_to: dateTo.value,
     };
 
     loadActivityLogData(filters);
@@ -243,14 +252,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const user = await protectPage("admin");
     try {
-      const welcomeSpan = document.querySelector('.welcome span');
+      const welcomeSpan = document.querySelector(".welcome span");
       if (welcomeSpan) welcomeSpan.textContent = getDisplayName(user);
     } catch (e) {
-      console.warn('Could not set welcome name on activity-log page', e);
+      console.warn("Could not set welcome name on activity-log page", e);
     }
     initActivityLog();
   } catch (err) {
-    console.error('Access denied or error on activity-log page:', err);
-    document.body.innerHTML = '<h1>Access Denied</h1>';
+    console.error("Access denied or error on activity-log page:", err);
+    document.body.innerHTML = "<h1>Access Denied</h1>";
   }
 });

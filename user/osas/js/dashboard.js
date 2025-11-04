@@ -1,10 +1,39 @@
 // ---- OSAS Dashboard ----
-import { protectPage } from "../../../js/auth-guard.js";
+// Helper: pick a friendly display name from user object
+function getDisplayName(user) {
+  if (!user) return "User";
+  const nameCandidates = [
+    user.first_name,
+    user.firstName,
+    user.given_name,
+    user.name,
+    user.displayName,
+    user.full_name,
+  ];
+  for (const n of nameCandidates) {
+    if (n && typeof n === "string" && n.trim()) {
+      return n.trim();
+    }
+  }
+  if (user.email) {
+    const local = user.email.split("@")[0];
+    const parts = local.split(/[^a-zA-Z0-9]+/).filter(Boolean);
+    if (parts.length) return parts[0];
+  }
+  return user.role || "User";
+}
 
 // Wait for DOM + Auth
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    await protectPage("osas");
+    const user = await protectPage("osas");
+    // Set the welcome name
+    if (user) {
+      const nameSpan = document.querySelector(".welcome span");
+      if (nameSpan) {
+        nameSpan.textContent = getDisplayName(user);
+      }
+    }
     await loadOsasDashboard();
   } catch (err) {
     console.error("Access denied or error:", err);

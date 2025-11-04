@@ -1,4 +1,4 @@
-export function setCurrentDate() {
+function setCurrentDate() {
   const dateElement = document.querySelector(".current-date");
   if (!dateElement) return;
 
@@ -11,7 +11,7 @@ export function setCurrentDate() {
   });
 }
 
-export async function loadFolder(targetSelector, title) {
+async function loadFolder(targetSelector, title) {
   try {
     const response = await fetch("../components/folder.html");
     if (!response.ok) throw new Error("Folder HTML not found");

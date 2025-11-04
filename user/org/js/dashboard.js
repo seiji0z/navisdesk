@@ -2,12 +2,27 @@
 // ORGANIZATION DASHBOARD (GRID LAYOUT)
 // ===============================
 
-import { protectPage } from "../../../js/auth-guard.js";
-
 // Wait for DOM + Auth
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+    // Authenticate user
     await protectPage("org");
+
+    // Fetch organization details
+    const response = await fetch("../../../server/php/get-student-orgs.php");
+    if (!response.ok) throw new Error("Failed to fetch organization details");
+    const orgs = await response.json();
+
+    // Find our organization
+    const myOrg = orgs.find((org) => org._id === ICON_ORG_ID);
+    if (!myOrg) throw new Error("Organization not found");
+
+    // Set the welcome name to organization abbreviation
+    const nameSpan = document.querySelector(".welcome span");
+    if (nameSpan) {
+      nameSpan.textContent = myOrg.abbreviation;
+    }
+
     renderOrgDashboard();
   } catch (err) {
     console.error("Access denied or error:", err);

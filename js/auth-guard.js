@@ -1,4 +1,4 @@
-export async function protectPage(expectedRole) {
+async function protectPage(expectedRole) {
   // Allow easy local development bypass on localhost
   // Normal auth behavior: ask server who the user is
   try {
@@ -11,7 +11,9 @@ export async function protectPage(expectedRole) {
 
     const user = await res.json();
     if (!user.loggedIn || user.role !== expectedRole) {
-      alert(`Access denied! This page is only accessible to ${expectedRole} users.`);
+      alert(
+        `Access denied! This page is only accessible to ${expectedRole} users.`
+      );
       window.location.href = "/login.html";
       return null;
     }
