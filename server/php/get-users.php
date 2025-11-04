@@ -1,18 +1,16 @@
 <?php
+// Include DB helpers
 require_once __DIR__ . '/../db.php';
 header('Content-Type: application/json');
 
-/* -------------------------------------------------
-   1. READ FILTERS FROM GET
-   ------------------------------------------------- */
+//READ FILTERS FROM GET
 $search     = trim($_GET['search'] ?? '');
 $role       = trim($_GET['role'] ?? '');
 $department = trim($_GET['department'] ?? '');
 $status     = trim($_GET['status'] ?? '');
 
-/* -------------------------------------------------
-   2. MAP FRONTEND ROLE TO DB VALUE
-   ------------------------------------------------- */
+
+//MAP FRONTEND ROLE TO DB VALUE
 $roleMap = [
     'admin'        => 'admin',
     'osas'         => 'osas',
@@ -23,15 +21,14 @@ $dbRoleFilter = null;
 if ($role !== '') {
     $mapped = $roleMap[$role] ?? null;
     if (is_array($mapped)) {
-        $dbRoleFilter = ['$in' => $mapped];
+        $dbRoleFilter = ['$in' => $mapped]; // Match any in array
     } else {
         $dbRoleFilter = $mapped;
     }
 }
 
-/* -------------------------------------------------
-   3. BUILD MongoDB query
-   ------------------------------------------------- */
+
+//BUILD MongoDB query
 $filter = [];
 
 if ($search !== '') {
@@ -46,10 +43,8 @@ if ($dbRoleFilter !== null) {
     $filter['role'] = $dbRoleFilter;
 }
 
-/* ---- NEW: Department filter ---- */
+// Department filter (same field name in both collections)
 if ($department !== '') {
-    // For admin/osas the field is called "department"
-    // For orgs it is also "department"
     $filter['department'] = $department;
 }
 
@@ -57,21 +52,21 @@ if ($status !== '') {
     $filter['status'] = $status;
 }
 
-/* -------------------------------------------------
-   4. FETCH BOTH collections
-   ------------------------------------------------- */
+// FETCH BOTH collections
+
 try {
+    // Get admins/OSAS and student orgs separately
     $admins = findAll('admin_osas', $filter);
     $orgs   = findAll('student_organizations', $filter);
 
-    $all = [];
+    $all = []; // Combined list
 
-    // ---------- Admins & OSAS ----------
+    // Process Admins & OSAS
     foreach ($admins as $a) {
         $a = (array)$a;
         $dbRole = $a['role'] ?? '';
 
-        // Map DB role → Display role
+        // Convert DB role to user-friendly name
         $displayRole = match ($dbRole) {
             'admin' => 'Admin',
             'osas'  => 'OSAS Officer',
@@ -86,13 +81,11 @@ try {
             "status"         => $a['status'] ?? 'Active',
             "dateRegistered" => formatDate($a['created_at'] ?? null),
             "lastLogin"      => formatDate($a['last_log'] ?? null),
-
-            // Keep department for the front-end (used in edit modal)
             "department"     => $a['department'] ?? '',
         ];
     }
 
-    // ---------- Student Orgs ----------
+    // Process Student Orgs
     foreach ($orgs as $o) {
         $o = (array)$o;
         $adviser = $o['adviser'] ?? [];
@@ -105,7 +98,7 @@ try {
             "dateRegistered" => formatDate($o['created_at'] ?? null),
             "lastLogin"      => formatDate($o['last_log'] ?? null),
 
-            // Org-only fields
+            // Org-specific fields
             "abbreviation"   => $o['abbreviation'] ?? '',
             "department"     => $o['department'] ?? '',
             "type"           => $o['type'] ?? '',
@@ -118,7 +111,7 @@ try {
         ];
     }
 
-    // Return ONLY the fields the front-end expects
+    // Send combined list
     echo json_encode(array_values($all));
 
 } catch (Exception $e) {
@@ -127,9 +120,8 @@ try {
     echo json_encode(['error' => 'Failed to load users']);
 }
 
-/* -------------------------------------------------
-   Helper: format MongoDB date → d/m/Y
-   ------------------------------------------------- */
+//format MongoDB date to d/m/Y
+
 function formatDate($date) {
     if (!$date) return "N/A";
     try {

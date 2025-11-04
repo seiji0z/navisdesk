@@ -2,20 +2,17 @@
 require_once __DIR__ . '/../db.php';
 header('Content-Type: application/json');
 
-/* -------------------------------------------------
-   1. READ FILTERS FROM GET
-   ------------------------------------------------- */
+//GET FILTER PARAMETERS FROM URL
 $search     = trim($_GET['search'] ?? '');
 $role       = trim($_GET['role'] ?? '');
 $date_from  = trim($_GET['date_from'] ?? '');
 $date_to    = trim($_GET['date_to'] ?? '');
 
-/* -------------------------------------------------
-   2. BUILD MongoDB FILTER
-   ------------------------------------------------- */
+
+//BUILD DATABASE FILTER
 $filter = [];
 
-// --- Search: match user_name OR action (case-insensitive) ---
+// Search by user_name OR action (case-insensitive)
 if ($search !== '') {
     $regex = new MongoDB\BSON\Regex(preg_quote($search), 'i');
     $filter['$or'] = [
@@ -24,45 +21,33 @@ if ($search !== '') {
     ];
 }
 
-// --- Role filter: map frontend → DB value ---
+// Filter by role
 if ($role !== '') {
-    if ($role === 'Student Org') {
-        $filter['role'] = 'Organization';  // DB uses "Organization"
-    } elseif ($role === 'OSAS Officer') {
-        $filter['role'] = 'OSAS Officer';
-    } elseif ($role === 'Admin') {
-        $filter['role'] = 'Admin';
-    }
-    // If empty → no filter
+    if ($role === 'Student Org') $filter['role'] = 'Organization';
+    elseif ($role === 'OSAS Officer') $filter['role'] = 'OSAS Officer';
+    elseif ($role === 'Admin') $filter['role'] = 'Admin';
 }
 
-// --- Date range filter ---
+// Filter by date range
 if ($date_from !== '' || $date_to !== '') {
     $dateFilter = [];
-
     if ($date_from !== '') {
-        // Start of day: 00:00:00
         $from = new DateTime($date_from . ' 00:00:00');
         $dateFilter['$gte'] = $from->format('Y-m-d H:i:s');
     }
-
     if ($date_to !== '') {
-        // End of day: 23:59:59
         $to = new DateTime($date_to . ' 23:59:59');
         $dateFilter['$lte'] = $to->format('Y-m-d H:i:s');
     }
-
     $filter['timestamp'] = $dateFilter;
 }
 
-/* -------------------------------------------------
-   3. FETCH FROM DB (sorted by timestamp DESC)
-   ------------------------------------------------- */
+ //FETCH LOGS FROM DB
 try {
-    $options = ['sort' => ['timestamp' => -1]];
+    $options = ['sort' => ['timestamp' => -1]]; // newest first
     $logs = findAll('user_logs', $filter, $options);
 
-    // Format for frontend
+    // Format documents for frontend
     $formatted = array_map(function($log) {
         $log = (array)$log;
         return [
@@ -71,7 +56,6 @@ try {
             'role'      => $log['role'] ?? 'Unknown',
             'action'    => $log['action'] ?? '',
             'timestamp' => $log['timestamp'] ?? '',
-            // Optional: include user_name if you want to avoid name lookup
             'user_name' => $log['user_name'] ?? ''
         ];
     }, $logs);
