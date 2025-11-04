@@ -86,8 +86,8 @@ function renderProfileContent() {
               <label for="org-description">Organization Description</label>
               <textarea id="org-description" rows="3" placeholder="Enter a short description about your organization..."></textarea>
 
-              <label for="slu-email">Official SLU Institution Email <span class="required">*</span></label>
-              <input id="slu-email" type="email" required />
+              <label>Official SLU Institution Email</label>
+              <div id="slu-email-display" style="padding: 0.75rem; background: #f3f4f6; border-radius: 0.5rem; color: #6b7280; font-size: 0.95rem;"></div>
 
               <label for="org-type">Type of Organization</label>
               <select id="org-type" required>
@@ -221,7 +221,9 @@ async function wireProfileBehaviors() {
   setValue("official-name", org.name);
   setValue("acronym", org.abbreviation);
   setValue("org-description", org.description);
-  setValue("slu-email", org.email);
+  // Display email as read-only
+  const emailDisplay = document.getElementById("slu-email-display");
+  if (emailDisplay && org.email) emailDisplay.textContent = org.email;
   setValue("org-type", org.type);
   setValue("adviser-name", org.adviser?.name);
   setValue("adviser-email", org.adviser?.email);
@@ -295,7 +297,6 @@ async function wireProfileBehaviors() {
     // Required fields
     const official = document.getElementById("official-name");
     const acronym = document.getElementById("acronym");
-    const email = document.getElementById("slu-email");
 
     if (!official.value.trim()) {
       official.focus();
@@ -305,11 +306,6 @@ async function wireProfileBehaviors() {
     if (!acronym.value.trim()) {
       acronym.focus();
       alert("Acronym is required.");
-      return;
-    }
-    if (!email.value.trim()) {
-      email.focus();
-      alert("Email is required.");
       return;
     }
 
@@ -325,7 +321,7 @@ async function wireProfileBehaviors() {
     const payload = {
       name: official.value.trim(),
       abbreviation: acronym.value.trim(),
-      email: email.value.trim(),
+      email: org.email, // Email cannot be changed
       department: org.department || "SAMCIS",
       type: document.getElementById("org-type").value,
       adviser: {

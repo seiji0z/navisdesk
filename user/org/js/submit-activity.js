@@ -544,9 +544,9 @@ function showReview() {
 
   const venue = venueParticipants.querySelector("input").value.trim();
 
-  // Get selected SDGs
+  // Get selected SDGs (only from desktop grid to avoid duplicates)
   const selectedSDGs = Array.from(
-    sdgAlignment.querySelectorAll('input[type="checkbox"]:checked')
+    sdgAlignment.querySelector('.sdg-grid').querySelectorAll('input[type="checkbox"]:checked')
   ).map((cb) => cb.dataset.sdg);
 
   // Get supporting documents info
