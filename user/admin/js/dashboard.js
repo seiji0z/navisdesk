@@ -4,7 +4,6 @@ import { protectPage } from "../../../js/auth-guard.js";
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     await protectPage("admin");
-    console.log("Admin logged in. Loading dashboard...");
 
     // NOW load the dashboard
     await loadAdminDashboard();
@@ -16,33 +15,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function loadAdminDashboard() {
   try {
-    console.log("Loading admin dashboard...");
-    
     // === CHANGED: Fetch from PHP (Local MongoDB) instead of JSON files ===
     const [activitiesRes, orgsRes] = await Promise.all([
       fetch("../../../server/php/get-activities.php", {
-        credentials: 'include'
+        credentials: "include",
       }),
       fetch("../../../server/php/get-student-orgs.php", {
-        credentials: 'include'
+        credentials: "include",
       }),
     ]);
 
-    console.log("Activities response status:", activitiesRes.status);
-    console.log("Organizations response status:", orgsRes.status);
-
     if (!activitiesRes.ok) {
-      throw new Error(`Failed to load activities: ${activitiesRes.status} ${activitiesRes.statusText}`);
+      throw new Error(
+        `Failed to load activities: ${activitiesRes.status} ${activitiesRes.statusText}`
+      );
     }
     if (!orgsRes.ok) {
-      throw new Error(`Failed to load organizations: ${orgsRes.status} ${orgsRes.statusText}`);
+      throw new Error(
+        `Failed to load organizations: ${orgsRes.status} ${orgsRes.statusText}`
+      );
     }
 
     const activities = await activitiesRes.json();
     const orgs = await orgsRes.json();
-
-    console.log("Loaded activities:", activities.length);
-    console.log("Loaded organizations:", orgs.length);
 
     // === COUNTERS ===
     const total = activities.length;
@@ -88,44 +83,39 @@ async function loadAdminDashboard() {
     // === DRAW CHARTS ===
     try {
       // Draw bar chart
-      console.log("Drawing bar chart...");
       drawBarChart(activities, orgs);
 
       // Draw donut chart
-      console.log("Drawing donut chart...");
       drawDonutChart(activities);
 
       // Add resize handler
       let resizeTimeout;
-      window.addEventListener('resize', () => {
+      window.addEventListener("resize", () => {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-          console.log("Resizing charts...");
           drawBarChart(activities, orgs);
           drawDonutChart(activities);
         }, 250);
       });
-
     } catch (chartErr) {
       console.error("Error drawing charts:", chartErr);
-      throw chartErr;  // Re-throw to be caught by outer catch
+      throw chartErr; // Re-throw to be caught by outer catch
     }
   } catch (err) {
     console.error("Dashboard load error:", err);
-    document.getElementById("folder-body").innerHTML =
-      `<p>Error loading dashboard: ${err.message}</p>`;
+    document.getElementById(
+      "folder-body"
+    ).innerHTML = `<p>Error loading dashboard: ${err.message}</p>`;
   }
 }
 
 // === BAR CHART ===
 function drawBarChart(activities, orgs) {
-  console.log("Starting bar chart draw...");
-  
   if (!Array.isArray(activities)) {
     console.error("Activities is not an array:", activities);
     throw new Error("Invalid activities data");
   }
-  
+
   if (!Array.isArray(orgs)) {
     console.error("Organizations is not an array:", orgs);
     throw new Error("Invalid organizations data");
@@ -150,30 +140,30 @@ function drawBarChart(activities, orgs) {
 
   const container = canvas.parentElement;
   const dpr = window.devicePixelRatio || 1;
-  
+
   // Set canvas size based on container
   const containerStyle = getComputedStyle(container);
   const containerWidth = parseInt(containerStyle.width, 10) - 40; // Account for padding
   const containerHeight = Math.min(380, containerWidth * 0.75); // Maintain aspect ratio
-  
+
   // Update canvas size
-  canvas.style.width = containerWidth + 'px';
-  canvas.style.height = containerHeight + 'px';
+  canvas.style.width = containerWidth + "px";
+  canvas.style.height = containerHeight + "px";
   canvas.width = containerWidth * dpr;
   canvas.height = containerHeight * dpr;
 
   // Store dimensions for later use
   const rect = {
     width: containerWidth,
-    height: containerHeight
+    height: containerHeight,
   };
-  
+
   const ctx = canvas.getContext("2d");
   ctx.scale(dpr, dpr);
 
   const values = departments.map((d) => deptCount[d]);
   const maxVal = Math.max(...values, 1);
-  
+
   // Calculate dimensions based on canvas size
   const padding = { top: 40, right: 20, bottom: 60, left: 50 };
   const chartWidth = rect.width - padding.left - padding.right;
@@ -191,7 +181,7 @@ function drawBarChart(activities, orgs) {
   ctx.font = "12px Poppins";
   ctx.strokeStyle = "#e5e7eb";
   ctx.fillStyle = "#6b7280";
-  
+
   for (let i = 0; i <= 5; i++) {
     const y = baseY - (i * chartHeight) / 5;
     ctx.beginPath();
@@ -218,7 +208,7 @@ function drawBarChart(activities, orgs) {
     ctx.textAlign = "center";
     ctx.font = "bold 13px Poppins";
     ctx.fillText(val, x + barWidth / 2, y - 8);
-    
+
     // Department label
     ctx.fillStyle = "#374151";
     ctx.font = "12px Poppins";
@@ -235,36 +225,39 @@ function drawDonutChart(activities) {
 
   const container = canvas.parentElement;
   const dpr = window.devicePixelRatio || 1;
-  
+
   // Set canvas size based on container with minimum dimensions
   const containerStyle = getComputedStyle(container);
   const minSize = 200; // Minimum size to ensure chart is visible
   const paddingSpace = 40;
-  
-  const containerWidth = Math.max(minSize, parseInt(containerStyle.width, 10) - paddingSpace);
+
+  const containerWidth = Math.max(
+    minSize,
+    parseInt(containerStyle.width, 10) - paddingSpace
+  );
   // For donut chart, prefer square aspect ratio
   const containerHeight = Math.max(minSize, Math.min(380, containerWidth));
-  
+
   // Update canvas size
-  canvas.style.width = containerWidth + 'px';
-  canvas.style.height = containerHeight + 'px';
+  canvas.style.width = containerWidth + "px";
+  canvas.style.height = containerHeight + "px";
   canvas.width = containerWidth * dpr;
   canvas.height = containerHeight * dpr;
 
   // Store dimensions for later use
   const rect = {
     width: containerWidth,
-    height: containerHeight
+    height: containerHeight,
   };
-  
+
   const ctx = canvas.getContext("2d");
   ctx.scale(dpr, dpr);
-  
+
   // Calculate dimensions ensuring minimum sizes
   const legendSpace = Math.min(60, rect.height * 0.2); // Adaptive legend space
   const cx = rect.width / 2;
   const cy = (rect.height - legendSpace) / 2;
-  
+
   // Ensure minimum radius while maintaining proportions
   const minRadius = 40;
   const maxRadius = Math.min(cx - 30, cy - 30);
@@ -300,7 +293,7 @@ function drawDonutChart(activities) {
 
   // Clear canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+
   // Draw donut segments
   let start = -Math.PI / 2;
   data.forEach((val, i) => {
@@ -311,22 +304,23 @@ function drawDonutChart(activities) {
     ctx.arc(cx, cy, radius, start, start + angle);
     ctx.closePath();
     ctx.fill();
-    
+
     // Add percentage label if segment is large enough
     const percent = ((val / total) * 100).toFixed(0);
-    if (percent > 5) {  // Only show label if segment is > 5%
+    if (percent > 5) {
+      // Only show label if segment is > 5%
       const midAngle = start + angle / 2;
-      const labelRadius = radius * 0.8;  // Position label at 80% of radius
+      const labelRadius = radius * 0.8; // Position label at 80% of radius
       const x = cx + Math.cos(midAngle) * labelRadius;
       const y = cy + Math.sin(midAngle) * labelRadius;
-      
+
       ctx.font = "bold 12px Poppins";
       ctx.fillStyle = "#FFFFFF";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(percent + "%", x, y);
     }
-    
+
     start += angle;
   });
 
@@ -350,29 +344,32 @@ function drawDonutChart(activities) {
   // Legend
   const legendPadding = 10;
   const legendItemHeight = Math.min(20, rect.height * 0.05);
-  const maxLegendWidth = rect.width - (legendPadding * 2);
+  const maxLegendWidth = rect.width - legendPadding * 2;
   const legendItemWidth = Math.min(200, maxLegendWidth / 2);
-  const legendColumns = Math.max(1, Math.floor(maxLegendWidth / legendItemWidth));
+  const legendColumns = Math.max(
+    1,
+    Math.floor(maxLegendWidth / legendItemWidth)
+  );
   const legendRows = Math.ceil(labels.length / legendColumns);
-  
+
   // Calculate legend Y position to ensure it fits
   const legendTotalHeight = legendRows * legendItemHeight;
   const legendY = rect.height - legendTotalHeight - legendPadding;
-  
+
   ctx.font = `${Math.min(13, rect.height * 0.035)}px Poppins`;
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  
+
   labels.forEach((l, i) => {
     const column = i % legendColumns;
     const row = Math.floor(i / legendColumns);
     const x = legendPadding + column * legendItemWidth;
     const y = legendY + row * legendItemHeight;
-    
+
     // Draw legend item box
     ctx.fillStyle = colors[i % colors.length];
     ctx.fillRect(x, y - 4, 8, 8);
-    
+
     // Draw legend text
     ctx.fillStyle = "#374151";
     const truncatedLabel = l.length > 20 ? l.substring(0, 17) + "..." : l;

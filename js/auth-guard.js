@@ -1,9 +1,5 @@
 export async function protectPage(expectedRole) {
   // Allow easy local development bypass on localhost
-  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-    console.log("Bypassing auth guard (local mode)");
-    return;
-  }
 
   // Normal auth behavior: ask server who the user is
   try {
