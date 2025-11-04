@@ -1,14 +1,17 @@
-// ======== LOAD AND RENDER ACTIVITY LOG ========
-async function loadActivityLogData() {
+// ======== LOAD ACTIVITY LOG FROM PHP (WITH FILTERS) ========
+async function loadActivityLogData(filters = {}) {
   try {
+    const params = new URLSearchParams(filters);
+    const url = `../../../server/php/get-user-logs.php?${params.toString()}`;
+
     const [logsRes, adminRes, orgRes] = await Promise.all([
-      fetch("../../../server/php/get-user-logs.php"),
+      fetch(url),
       fetch("../../../server/php/get-admins.php"),
       fetch("../../../server/php/get-student-orgs.php")
     ]);
 
     if (!logsRes.ok || !adminRes.ok || !orgRes.ok) {
-      throw new Error("API failed");
+      throw new Error("One or more API calls failed");
     }
 
     const [logsData, adminData, orgData] = await Promise.all([
@@ -16,6 +19,10 @@ async function loadActivityLogData() {
       adminRes.json(),
       orgRes.json()
     ]);
+
+    if (logsData.error) {
+      throw new Error(logsData.error);
+    }
 
     const adminMap = new Map(adminData.map(a => [a._id.toString(), a.name]));
     const orgMap = new Map(orgData.map(o => [o._id.toString(), o.name]));
@@ -46,14 +53,13 @@ async function loadActivityLogData() {
     }
 
     renderActivityTable(activities);
-    setupActivityFilters(activities);
 
   } catch (error) {
     console.error("Activity Log Load Failed:", error);
     document.getElementById("activities-table-body").innerHTML = `
       <tr>
         <td colspan="4" style="text-align:center; color:red; padding:20px;">
-          Failed to load user data.
+          Failed to load activity logs.
         </td>
       </tr>`;
   }
@@ -67,6 +73,8 @@ function loadActivityModules() {
         <div class="filter-search">
           <h2>Filter & Search</h2>
           <div class="filters-row">
+
+            <!-- SEARCH BOX -->
             <div class="search-box">
               <label>Search Activity</label>
               <div class="input-icon">
@@ -76,6 +84,18 @@ function loadActivityModules() {
                 </button>
               </div>
             </div>
+
+            <!-- DATE FILTER -->
+            <div class="date-group">
+              <label>Date Range</label>
+              <div class="date-inputs">
+                <input type="date" id="filter-date-from" />
+                <span class="date-separator">to</span>
+                <input type="date" id="filter-date-to" />
+              </div>
+            </div>
+
+            <!-- ROLE FILTER -->
             <div class="select-group">
               <label>Role</label>
               <select id="filter-role">
@@ -105,7 +125,8 @@ function loadActivityModules() {
     </div>
   `;
 
-  loadActivityLogData();
+  setupActivityFilters();
+  loadActivityLogData(); // Initial load
 }
 
 // ======== RENDER TABLE ========
@@ -153,32 +174,37 @@ function formatRoleDisplay(role) {
   }[role] || role;
 }
 
-// ======== FILTERS ========
-function setupActivityFilters(activities) {
+// ======== FILTERS (PHP-BASED) ========
+function setupActivityFilters() {
   const searchInput = document.getElementById("search-activity");
   const roleFilter = document.getElementById("filter-role");
+  const dateFrom = document.getElementById("filter-date-from");
+  const dateTo = document.getElementById("filter-date-to");
 
-  function filter() {
-    const search = searchInput.value.toLowerCase().trim();
-    const role = roleFilter.value;
+  let applyFilters;
 
-    const filtered = activities.filter(a => {
-      const matchSearch = !search || (
-        a.userName.toLowerCase().includes(search) ||
-        a.action.toLowerCase().includes(search)
-      );
-      const matchRole = !role || 
-        (role === "Student Org" && a.role === "Organization") ||
-        a.role === role;
-      return matchSearch && matchRole;
-    });
+  applyFilters = () => {
+    const filters = {
+      search: searchInput.value.trim(),
+      role: roleFilter.value,
+      date_from: dateFrom.value,
+      date_to: dateTo.value
+    };
 
-    renderActivityTable(filtered);
-  }
+    loadActivityLogData(filters);
+  };
 
-  searchInput.addEventListener("input", filter);
-  roleFilter.addEventListener("change", filter);
-  document.querySelector(".search-btn").addEventListener("click", filter);
+  // Debounce search input
+  let searchTimeout;
+  searchInput.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(applyFilters, 400);
+  });
+
+  roleFilter.addEventListener("change", applyFilters);
+  dateFrom.addEventListener("change", applyFilters);
+  dateTo.addEventListener("change", applyFilters);
+  document.querySelector(".search-btn").addEventListener("click", applyFilters);
 }
 
 // ======== INIT ========

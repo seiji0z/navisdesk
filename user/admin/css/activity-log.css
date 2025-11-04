@@ -124,6 +124,57 @@
   height: 18px;
   filter: invert(1);
 }
+
+/* ===== DATE FILTER STYLES ===== */
+.date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 280px;
+}
+
+.date-inputs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.date-inputs input[type="date"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  width: 140px;
+}
+
+.date-separator {
+  font-weight: bold;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* Responsive: Stack on small screens */
+@media (max-width: 768px) {
+  .filters-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+searc
+  .search-box,
+  .date-group,
+  .select-group {
+    width: 100%;
+  }
+
+  .date-inputs {
+    justify-content: space-between;
+  }
+
+  .date-inputs input[type="date"] {
+    width: 48%;
+  }
+}
+
 /* ========== 1024px (laptops) ========== */
 @media (max-width: 1024px) {
   html {
