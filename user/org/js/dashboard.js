@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch("../../../server/php/get-student-orgs.php");
     if (!response.ok) throw new Error("Failed to fetch organization details");
     const orgs = await response.json();
+    organizationsData = orgs; // Store globally for later use
 
     // Find our organization
     const myOrg = orgs.find((org) => org._id === ICON_ORG_ID);
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 const ICON_ORG_ID = "6716001a9b8c2001abcd0001";
 let activitiesData = [];
+let organizationsData = [];
 
 async function fetchActivitiesFromDB() {
   try {
@@ -47,6 +49,7 @@ async function fetchActivitiesFromDB() {
     }
 
     const allActivities = await response.json();
+<<<<<<< HEAD
 
     activitiesData = allActivities.map((a) => ({
       _id: a._id,
@@ -71,6 +74,10 @@ async function fetchActivitiesFromDB() {
       supporting_docs: a.supporting_docs,
       evidences: a.evidences,
     }));
+=======
+    // Keep all fields from MongoDB, just filter by org_id
+    activitiesData = allActivities.filter((a) => a.org_id === ICON_ORG_ID);
+>>>>>>> 5237f983807e629bf5b157fecd18f2ea51e32fe0
 
     console.log("ICON Activities:", activitiesData);
     return activitiesData;
@@ -258,7 +265,7 @@ function showActivityDetails(submission) {
   }
 
   const detailsComponent = new ActivityDetailsComponent();
-  const detailsView = detailsComponent.render(submission);
+  const detailsView = detailsComponent.render(submission, organizationsData);
   folderBody.appendChild(detailsView);
 
   detailsComponent.bindBackButton(() => {
@@ -298,9 +305,14 @@ function formatDate(dateString) {
 }
 
 class ActivityDetailsComponent {
-  render(submission) {
+  render(submission, organizations = []) {
     const container = document.createElement("div");
     container.classList.add("activity-details");
+
+    // Find the organization details
+    const org = organizations.find((o) => o._id === submission.org_id);
+    const orgName = org?.name || "N/A";
+    const orgAbbreviation = org?.abbreviation || "N/A";
 
     container.innerHTML = `
       <button class="back-btn"><i class="fas fa-arrow-left"></i> Back</button>
@@ -317,44 +329,52 @@ class ActivityDetailsComponent {
     }</span>
           </div>
           <div class="info-item">
+            <strong>Organization Name:</strong>
+            <span>${orgName}</span>
+          </div>
+          <div class="info-item">
+            <strong>Organization Abbreviation:</strong>
+            <span>${orgAbbreviation}</span>
+          </div>
+          <div class="info-item">
             <strong>Description:</strong>
-            <span>${submission.description}</span>
+            <span>${submission.description || "N/A"}</span>
           </div>
           <div class="info-item">
             <strong>Objectives:</strong>
-            <span>${submission.objectives}</span>
+            <span>${submission.objectives || "N/A"}</span>
           </div>
           <div class="info-item">
             <strong>Academic Year:</strong>
-            <span>${submission.acad_year}</span>
+            <span>${submission.acad_year || "N/A"}</span>
           </div>
           <div class="info-item">
             <strong>Term:</strong>
-            <span>${submission.term}</span>
+            <span>${submission.term || "N/A"}</span>
           </div>
           <div class="info-item">
             <strong>Organization ID:</strong>
-            <span>${submission.org_id}</span>
+            <span>${submission.org_id || "N/A"}</span>
           </div>
           <div class="info-item">
             <strong>Submitted By:</strong>
-            <span>${submission.submitted_by}</span>
+            <span>${submission.submitted_by || "N/A"}</span>
           </div>
           <div class="info-item">
             <strong>Submitted At:</strong>
-            <span>${formatDate(submission.submitted_at)}</span>
+            <span>${formatDate(submission.submitted_at) || "N/A"}</span>
           </div>
           <div class="info-item">
             <strong>Reviewed By:</strong>
-            <span>${submission.reviewed_by || ""}</span>
+            <span>${submission.reviewed_by || "N/A"}</span>
           </div>
           <div class="info-item">
             <strong>Reviewed At:</strong>
-            <span>${formatDate(submission.reviewed_at)}</span>
+            <span>${formatDate(submission.reviewed_at) || "N/A"}</span>
           </div>
           <div class="info-item">
             <strong>Created At:</strong>
-            <span>${formatDate(submission.created_at)}</span>
+            <span>${formatDate(submission.created_at) || "N/A"}</span>
           </div>
         </div>
       </section>
@@ -365,22 +385,22 @@ class ActivityDetailsComponent {
         <div class="info-grid">
           <div class="info-item">
             <strong>Venue:</strong>
-            <span>${submission.venue}</span>
+            <span>${submission.venue || "N/A"}</span>
           </div>
           <div class="info-item">
             <strong>Date Start:</strong>
-            <span>${formatDate(submission.date_start)}</span>
+            <span>${formatDate(submission.date_start) || "N/A"}</span>
           </div>
           <div class="info-item">
             <strong>Date End:</strong>
-            <span>${formatDate(submission.date_end)}</span>
+            <span>${formatDate(submission.date_end) || "N/A"}</span>
           </div>
           <div class="info-item full-width">
             <strong>SDGs:</strong>
             <span>${
               submission.sdgs && submission.sdgs.length
                 ? submission.sdgs.join(", ")
-                : "None"
+                : "N/A"
             }</span>
           </div>
         </div>

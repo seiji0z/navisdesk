@@ -12,6 +12,7 @@ try {
     // -------------------------------------------------
     $orgIdHeader = $_SERVER['HTTP_X_ORG_ID'] ?? null;
 
+<<<<<<< HEAD
     if (!$orgIdHeader) {
         http_response_code(400);
         echo json_encode(['error' => 'Missing x-org-id header']);
@@ -46,6 +47,24 @@ try {
         $doc['org_id'] = (string)$doc['org_id'];
         $doc['status'] = $doc['status'] ?? 'Pending';
         $doc['sdgs']   = $doc['sdgs']   ?? [];
+=======
+    // Convert MongoDB documents to arrays and format fields for frontend
+    $result = array_map(function($doc) {
+        $doc = (array)$doc;                     // Convert BSON document to PHP array
+        $doc['_id'] = (string)$doc['_id'];     // Convert ObjectId to string
+        $doc['org_id'] = (string)$doc['org_id'];
+        
+        // Convert ObjectIds to strings for submitted_by and reviewed_by if they exist
+        if (isset($doc['submitted_by']) && is_object($doc['submitted_by'])) {
+            $doc['submitted_by'] = (string)$doc['submitted_by'];
+        }
+        if (isset($doc['reviewed_by']) && is_object($doc['reviewed_by'])) {
+            $doc['reviewed_by'] = (string)$doc['reviewed_by'];
+        }
+        
+        $doc['status'] = $doc['status'] ?? 'Pending'; // Default status
+        $doc['sdgs'] = $doc['sdgs'] ?? [];     // Default empty SDGs array
+>>>>>>> 5237f983807e629bf5b157fecd18f2ea51e32fe0
         return $doc;
     }, $activities);
 
