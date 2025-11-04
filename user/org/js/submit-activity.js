@@ -1,6 +1,40 @@
 // Select folder body container
 const folderBody = document.getElementById("folder-body");
 
+// Global variable to store the activity being edited (for re-submission)
+let editingActivityId = null;
+let editingActivityData = null;
+
+// Get URL parameters
+function getURLParameter(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
+// Fetch activity data for editing
+async function fetchActivityForEdit(activityId) {
+  try {
+    const orgId = "6716001a9b8c2001abcd0001"; // ICON ORG
+    const response = await fetch("../../../server/php/get-activities.php", {
+      headers: { "x-org-id": orgId }
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch activities");
+
+    const allActivities = await response.json();
+    const activity = allActivities.find(a => a._id === activityId);
+    
+    if (!activity) {
+      console.error("Activity not found:", activityId);
+      return null;
+    }
+    
+    return activity;
+  } catch (error) {
+    console.error("Error fetching activity:", error);
+    return null;
+  }
+}
 
 // Save activity to database
 window.DB = {
@@ -500,13 +534,13 @@ function escapeHtml(str) {
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-ssubmitBtn.addEventListener("click", () => {
+submitBtn.addEventListener("click", () => {
   const reviewCard = document.getElementById("review-card");
 
   if (reviewCard) {
     // READ-ONLY MODE: Just show success, no DB update
     alert("Form reviewed! (Read-only mode – no data saved)");
-    window.location.href = "dashboard.html";
+    window.location.href = "my-activities.html";
     return;
   }
 
@@ -959,8 +993,129 @@ function updateUploadRowState(container) {
   else container.classList.remove("single-upload");
 }
 
+// ===============================
+// Pre-populate Form for Editing
+// ===============================
+async function prePopulateForm(activityData) {
+  if (!activityData) return;
+  
+  // Activity Details
+  const details = activityDetails.querySelectorAll("input, textarea");
+  details[0].value = activityData.title || "";
+  details[1].value = activityData.description || "";
+  details[2].value = activityData.objectives || "";
+  details[3].value = activityData.type || "";
+
+  // Date & Time
+  const dates = dateTime.querySelectorAll("input");
+  if (activityData.date_start) {
+    const startDate = new Date(activityData.date_start);
+    dates[0].value = startDate.toISOString().split('T')[0]; // date
+    dates[2].value = startDate.toISOString().split('T')[1].substring(0, 5); // time
+  }
+  if (activityData.date_end) {
+    const endDate = new Date(activityData.date_end);
+    dates[1].value = endDate.toISOString().split('T')[0]; // date
+    dates[3].value = endDate.toISOString().split('T')[1].substring(0, 5); // time
+  }
+
+  // Venue
+  venueParticipants.querySelector("input").value = activityData.venue || "";
+
+  // SDGs - Handle both "SDG 1" and "1" formats
+  if (activityData.sdgs && Array.isArray(activityData.sdgs)) {
+    activityData.sdgs.forEach(sdg => {
+      // Extract number from "SDG 1" format or use as is
+      const sdgNumber = sdg.toString().replace(/[^0-9]/g, '');
+      const checkbox = sdgAlignment.querySelector(`input[data-sdg="${sdgNumber}"]`);
+      if (checkbox) {
+        checkbox.checked = true;
+      }
+    });
+    
+    // Trigger mobile SDG selector update if it exists
+    const firstCheckbox = sdgAlignment.querySelector('input[type="checkbox"]:checked');
+    if (firstCheckbox) {
+      firstCheckbox.dispatchEvent(new Event('change'));
+    }
+  }
+
+  // Note: File uploads cannot be pre-populated due to browser security restrictions
+  // We'll display information about existing files instead
+  if (activityData.supporting_docs && activityData.supporting_docs.length > 0) {
+    const supportContainer = document.getElementById("supporting-uploads");
+    const infoBox = document.createElement("div");
+    infoBox.classList.add("existing-files-info");
+    infoBox.innerHTML = `
+      <p style="color: #073066; font-weight: 500; margin-bottom: 10px;">
+        <i class="fas fa-info-circle"></i> Existing Supporting Documents:
+      </p>
+      <ul style="list-style: none; padding-left: 20px;">
+        ${activityData.supporting_docs.map(doc => `
+          <li style="margin-bottom: 5px;">
+            <i class="fas fa-file"></i> ${typeof doc === 'string' ? doc : doc.file_name}
+          </li>
+        `).join('')}
+      </ul>
+      <p style="color: #666; font-size: 0.9rem; margin-top: 10px;">
+        Upload new files to replace these documents, or leave empty to keep existing ones.
+      </p>
+    `;
+    supportContainer.insertBefore(infoBox, supportContainer.firstChild);
+  }
+
+  if (activityData.evidences && activityData.evidences.length > 0) {
+    const evidenceContainer = document.getElementById("evidence-uploads");
+    const infoBox = document.createElement("div");
+    infoBox.classList.add("existing-files-info");
+    infoBox.innerHTML = `
+      <p style="color: #073066; font-weight: 500; margin-bottom: 10px;">
+        <i class="fas fa-info-circle"></i> Existing Evidence Files:
+      </p>
+      <ul style="list-style: none; padding-left: 20px;">
+        ${activityData.evidences.map(evidence => `
+          <li style="margin-bottom: 5px;">
+            <i class="fas fa-image"></i> ${typeof evidence === 'string' ? evidence : evidence.file_name}
+          </li>
+        `).join('')}
+      </ul>
+      <p style="color: #666; font-size: 0.9rem; margin-top: 10px;">
+        Upload new files to replace these evidences, or leave empty to keep existing ones.
+      </p>
+    `;
+    evidenceContainer.insertBefore(infoBox, evidenceContainer.firstChild);
+  }
+
+  // Update page title to indicate editing mode
+  const folderTitle = document.querySelector(".folder-title");
+  if (folderTitle) {
+    folderTitle.textContent = "Re-submit Activity";
+  }
+}
+
+// Initialize form for editing or new submission
+async function initializeForm() {
+  // Check if we're editing an existing activity
+  editingActivityId = getURLParameter("edit");
+  
+  if (editingActivityId) {
+    // Fetch and pre-populate the form
+    editingActivityData = await fetchActivityForEdit(editingActivityId);
+    if (editingActivityData) {
+      await prePopulateForm(editingActivityData);
+    } else {
+      alert("Activity not found. Redirecting to My Activities...");
+      window.location.href = "my-activities.html";
+    }
+  }
+}
+
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initUploads);
+  document.addEventListener("DOMContentLoaded", () => {
+    initUploads();
+    initializeForm();
+  });
 } else {
   initUploads();
+  initializeForm();
 }
