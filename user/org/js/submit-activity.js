@@ -53,8 +53,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Select folder body container
 const folderBody = document.getElementById("folder-body");
 
-<<<<<<< HEAD
-=======
 // Global variable to store the activity being edited (for re-submission)
 let editingActivityId = null;
 let editingActivityData = null;
@@ -90,7 +88,6 @@ async function fetchActivityForEdit(activityId) {
   }
 }
 
->>>>>>> fb02237e4816abeb9181e53d08531540d1dfd05c
 // Save activity to database
 window.DB = {
   async saveActivity(formData) {
@@ -525,13 +522,50 @@ function gatherFormData() {
 }
 
 function showReview() {
-  const data = gatherFormData();
   // hide form sections
   folderBody
     .querySelectorAll(".activity-section")
     .forEach((s) => (s.style.display = "none"));
   buttonContainer.querySelector(".back-btn").style.display = "inline-block";
   submitBtn.textContent = "Submit Activity";
+
+  // Extract data from form elements directly
+  const details = activityDetails.querySelectorAll("input, textarea");
+  const title = details[0].value.trim();
+  const description = details[1].value.trim();
+  const objective = details[2].value.trim();
+  const type = details[3].value.trim() || "General";
+
+  const dates = dateTime.querySelectorAll("input");
+  const startDate = dates[0].value;
+  const startTime = dates[2].value || "00:00";
+  const endDate = dates[1].value;
+  const endTime = dates[3].value || "23:59";
+
+  const venue = venueParticipants.querySelector("input").value.trim();
+
+  // Get selected SDGs
+  const selectedSDGs = Array.from(
+    sdgAlignment.querySelectorAll('input[type="checkbox"]:checked')
+  ).map((cb) => cb.dataset.sdg);
+
+  // Get supporting documents info
+  const supportingInfo = Array.from(
+    supportingDocs.querySelectorAll(".upload-box")
+  ).map((box) => {
+    const type = box.querySelector(".supporting-type").value;
+    const files = Array.from(box.querySelector(".file-input").files).map(
+      (f) => f.name
+    );
+    return { type, files };
+  });
+
+  // Get evidence files
+  const evidenceFiles = Array.from(
+    evidence.querySelectorAll(".upload-box")
+  ).flatMap((box) =>
+    Array.from(box.querySelector(".file-input").files).map((f) => f.name)
+  );
 
   // create review card
   const reviewCard = document.createElement("div");
@@ -541,40 +575,43 @@ function showReview() {
     <h3>Review Submission</h3>
     <div class="section-content">
       <div class="review-row"><div class="review-label">Title</div><div class="review-value">${escapeHtml(
-        data.title
+        title
       )}</div></div>
       <div class="review-row"><div class="review-label">Description</div><div class="review-value">${escapeHtml(
-        data.description
+        description
       )}</div></div>
       <div class="review-row"><div class="review-label">Objective</div><div class="review-value">${escapeHtml(
-        data.objective
+        objective
       )}</div></div>
       <div class="review-row"><div class="review-label">Type</div><div class="review-value">${escapeHtml(
-        data.type
+        type
       )}</div></div>
       <div class="review-row"><div class="review-label">Date / Time</div><div class="review-value">${escapeHtml(
-        data.startDate
-      )} ${escapeHtml(data.startTime)} — ${escapeHtml(
-    data.endDate
-  )} ${escapeHtml(data.endTime)}</div></div>
+        startDate
+      )} ${escapeHtml(startTime)} — ${escapeHtml(endDate)} ${escapeHtml(
+    endTime
+  )}</div></div>
       <div class="review-row"><div class="review-label">Venue</div><div class="review-value">${escapeHtml(
-        data.venue
+        venue
       )}</div></div>
-      <div class="review-row"><div class="review-label">SDG Alignment</div><div class="review-value">${data.sdgs
+      <div class="review-row"><div class="review-label">SDG Alignment</div><div class="review-value">${selectedSDGs
         .map(
           (n) =>
-            `<span class="sdg-label" style="margin-right:6px;background:var(--sdg-${n})">${n}</span>`
+            `<span class="sdg-label sdg-${n}" style="margin-right:6px;">${n}</span>`
         )
         .join(" ")}</div></div>
       <div class="review-row"><div class="review-label">Supporting Documents</div><div class="review-value">${
-        data.supporting
-          .map(
-            (s) => `${escapeHtml(s.type)}: ${escapeHtml(s.files.join(", "))}`
-          )
-          .join("<br/>") || "None"
+        supportingInfo.length > 0
+          ? supportingInfo
+              .map(
+                (s) =>
+                  `${escapeHtml(s.type)}: ${escapeHtml(s.files.join(", "))}`
+              )
+              .join("<br/>")
+          : "None"
       }</div></div>
       <div class="review-row"><div class="review-label">Evidence</div><div class="review-value">${
-        data.evidence.flat().join(", ") || "None"
+        evidenceFiles.length > 0 ? escapeHtml(evidenceFiles.join(", ")) : "None"
       }</div></div>
     </div>
   `;
