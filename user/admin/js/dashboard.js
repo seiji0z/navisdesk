@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function loadAdminDashboard() {
   try {
+    console.log("Loading admin dashboard...");
+    
     // === CHANGED: Fetch from PHP (Local MongoDB) instead of JSON files ===
     const [activitiesRes, orgsRes] = await Promise.all([
       fetch("../../../server/php/get-activities.php", {
@@ -26,12 +28,21 @@ async function loadAdminDashboard() {
       }),
     ]);
 
-    if (!activitiesRes.ok || !orgsRes.ok) {
-      throw new Error("Failed to load data");
+    console.log("Activities response status:", activitiesRes.status);
+    console.log("Organizations response status:", orgsRes.status);
+
+    if (!activitiesRes.ok) {
+      throw new Error(`Failed to load activities: ${activitiesRes.status} ${activitiesRes.statusText}`);
+    }
+    if (!orgsRes.ok) {
+      throw new Error(`Failed to load organizations: ${orgsRes.status} ${orgsRes.statusText}`);
     }
 
     const activities = await activitiesRes.json();
     const orgs = await orgsRes.json();
+
+    console.log("Loaded activities:", activities.length);
+    console.log("Loaded organizations:", orgs.length);
 
     // === COUNTERS ===
     const total = activities.length;
@@ -75,17 +86,51 @@ async function loadAdminDashboard() {
     `;
 
     // === DRAW CHARTS ===
-    drawBarChart(activities, orgs);
-    drawDonutChart(activities);
+    try {
+      // Draw bar chart
+      console.log("Drawing bar chart...");
+      drawBarChart(activities, orgs);
+
+      // Draw donut chart
+      console.log("Drawing donut chart...");
+      drawDonutChart(activities);
+
+      // Add resize handler
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          console.log("Resizing charts...");
+          drawBarChart(activities, orgs);
+          drawDonutChart(activities);
+        }, 250);
+      });
+
+    } catch (chartErr) {
+      console.error("Error drawing charts:", chartErr);
+      throw chartErr;  // Re-throw to be caught by outer catch
+    }
   } catch (err) {
     console.error("Dashboard load error:", err);
     document.getElementById("folder-body").innerHTML =
-      "<p>Error loading dashboard.</p>";
+      `<p>Error loading dashboard: ${err.message}</p>`;
   }
 }
 
 // === BAR CHART ===
 function drawBarChart(activities, orgs) {
+  console.log("Starting bar chart draw...");
+  
+  if (!Array.isArray(activities)) {
+    console.error("Activities is not an array:", activities);
+    throw new Error("Invalid activities data");
+  }
+  
+  if (!Array.isArray(orgs)) {
+    console.error("Organizations is not an array:", orgs);
+    throw new Error("Invalid organizations data");
+  }
+
   const departments = ["SAMCIS", "SEA", "SONAHBS", "STELA", "SOM"];
   const deptCount = Object.fromEntries(departments.map((d) => [d, 0]));
 
@@ -99,16 +144,29 @@ function drawBarChart(activities, orgs) {
     });
 
   const canvas = document.getElementById("activitiesChart");
+  if (!canvas) {
+    throw new Error("Canvas element not found");
+  }
+
+  const container = canvas.parentElement;
   const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
   
-  // Set display size
-  canvas.style.width = rect.width + 'px';
-  canvas.style.height = rect.height + 'px';
+  // Set canvas size based on container
+  const containerStyle = getComputedStyle(container);
+  const containerWidth = parseInt(containerStyle.width, 10) - 40; // Account for padding
+  const containerHeight = Math.min(380, containerWidth * 0.75); // Maintain aspect ratio
   
-  // Set actual size in memory
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
+  // Update canvas size
+  canvas.style.width = containerWidth + 'px';
+  canvas.style.height = containerHeight + 'px';
+  canvas.width = containerWidth * dpr;
+  canvas.height = containerHeight * dpr;
+
+  // Store dimensions for later use
+  const rect = {
+    width: containerWidth,
+    height: containerHeight
+  };
   
   const ctx = canvas.getContext("2d");
   ctx.scale(dpr, dpr);
@@ -171,24 +229,46 @@ function drawBarChart(activities, orgs) {
 // === DONUT CHART ===
 function drawDonutChart(activities) {
   const canvas = document.getElementById("sdgChart");
+  if (!canvas) {
+    throw new Error("Canvas element not found");
+  }
+
+  const container = canvas.parentElement;
   const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
   
-  // Set display size
-  canvas.style.width = rect.width + 'px';
-  canvas.style.height = rect.height + 'px';
+  // Set canvas size based on container with minimum dimensions
+  const containerStyle = getComputedStyle(container);
+  const minSize = 200; // Minimum size to ensure chart is visible
+  const paddingSpace = 40;
   
-  // Set actual size in memory
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
+  const containerWidth = Math.max(minSize, parseInt(containerStyle.width, 10) - paddingSpace);
+  // For donut chart, prefer square aspect ratio
+  const containerHeight = Math.max(minSize, Math.min(380, containerWidth));
+  
+  // Update canvas size
+  canvas.style.width = containerWidth + 'px';
+  canvas.style.height = containerHeight + 'px';
+  canvas.width = containerWidth * dpr;
+  canvas.height = containerHeight * dpr;
+
+  // Store dimensions for later use
+  const rect = {
+    width: containerWidth,
+    height: containerHeight
+  };
   
   const ctx = canvas.getContext("2d");
   ctx.scale(dpr, dpr);
   
-  // Calculate dimensions
+  // Calculate dimensions ensuring minimum sizes
+  const legendSpace = Math.min(60, rect.height * 0.2); // Adaptive legend space
   const cx = rect.width / 2;
-  const cy = (rect.height - 60) / 2;  // Account for legend space
-  const radius = Math.min(cx - 60, cy - 60);
+  const cy = (rect.height - legendSpace) / 2;
+  
+  // Ensure minimum radius while maintaining proportions
+  const minRadius = 40;
+  const maxRadius = Math.min(cx - 30, cy - 30);
+  const radius = Math.max(minRadius, maxRadius);
   const cutout = radius * 0.6;
 
   const sdgCount = {};
@@ -268,26 +348,35 @@ function drawDonutChart(activities) {
   ctx.fillText("Total", cx, cy + 30);
 
   // Legend
-  const legendY = rect.height - 50;  // Fixed position from bottom
-  const legendItemWidth = Math.min(200, rect.width / 2);
-  const legendItemHeight = 20;
-  const legendColumns = Math.floor(rect.width / legendItemWidth);
+  const legendPadding = 10;
+  const legendItemHeight = Math.min(20, rect.height * 0.05);
+  const maxLegendWidth = rect.width - (legendPadding * 2);
+  const legendItemWidth = Math.min(200, maxLegendWidth / 2);
+  const legendColumns = Math.max(1, Math.floor(maxLegendWidth / legendItemWidth));
+  const legendRows = Math.ceil(labels.length / legendColumns);
   
-  ctx.font = "13px Poppins";
+  // Calculate legend Y position to ensure it fits
+  const legendTotalHeight = legendRows * legendItemHeight;
+  const legendY = rect.height - legendTotalHeight - legendPadding;
+  
+  ctx.font = `${Math.min(13, rect.height * 0.035)}px Poppins`;
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
   
   labels.forEach((l, i) => {
     const column = i % legendColumns;
     const row = Math.floor(i / legendColumns);
-    const x = 30 + column * legendItemWidth;
+    const x = legendPadding + column * legendItemWidth;
     const y = legendY + row * legendItemHeight;
     
+    // Draw legend item box
     ctx.fillStyle = colors[i % colors.length];
-    ctx.fillRect(x, y - 5, 10, 10);
+    ctx.fillRect(x, y - 4, 8, 8);
     
+    // Draw legend text
     ctx.fillStyle = "#374151";
-    ctx.fillText(l, x + 18, y);
+    const truncatedLabel = l.length > 20 ? l.substring(0, 17) + "..." : l;
+    ctx.fillText(truncatedLabel, x + 14, y);
   });
 }
 
