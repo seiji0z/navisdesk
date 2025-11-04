@@ -459,22 +459,20 @@ class MyActivitiesView {
     // Scroll to top when rendering
     this.folderBody.scrollTop = 0;
 
-    // Section 1 — Submission Status
-    const statusSection = document.createElement("div");
-    statusSection.classList.add("white-section");
+    // Single container with both sections
+    const mainSection = document.createElement("div");
+    mainSection.classList.add("white-section");
 
+    // Section 1 — Submission Status (Original Design)
     const statusTitle = document.createElement("h2");
     statusTitle.textContent = "Submission Status";
     statusTitle.classList.add("section-title");
-    statusSection.appendChild(statusTitle);
+    mainSection.appendChild(statusTitle);
 
     // Render activity summary cards
-    statusSection.appendChild(this.summaryComponent.render(activities));
+    mainSection.appendChild(this.summaryComponent.render(activities));
 
-    // Section 2 — All Submissions
-    const submissionsSection = document.createElement("div");
-    submissionsSection.classList.add("white-section");
-
+    // Section 2 — All Submissions (Improved Design)
     const submissionsHeader = document.createElement("div");
     submissionsHeader.classList.add("submissions-header");
 
@@ -500,18 +498,17 @@ class MyActivitiesView {
 
     submissionsHeader.appendChild(submissionsTitle);
     submissionsHeader.appendChild(toggleContainer);
-    submissionsSection.appendChild(submissionsHeader);
+    mainSection.appendChild(submissionsHeader);
 
     // Render submissions (cards or table)
     this.submissionContainer = this.submissionsComponent.render(
       submissions,
       this.currentViewMode
     );
-    submissionsSection.appendChild(this.submissionContainer);
+    mainSection.appendChild(this.submissionContainer);
 
-    // Append both sections separately to folder body
-    this.folderBody.appendChild(statusSection);
-    this.folderBody.appendChild(submissionsSection);
+    // Append single section to folder body
+    this.folderBody.appendChild(mainSection);
 
     // Bind toggle events
     this.bindToggleEvents(toggleContainer);
