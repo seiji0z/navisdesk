@@ -1,3 +1,30 @@
+import { protectPage } from "../../../js/auth-guard.js";
+
+// Helper: pick a friendly display name from user object
+function getDisplayName(user) {
+  if (!user) return "User";
+  const nameCandidates = [
+    user.first_name,
+    user.firstName,
+    user.given_name,
+    user.name,
+    user.displayName,
+    user.full_name,
+  ];
+  for (const n of nameCandidates) {
+    if (n && typeof n === "string" && n.trim()) {
+      const first = n.trim().split(" ")[0];
+      return first.charAt(0).toUpperCase() + first.slice(1);
+    }
+  }
+  if (user.email) {
+    const local = user.email.split("@")[0];
+    const parts = local.split(/[^a-zA-Z0-9]+/).filter(Boolean);
+    if (parts.length) return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+  }
+  return user.role || "User";
+}
+
 // ======== GLOBAL USERS ARRAY ========
 let users = [];
 let applyFilters;
@@ -560,9 +587,23 @@ function showDeactivateModal(index) {
 }
 
 // ======== INIT ========
-function initUserManagement() {
-  loadUserModules();
+async function initUserManagement() {
+  try {
+    const user = await protectPage("admin");
+    try {
+      const welcomeSpan = document.querySelector('.welcome span');
+      if (welcomeSpan) welcomeSpan.textContent = getDisplayName(user);
+    } catch (e) {
+      console.warn('Could not set welcome name on user-management page', e);
+    }
+    loadUserModules();
+  } catch (err) {
+    console.error('Access denied or error on user-management page:', err);
+    document.body.innerHTML = '<h1>Access Denied</h1>';
+  }
 }
+
+// Initialize when module is loaded
 initUserManagement();
 
 window.showAddUserModal = showAddUserModal;
