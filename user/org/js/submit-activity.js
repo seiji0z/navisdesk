@@ -53,8 +53,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Select folder body container
 const folderBody = document.getElementById("folder-body");
 
-<<<<<<< HEAD
-=======
 // Global variable to store the activity being edited (for re-submission)
 let editingActivityId = null;
 let editingActivityData = null;
@@ -70,19 +68,19 @@ async function fetchActivityForEdit(activityId) {
   try {
     const orgId = "6716001a9b8c2001abcd0001"; // ICON ORG
     const response = await fetch("../../../server/php/get-activities.php", {
-      headers: { "x-org-id": orgId }
+      headers: { "x-org-id": orgId },
     });
 
     if (!response.ok) throw new Error("Failed to fetch activities");
 
     const allActivities = await response.json();
-    const activity = allActivities.find(a => a._id === activityId);
-    
+    const activity = allActivities.find((a) => a._id === activityId);
+
     if (!activity) {
       console.error("Activity not found:", activityId);
       return null;
     }
-    
+
     return activity;
   } catch (error) {
     console.error("Error fetching activity:", error);
@@ -90,7 +88,6 @@ async function fetchActivityForEdit(activityId) {
   }
 }
 
->>>>>>> fb02237e4816abeb9181e53d08531540d1dfd05c
 // Save activity to database
 window.DB = {
   async saveActivity(formData) {
@@ -1051,7 +1048,7 @@ function updateUploadRowState(container) {
 // ===============================
 async function prePopulateForm(activityData) {
   if (!activityData) return;
-  
+
   // Activity Details
   const details = activityDetails.querySelectorAll("input, textarea");
   details[0].value = activityData.title || "";
@@ -1063,13 +1060,13 @@ async function prePopulateForm(activityData) {
   const dates = dateTime.querySelectorAll("input");
   if (activityData.date_start) {
     const startDate = new Date(activityData.date_start);
-    dates[0].value = startDate.toISOString().split('T')[0]; // date
-    dates[2].value = startDate.toISOString().split('T')[1].substring(0, 5); // time
+    dates[0].value = startDate.toISOString().split("T")[0]; // date
+    dates[2].value = startDate.toISOString().split("T")[1].substring(0, 5); // time
   }
   if (activityData.date_end) {
     const endDate = new Date(activityData.date_end);
-    dates[1].value = endDate.toISOString().split('T')[0]; // date
-    dates[3].value = endDate.toISOString().split('T')[1].substring(0, 5); // time
+    dates[1].value = endDate.toISOString().split("T")[0]; // date
+    dates[3].value = endDate.toISOString().split("T")[1].substring(0, 5); // time
   }
 
   // Venue
@@ -1077,19 +1074,23 @@ async function prePopulateForm(activityData) {
 
   // SDGs - Handle both "SDG 1" and "1" formats
   if (activityData.sdgs && Array.isArray(activityData.sdgs)) {
-    activityData.sdgs.forEach(sdg => {
+    activityData.sdgs.forEach((sdg) => {
       // Extract number from "SDG 1" format or use as is
-      const sdgNumber = sdg.toString().replace(/[^0-9]/g, '');
-      const checkbox = sdgAlignment.querySelector(`input[data-sdg="${sdgNumber}"]`);
+      const sdgNumber = sdg.toString().replace(/[^0-9]/g, "");
+      const checkbox = sdgAlignment.querySelector(
+        `input[data-sdg="${sdgNumber}"]`
+      );
       if (checkbox) {
         checkbox.checked = true;
       }
     });
-    
+
     // Trigger mobile SDG selector update if it exists
-    const firstCheckbox = sdgAlignment.querySelector('input[type="checkbox"]:checked');
+    const firstCheckbox = sdgAlignment.querySelector(
+      'input[type="checkbox"]:checked'
+    );
     if (firstCheckbox) {
-      firstCheckbox.dispatchEvent(new Event('change'));
+      firstCheckbox.dispatchEvent(new Event("change"));
     }
   }
 
@@ -1104,11 +1105,17 @@ async function prePopulateForm(activityData) {
         <i class="fas fa-info-circle"></i> Existing Supporting Documents:
       </p>
       <ul style="list-style: none; padding-left: 20px;">
-        ${activityData.supporting_docs.map(doc => `
+        ${activityData.supporting_docs
+          .map(
+            (doc) => `
           <li style="margin-bottom: 5px;">
-            <i class="fas fa-file"></i> ${typeof doc === 'string' ? doc : doc.file_name}
+            <i class="fas fa-file"></i> ${
+              typeof doc === "string" ? doc : doc.file_name
+            }
           </li>
-        `).join('')}
+        `
+          )
+          .join("")}
       </ul>
       <p style="color: #666; font-size: 0.9rem; margin-top: 10px;">
         Upload new files to replace these documents, or leave empty to keep existing ones.
@@ -1126,11 +1133,17 @@ async function prePopulateForm(activityData) {
         <i class="fas fa-info-circle"></i> Existing Evidence Files:
       </p>
       <ul style="list-style: none; padding-left: 20px;">
-        ${activityData.evidences.map(evidence => `
+        ${activityData.evidences
+          .map(
+            (evidence) => `
           <li style="margin-bottom: 5px;">
-            <i class="fas fa-image"></i> ${typeof evidence === 'string' ? evidence : evidence.file_name}
+            <i class="fas fa-image"></i> ${
+              typeof evidence === "string" ? evidence : evidence.file_name
+            }
           </li>
-        `).join('')}
+        `
+          )
+          .join("")}
       </ul>
       <p style="color: #666; font-size: 0.9rem; margin-top: 10px;">
         Upload new files to replace these evidences, or leave empty to keep existing ones.
@@ -1150,7 +1163,7 @@ async function prePopulateForm(activityData) {
 async function initializeForm() {
   // Check if we're editing an existing activity
   editingActivityId = getURLParameter("edit");
-  
+
   if (editingActivityId) {
     // Fetch and pre-populate the form
     editingActivityData = await fetchActivityForEdit(editingActivityId);

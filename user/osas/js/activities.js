@@ -27,6 +27,23 @@ function getDisplayName(user) {
 let allActivitiesData = null;
 let currentOrgMap = null;
 
+// Robust ID resolver that returns a string for various _id shapes
+function resolveId(id) {
+  if (id == null) return "";
+  // Mongo style: { $oid: '...' }
+  if (typeof id === "object") {
+    if (id.$oid) return String(id.$oid);
+    // If it's an ObjectId-like from some drivers
+    if (typeof id.toString === "function") return String(id.toString());
+    try {
+      return JSON.stringify(id);
+    } catch (e) {
+      return String(id);
+    }
+  }
+  return String(id);
+}
+
 async function loadActivities() {
   const folderBody = document.querySelector("#folder-body");
 
@@ -111,7 +128,8 @@ async function loadActivities() {
 
     // Build org map from student_orgs collection
     currentOrgMap = orgs.reduce((map, org) => {
-      map[org._id] = {
+      const key = resolveId(org._id);
+      map[key] = {
         name: org.name || "Unknown Organization",
         dept: org.department || "Unknown Department",
       };
@@ -210,7 +228,8 @@ function renderActivitiesTable(activities, orgMap) {
   cardsContainer.innerHTML = "";
 
   activities.forEach((activity) => {
-    const orgInfo = orgMap[activity.org_id?._id || activity.org_id] || {
+    const orgKey = resolveId(activity.org_id?._id || activity.org_id);
+    const orgInfo = orgMap[orgKey] || {
       name: "Unknown Organization",
       dept: "Unknown Department",
     };
@@ -261,9 +280,9 @@ function renderActivitiesTable(activities, orgMap) {
         <td>${activity.term || "N/A"}</td>
         <td><span class="status ${statusClass}">${activity.status}</span></td>
         <td>${formattedDate}</td>
-        <td><button class="review-btn" data-activity-id="${
+        <td><button type="button" tabindex="0" class="review-btn" style="pointer-events:auto;z-index:10;" data-activity-id="${resolveId(
           activity._id
-        }">Review</button></td>
+        )}">Review</button></td>
       </tr>
     `;
 
@@ -303,13 +322,51 @@ function renderActivitiesTable(activities, orgMap) {
           </div>
         </div>
         <div class="activity-card-actions">
-          <button class="review-btn" data-activity-id="${
+          <button type="button" tabindex="0" class="review-btn" style="pointer-events:auto;z-index:10;" data-activity-id="${resolveId(
             activity._id
-          }">Review</button>
+          )}">Review</button>
         </div>
       </div>
     `;
   });
+
+  // Debug: log rendered activity ids (first 10)
+  try {
+    const renderedIds = Array.from(document.querySelectorAll(".review-btn"))
+      .slice(0, 10)
+      .map((b) => b.dataset.activityId);
+    console.debug("Rendered review button IDs:", renderedIds);
+  } catch (e) {
+    console.debug("Could not log rendered IDs", e);
+  }
+
+  // Attach direct click handlers to each review button (safer than delegation in some contexts)
+  try {
+    document.querySelectorAll(".review-btn").forEach((btn) => {
+      // avoid double-wiring
+      if (btn.__wired) return;
+      btn.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        const id = btn.dataset.activityId;
+        console.debug("Direct handler: review button clicked, id=", id);
+        const activity = allActivitiesData.find(
+          (a) => resolveId(a._id) === String(id)
+        );
+        if (activity) {
+          console.debug(
+            "Direct handler: found activity, opening review",
+            resolveId(activity._id)
+          );
+          showActivityReview(activity);
+        } else {
+          console.warn("Direct handler: no activity found for id", id);
+        }
+      });
+      btn.__wired = true;
+    });
+  } catch (e) {
+    console.debug("Could not attach direct handlers", e);
+  }
 }
 
 function addFilterEventListeners() {
@@ -387,8 +444,23 @@ function addReviewButtonListener() {
     const btn = e.target.closest(".review-btn");
     if (btn) {
       const id = btn.dataset.activityId;
-      const activity = allActivitiesData.find((a) => a._id === id);
-      if (activity) showActivityReview(activity);
+      console.debug("Review button clicked, id=", id);
+      const activity = allActivitiesData.find((a) => {
+        return resolveId(a._id) === String(id);
+      });
+      if (activity) {
+        console.debug(
+          "Found activity for id, opening review:",
+          resolveId(activity._id)
+        );
+        showActivityReview(activity);
+      } else {
+        console.warn("No activity found for id:", id);
+        console.debug(
+          "Available activity ids:",
+          allActivitiesData.map((a) => resolveId(a._id)).slice(0, 20)
+        );
+      }
     }
   });
   folderBody.dataset.listenerAttached = "true";
